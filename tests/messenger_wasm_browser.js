@@ -1,9 +1,10 @@
-// The same libsignal WebAssembly build in a real browser engine (Chromium, headless, through Playwright): two devices
+// The same libsignal WebAssembly build in real browser engines (Chromium, WebKit as in Safari on iPhone, Firefox;
+// headless, through Playwright): two devices
 // in the page start a session from bundles, exchange sealed-sender messages both ways, and check the trust root.
 // The sender certificates come from a real relay. Build first: cd messenger/wasm && wasm-pack build --release --target web
 //   node tests/messenger_wasm_browser.js
 const path = require("path"), os = require("os"), fs = require("fs"), http = require("http"), { spawn } = require("child_process");
-const { chromium } = require("playwright");
+const pw = require("playwright"), ENGINE = process.env.ENGINE || "chromium";   // chromium, webkit (Safari's engine), firefox
 const MSG = path.join(__dirname, "..", "messenger"), PKG = path.join(MSG, "wasm", "pkg-web");
 const HOME = fs.mkdtempSync(path.join(os.tmpdir(), "zwasmb-")), PORT = 20100 + Math.floor(Math.random() * 300), R = `http://127.0.0.1:${PORT}`;
 const relay = spawn(process.execPath, [path.join(MSG, "relay.js")], { env: { ...process.env, HOME, ZENOS_RELAY_PORT: String(PORT) }, stdio: "ignore" });
@@ -21,10 +22,10 @@ let fail = 0; const check = (n, c, g) => { console.log((c ? "ok   " : "FAIL ") +
 const j = async (p, method = "GET", obj) => (await fetch(R + p, { method, headers: { "Content-Type": "application/json" }, body: obj && JSON.stringify(obj) })).json();
 (async () => {
   for (let i = 0; i < 60; i++) { try { await fetch(R + "/trust"); break; } catch { await new Promise((z) => setTimeout(z, 100)); } }
-  browser = await chromium.launch();
+  browser = await pw[ENGINE].launch();
   const pg = await (await browser.newContext()).newPage();
   await pg.goto(`http://127.0.0.1:${PORT + 1}/`); await pg.waitForFunction(() => window.ready === true, null, { timeout: 30000 });
-  check("libsignal (WebAssembly) loads in Chromium", true);
+  check(`libsignal (WebAssembly) loads in ${ENGINE}`, true);
   const bundles = await pg.evaluate(() => { const n = Date.now(); window.a = new W.Device("alice", 11, 2, n); window.b = new W.Device("bob", 22, 2, n);
     return [a.bundle(), b.bundle()]; });
   const { trust } = await j("/trust");
