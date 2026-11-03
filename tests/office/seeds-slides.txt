@@ -1,0 +1,21 @@
+# Pages with PowerPoint files (crawl.py --only pptx,ppt)
+https://www.wam.go.jp/hp/?p=784
+https://www.wam.go.jp/hp/?p=782
+https://www.wam.go.jp/hp/?p=780
+https://www.wam.go.jp/hp/saiken-saiken_00-tabid-1390/saiken-saiken_00-saiken23-tabid-1389/
+https://www.amed.go.jp/koubo/index.html
+https://www.amed.go.jp/koubo/11/03/1103B_00019.html
+https://www.nedo.go.jp/koubo/
+https://www.meti.go.jp/information/publicoffer/index.html
+https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html
+https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai08/index.html
+https://www.chisou.go.jp/sousei/about/index.html
+https://www.soumu.go.jp/menu_seisaku/ictseisaku/index.html
+https://www.mext.go.jp/a_menu/shinkou/hojyo/index.htm
+https://www.env.go.jp/policy/hozen/green/kouhyou.html
+https://www.maff.go.jp/j/supply/hozyo/index.html
+https://www.pref.niigata.lg.jp/sec/shogyoshinko/1195575376691.html
+https://www.pref.kagawa.lg.jp/eizen/oshirase/youshikisyuu.html
+https://www.city.sakai.lg.jp/benri/download/download_kigyo/mokuteki/sangyo/tochi/keikan_todokede-nintei/kankocho/index.html
+https://www.jst.go.jp/kisoken/boshuu/teian.html
+https://www.jsps.go.jp/j-grantsinaid/03_keikaku/download.html

@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+**Office files**
+- The ZENOS office engine (docs/OFFICE_ENGINE.md; `zoffice.py`): Word, Excel and PowerPoint files, new and old
+  formats (.docx .doc .xlsx .xls .pptx .ppt), are read, written and drawn by LibreOffice, run in the ZENOS sandbox
+  with no network, the file only in memory, and a locked-down profile (macros never run, no autosave, no update
+  check). ZENOS Office (`zenos-office`): the engine draws and edits the document in a ZENOS window; copying out goes
+  only through the window and is refused from L3 up; the engine never prints; sealed files open into memory and
+  are sealed again on saving. Fonts the files ask for are mapped to free fonts of the same widths.
+- tests/office: 642 public files from ministries and municipalities (was 105), measured cell by cell; the check
+  runs on every change to the office code and refuses a change that makes any file worse than the baseline.
+
 **Messages**
 - Organizations reaching each other (docs/FEDERATION.md; `messenger/federation.js`; Lean: `Federation.lean`):
   each organization runs its own relay, and relays exchange Signal-protocol envelopes only when both

@@ -36,6 +36,10 @@ for a in docs sheets slides; do
   cp -a "$B/$a/dist" "$Z/apps/$a/"
 done
 cp -a "$SRC/apps/common" "$Z/apps/"          # the local server the three office apps share
+cp -a "$SRC/apps/office" "$Z/apps/"          # ZENOS Office: the LibreOffice engine in a ZENOS window (docs/OFFICE_ENGINE.md)
+chmod 755 "$Z/apps/office/zenos-office" "$Z/apps/office/zenos_office.py"
+mkdir -p "$P/etc/fonts/conf.d"
+install -m 644 "$SRC/system/fontconfig/60-zenos-office.conf" "$P/etc/fonts/conf.d/60-zenos-office.conf"
 
 echo "== messenger (AGPL-3.0)"
 cp -a "$SRC/messenger" "$B/msg"
@@ -60,6 +64,7 @@ chmod 755 "$P"/usr/sbin/*
 chmod 644 "$P/usr/sbin/zenos-netsense.bt"
 mkdir -p "$P/usr/bin"
 ln -sf ../sbin/zenos_conductor.py "$P/usr/bin/zenos-conductor"     # the conductor runs as the person
+ln -sf ../share/zenos/apps/office/zenos-office "$P/usr/bin/zenos-office"
 cp "$SRC"/system/systemd/*.service "$SRC"/system/systemd/*.timer "$P/lib/systemd/system/"
 # fewer ways into the kernel: sysctl settings and modules that are never loaded (docs/THREAT_MODEL.md)
 mkdir -p "$P/usr/lib/sysctl.d" "$P/usr/lib/modprobe.d"

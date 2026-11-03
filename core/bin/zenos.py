@@ -702,7 +702,10 @@ def media_view(p, name, data, lvl):
 
 # ---------------- office files (Documents / Sheets / Slides) ----------------
 OFFICE_EXT = {".docx": "Documents", ".xlsx": "Sheets", ".pptx": "Slides",
-              ".odt": "Documents", ".ods": "Sheets", ".odp": "Slides"}
+              ".odt": "Documents", ".ods": "Sheets", ".odp": "Slides",
+              ".doc": "Documents", ".xls": "Sheets", ".ppt": "Slides",
+              ".docm": "Documents", ".xlsm": "Sheets", ".pptm": "Slides"}
+OFFICE_WINDOW = "/usr/bin/zenos-office"     # the LibreOffice engine in a ZENOS window (docs/OFFICE_ENGINE.md)
 OFFICE_APPS = {".docx": "zenos-docs.sh", ".xlsx": "zenos-sheets.sh", ".pptx": "zenos-slides.sh"}
 
 
@@ -718,7 +721,10 @@ def office_edit(p, name, data, lvl):
     audit("office-open", file=p.name, level=lvl, app=app)
     try:
         launcher = Path(__file__).parent / OFFICE_APPS.get(Path(name).suffix.lower(), "")
-        if launcher.name and launcher.exists():          # the ZENOS app, in sealed mode (saves only to the RAM copy)
+        if os.path.exists(OFFICE_WINDOW):                # the engine keeps tables, pictures, layout; macros never run
+            subprocess.run([OFFICE_WINDOW, str(t), "--level", str(lvl)],
+                           env=dict(UI_ENV, ZENOS_SEALED_LEVEL=str(lvl)), capture_output=True)
+        elif launcher.name and launcher.exists():        # the ZENOS app, in sealed mode (saves only to the RAM copy)
             subprocess.run([str(launcher), str(t)], env=dict(UI_ENV, ZENOS_SEALED_LEVEL=str(lvl)), capture_output=True)
         else:                                            # OpenDocument files: LibreOffice with its profile in RAM
             subprocess.run(["soffice", f"-env:UserInstallation=file://{d}/profile", "--norestore", "--nologo", str(t)],

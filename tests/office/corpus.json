@@ -838,5 +838,4301 @@
   "sha256": "445dfd8e329d0ea1d51391ef06f96a26a40817d570857fe4ae1bf9a5f97eb098",
   "bytes": 28265,
   "fetched": "2026-10-31"
+ },
+ {
+  "file": "e9886450450d.xlsx",
+  "url": "https://www.amed.go.jp/content/000117274.xlsx",
+  "page": "https://www.amed.go.jp/koubo/11/03/1103B_00019.html",
+  "sha256": "e9886450450d59c8077d52e2dfe8b870c9cbe72f209825d495fb0375faad9ab1",
+  "bytes": 302319,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4b520f6fad71.docx",
+  "url": "https://www.amed.go.jp/content/000104977.docx",
+  "page": "https://www.amed.go.jp/koubo/11/03/1103B_00019.html",
+  "sha256": "4b520f6fad71e355bec4d586ed9fb7d6f3ba79212b49c62be1b52853df1faf33",
+  "bytes": 154260,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1431dde3e645.docx",
+  "url": "https://www.amed.go.jp/content/000104978.docx",
+  "page": "https://www.amed.go.jp/koubo/11/03/1103B_00019.html",
+  "sha256": "1431dde3e6451df1fc306cb2fa9979fa0e80a7bbb2d970183fb85c295772d3bc",
+  "bytes": 43764,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "43dca32f7ddc.xlsx",
+  "url": "https://www.amed.go.jp/content/000104979.xlsx",
+  "page": "https://www.amed.go.jp/koubo/11/03/1103B_00019.html",
+  "sha256": "43dca32f7ddc631476b964a475f7fd638639a6b249f8917119279e29d7c51521",
+  "bytes": 14485,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "50d455c97c90.docx",
+  "url": "https://www.amed.go.jp/content/000104980.docx",
+  "page": "https://www.amed.go.jp/koubo/11/03/1103B_00019.html",
+  "sha256": "50d455c97c90f7969063e3cecd37e7877805512b8ba8c719a7b93f647f762ca9",
+  "bytes": 29688,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9d9e28480526.docx",
+  "url": "https://www.amed.go.jp/content/000104981.docx",
+  "page": "https://www.amed.go.jp/koubo/11/03/1103B_00019.html",
+  "sha256": "9d9e28480526bdca6ccc8c757028d709b73b42b4d7a4e0ecfc0e43b0dcd3266e",
+  "bytes": 29256,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "cee850a7455f.docx",
+  "url": "https://www.amed.go.jp/content/000118689.docx",
+  "page": "https://www.amed.go.jp/contact/index.html",
+  "sha256": "cee850a7455fc8f573672b2ff0ce0d325c65b2fc15ae01c373f9e6ac1dea84fb",
+  "bytes": 28046,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "05877676597c.docx",
+  "url": "https://www.amed.go.jp/content/000075410.docx",
+  "page": "https://www.amed.go.jp/contact/index.html",
+  "sha256": "05877676597cdce9be522e12dcd3c72a930231e4ad7cc2b3d621a59bce75923b",
+  "bytes": 17598,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "04b205d9321a.docx",
+  "url": "https://www.amed.go.jp/content/000075411.docx",
+  "page": "https://www.amed.go.jp/contact/index.html",
+  "sha256": "04b205d9321afc25dc010f6f43ffec708b1b9af1d1015ed92a9ae7cf0f1e7c30",
+  "bytes": 17337,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "00d372df63ed.docx",
+  "url": "https://www.amed.go.jp/content/000160400.docx",
+  "page": "https://www.amed.go.jp/contact/arec.html",
+  "sha256": "00d372df63ed602e23607621e6b34e3f9b77c9e81f4edfd1f475bc04833bba54",
+  "bytes": 18311,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4d0ef1482051.docx",
+  "url": "https://www.amed.go.jp/content/000157595.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "4d0ef1482051cead778e4b680fc50e4191b3a50b916b93645e0129cb0762bc68",
+  "bytes": 31009,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "32bcd07b8a9c.docx",
+  "url": "https://www.amed.go.jp/content/000157611.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "32bcd07b8a9c6c82166dbb488f7a500ae84cfa9c406f15d50433e00410a668d3",
+  "bytes": 18566,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bac9d30193d2.docx",
+  "url": "https://www.amed.go.jp/content/000157612.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "bac9d30193d290a61e8e9185f10fea1c3cb0411459cf23f2065c258691c8568c",
+  "bytes": 29193,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "441540e55804.xlsx",
+  "url": "https://www.amed.go.jp/content/000157613.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "441540e5580446ef4a50f6d5f31fe69735dcb0db889e1f14712563a5e6a828f0",
+  "bytes": 12800,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "18d583d080eb.docx",
+  "url": "https://www.amed.go.jp/content/000157614.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "18d583d080eb70a9593a62da526c59dca9937f9a5e7257a94cadd178beac5034",
+  "bytes": 19052,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1fa0eda88f57.xlsx",
+  "url": "https://www.amed.go.jp/content/000157615.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "1fa0eda88f572b9bd25f9527fa8552295b55b20171f7a74df619acd34876306b",
+  "bytes": 10618,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "cbfcdf12ea97.xlsx",
+  "url": "https://www.amed.go.jp/content/000157620.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "cbfcdf12ea972b972e1bec0c9424b634696fc2f76596b4c2913bcbca4fb8acea",
+  "bytes": 12143,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "98a0e0aa0d03.xlsx",
+  "url": "https://www.amed.go.jp/content/000157639.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "98a0e0aa0d036560026e3e9c83090d7217e611336dd8134fada61aead4f951e7",
+  "bytes": 10227,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1eba513e3171.docx",
+  "url": "https://www.amed.go.jp/content/000157640.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "1eba513e317187838ab4cec8781759abbdc0f8a9ca58e773b7b270f21fb1e5c6",
+  "bytes": 17395,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c19f4dae78ce.docx",
+  "url": "https://www.amed.go.jp/content/000157641.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "c19f4dae78ce727e5b3b353933bd99c32754545fb2ba09f753498b6e61d6d329",
+  "bytes": 22022,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "950b415b8636.xlsx",
+  "url": "https://www.amed.go.jp/content/000157649.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "950b415b86361b6e61166c02f62b47acfe888d8ba2e75835783bead942396aa2",
+  "bytes": 199516,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f9055cf13db9.docx",
+  "url": "https://www.amed.go.jp/content/000157652.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "f9055cf13db9d2cd2e0c4485c7ef77d684f77a07a1d53849481343b3affdab1e",
+  "bytes": 30498,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "be727f71ea04.xlsx",
+  "url": "https://www.amed.go.jp/content/000157736.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "be727f71ea0403f0b3350b1f339f5aaea0a158bdac90b34391261017d9ed7b50",
+  "bytes": 49889,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f5e867e5a016.xlsx",
+  "url": "https://www.amed.go.jp/content/000158314.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "f5e867e5a016a4d834dea1a84a241e4284f6695261b667ced45240730dc93fb3",
+  "bytes": 22823,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1f8a3b97464f.docx",
+  "url": "https://www.amed.go.jp/content/000157656.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "1f8a3b97464f6c21c431633e733862f2b70a20032eaa26ee49497e0d2f6c1192",
+  "bytes": 259053,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b14a5b204b1d.xlsx",
+  "url": "https://www.amed.go.jp/content/000162895.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "b14a5b204b1d0292f80992563c96eae905907b5d253e313ddede07e298b72d36",
+  "bytes": 32498,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f10280350638.xlsx",
+  "url": "https://www.amed.go.jp/content/000164472.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "f10280350638c781f46ca1f3a2fd506c9635b484328a709b6c232a5e7a081766",
+  "bytes": 111096,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "548895386b97.xlsx",
+  "url": "https://www.amed.go.jp/content/000160552.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "548895386b97e3b742a87aa088186e8e6dd54566c917ba9f78b304cb283390c8",
+  "bytes": 213776,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "fe0f688916df.xlsx",
+  "url": "https://www.amed.go.jp/content/000157660.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "fe0f688916df790f49f03bb8d7a3a84187ce88c4e1d3e21b1bdd4e318403c585",
+  "bytes": 88350,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b1b8581ed18a.xlsx",
+  "url": "https://www.amed.go.jp/content/000157661.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "b1b8581ed18a31f07d93f6a126d61e1ad508b48b1029602042672fa74ea2a582",
+  "bytes": 96021,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "37b496207e6a.xlsx",
+  "url": "https://www.amed.go.jp/content/000162007.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "37b496207e6a2127992069d24a969378d62783067af5fe379b1b568506213fcb",
+  "bytes": 215297,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3a59480a24d3.xlsx",
+  "url": "https://www.amed.go.jp/content/000162008.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "3a59480a24d3d47c5a61efc9e0e0387ff662c1b7408c57c3653fe7a6a75b3db0",
+  "bytes": 214837,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ece2b9307ef8.docx",
+  "url": "https://www.amed.go.jp/content/000157664.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "ece2b9307ef87cd4756609a13ab2527312895b9d01b66b4bab0647f175fd74cb",
+  "bytes": 25486,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4a3d24ffb65b.docx",
+  "url": "https://www.amed.go.jp/content/000157665.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "4a3d24ffb65b94f870481085b106a2c927a92f2a3d7ce7c1242f5485c0bba574",
+  "bytes": 26588,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "da1f44be46ae.xlsx",
+  "url": "https://www.amed.go.jp/content/000157666.xlsx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "da1f44be46ae9530270d41b7cc0adeb710db75b1029c53a4eca41bfde23bd956",
+  "bytes": 16257,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1c3600d99b80.docx",
+  "url": "https://www.amed.go.jp/content/000157667.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "1c3600d99b80fb8bf1bfb283165668e4b7f2f170bc6fd0df90019bc1a428ea8e",
+  "bytes": 22291,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "65d7c03b33f5.docx",
+  "url": "https://www.amed.go.jp/content/000157670.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "65d7c03b33f5949021058f88d2a227f41e8100c649194a3dfce87f123744f9ee",
+  "bytes": 23228,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "95b7c87e5b4a.docx",
+  "url": "https://www.amed.go.jp/content/000161915.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "95b7c87e5b4a4270561ba6d1ad149b109fa68f162cd1e3c2ccc418348e88270d",
+  "bytes": 24707,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4085213929ae.docx",
+  "url": "https://www.amed.go.jp/content/000161916.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "4085213929ae60489a6c7e960c6b388d962178a6558c71c92ba96a3a79f97464",
+  "bytes": 28524,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4b6687159e63.docx",
+  "url": "https://www.amed.go.jp/content/000157669.docx",
+  "page": "https://www.amed.go.jp/keiri/youshiki.html",
+  "sha256": "4b6687159e63482a08cda743f206157bfad8aa1e0cb2aaeb481b4d1d5bee95ca",
+  "bytes": 22836,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e9e24a11f82f.docx",
+  "url": "https://www.nedo.go.jp/content/800075195.docx",
+  "page": "https://www.nedo.go.jp/koubo/SM2_100001_00143.html",
+  "sha256": "e9e24a11f82ff474ec5f35dfed087bcd73a105e9a6060b867c82ee5443ff54c5",
+  "bytes": 74709,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ecf33050b1b5.xlsx",
+  "url": "https://www.nedo.go.jp/content/800075196.xlsx",
+  "page": "https://www.nedo.go.jp/koubo/SM2_100001_00143.html",
+  "sha256": "ecf33050b1b53c3bb524d3f4a27380ade8b5b05a3d6464f3b5e1a9fb181ee441",
+  "bytes": 24149,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a994b738c66b.docx",
+  "url": "https://www.nedo.go.jp/content/800075197.docx",
+  "page": "https://www.nedo.go.jp/koubo/SM2_100001_00143.html",
+  "sha256": "a994b738c66b4ab82c19c1149c0c60e84d40f2aab0e6bde1e8098e1b97e45b44",
+  "bytes": 51845,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "41cd4751e1d9.docx",
+  "url": "https://www.nedo.go.jp/content/800075198.docx",
+  "page": "https://www.nedo.go.jp/koubo/SM2_100001_00143.html",
+  "sha256": "41cd4751e1d922f908ce11a05f9fa2ba1a3d7322d9af310d4f76c24cfd2655f4",
+  "bytes": 78647,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "862f9566fb98.xlsx",
+  "url": "https://www.nedo.go.jp/content/800074896.xlsx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "862f9566fb982f3790712bcfda41a355eca101e7384f8defc99c7d14171ada4d",
+  "bytes": 54671,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f4a68247eae4.docx",
+  "url": "https://www.nedo.go.jp/content/800073818.docx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "f4a68247eae4c047864adfd616c203202e87d1076e2c48bc513ebce1ba0beade",
+  "bytes": 57610,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "543616b75618.docx",
+  "url": "https://www.nedo.go.jp/content/800073819.docx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "543616b7561815bcc579c7e3449fbffcb5eeaca5d42078deb55051dcd9b2ea0f",
+  "bytes": 396839,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6056cfceeeba.docx",
+  "url": "https://www.nedo.go.jp/content/800073820.docx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "6056cfceeeba535c6238b0b3e150e82945dad982f0364b7190a0d08083f4474f",
+  "bytes": 65883,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "46f3f227fb43.xlsx",
+  "url": "https://www.nedo.go.jp/content/800073821.xlsx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "46f3f227fb43a2eaf17daa1be95c13906fc0801825a7bdf3121f01f588f0f7ff",
+  "bytes": 39334,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d04d14a29eeb.xlsx",
+  "url": "https://www.nedo.go.jp/content/800073822.xlsx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "d04d14a29eebab42c27ab43dc7d223ed3bcd7e533a4f55af4127dc92776d8fb5",
+  "bytes": 158981,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "33f706d155a5.pptx",
+  "url": "https://www.nedo.go.jp/content/800073823.pptx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "33f706d155a5973761d398ef8e3bae388ffc5614ca8f5711d6d9d67c7f9d5c54",
+  "bytes": 43194,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "420c307bdb4f.xlsx",
+  "url": "https://www.nedo.go.jp/content/800073824.xlsx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "420c307bdb4f07b8e81fdb000618189f28fbcb4ed13e424ebd34ccb2a8e353b1",
+  "bytes": 15038,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "fae0ebe5e25e.xlsx",
+  "url": "https://www.nedo.go.jp/content/800073825.xlsx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "fae0ebe5e25ee9de100bd7055de2aac5f82fbde02a188a7dfac6537ac8a19eca",
+  "bytes": 41844,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "08b3ee1e4d29.docx",
+  "url": "https://www.nedo.go.jp/content/800073826.docx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100511.html",
+  "sha256": "08b3ee1e4d29b467125800d956302afc65dc6111f891d279c90bb95611243dfd",
+  "bytes": 25737,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7b13bb24a170.docx",
+  "url": "https://www.nedo.go.jp/content/800072212.docx",
+  "page": "https://www.nedo.go.jp/koubo/CA2_100541.html",
+  "sha256": "7b13bb24a170d45e4fd02d69753d27ced93b89a51d4a09a8269fdb677db12a79",
+  "bytes": 58242,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6febd06ebf8b.docx",
+  "url": "https://www.nedo.go.jp/content/100947059.docx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00002.html",
+  "sha256": "6febd06ebf8b3c4fde2fe691b45e5b4200a085580fe9ea09f954e40f06a48734",
+  "bytes": 26093,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3697b9063727.docx",
+  "url": "https://www.nedo.go.jp/content/100960996.docx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00002.html",
+  "sha256": "3697b9063727cb4eeae256fe2d6d4f6ae1c23719d96957f7ea671d6e035acb74",
+  "bytes": 45025,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b4470a99d2f9.docx",
+  "url": "https://www.nedo.go.jp/content/100960997.docx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00002.html",
+  "sha256": "b4470a99d2f9dd4623bec17b592ebebeda19ec18904a57702a5e9a5306969d6f",
+  "bytes": 22290,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9bfd12adbec1.docx",
+  "url": "https://www.nedo.go.jp/content/100981330.docx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00002.html",
+  "sha256": "9bfd12adbec126b85c10fc5cfff8ee7dabdb5e96d3e8d085ada0b386f2604ff5",
+  "bytes": 43703,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8ec46f9f131c.docx",
+  "url": "https://www.nedo.go.jp/content/100981331.docx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00002.html",
+  "sha256": "8ec46f9f131c4339f6b412bfe3935f8eb02bf0f30b3777dd68b7d948dd17b079",
+  "bytes": 22668,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bbaa0ec43cf4.docx",
+  "url": "https://www.nedo.go.jp/content/100981332.docx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00002.html",
+  "sha256": "bbaa0ec43cf406b2fd5eef2496e7668a9af733f41a84cfa191bfda11237ddb3c",
+  "bytes": 40896,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e70d456eefff.docx",
+  "url": "https://www.nedo.go.jp/content/100981333.docx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00002.html",
+  "sha256": "e70d456eefff194a7db4a61b3f6686275d2d7271647bf9d56e9a1db1be821525",
+  "bytes": 22454,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b5cece31b6db.docx",
+  "url": "https://www.nedo.go.jp/content/100969767.docx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00003.html",
+  "sha256": "b5cece31b6dba0f60e9c5674b8d9fcb34644cc168aa95439126f8cac8b63ae34",
+  "bytes": 22806,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "196b94403e8f.xlsx",
+  "url": "https://www.nedo.go.jp/content/100969768.xlsx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00003.html",
+  "sha256": "196b94403e8fe0ef4e5269214a4cd77f9b7fd35531d6393e8e7bdd09e195ff14",
+  "bytes": 20272,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3c98889dcd07.docx",
+  "url": "https://www.nedo.go.jp/content/100969769.docx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00003.html",
+  "sha256": "3c98889dcd0759f4416ae524b2133d804dccf39f2df86715657ef84dce0e4bdd",
+  "bytes": 22899,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b8719ed6a9fe.xlsx",
+  "url": "https://www.nedo.go.jp/content/100969770.xlsx",
+  "page": "https://www.nedo.go.jp/jyouhoukoukai/other_CA_00003.html",
+  "sha256": "b8719ed6a9fe4634490921ffef2b99058a86bb6409ff2a681964954355ec2e28",
+  "bytes": 19352,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d725e77a6629.docx",
+  "url": "https://www.nedo.go.jp/content/800074902.docx",
+  "page": "https://www.nedo.go.jp/events/SM_100001_00066.html",
+  "sha256": "d725e77a662970405c1420baa3e0a119734aa4a62f956c3ee5c44c59f2b3fde7",
+  "bytes": 44833,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "dc5d29efa049.docx",
+  "url": "https://www.nedo.go.jp/content/800057930.docx",
+  "page": "https://www.nedo.go.jp/nyusatsu/AJ_100152.html",
+  "sha256": "dc5d29efa04955e1e9263c0de890b6529d571d609fa138938b6a1a4016acc141",
+  "bytes": 21918,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1b56f4f1cbb1.pptx",
+  "url": "https://www.chisou.go.jp/sousei/resas/pptx/20250401_resasforteachers_youshiki.pptx",
+  "page": "https://www.chisou.go.jp/sousei/resas/index.html",
+  "sha256": "1b56f4f1cbb196f343b82544666d0479fbe48dc039c3edfd21e4be33db47e77a",
+  "bytes": 61624,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6758f41054bc.doc",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/files/r080310_koufuyoukou_bekkiyoushiki.doc",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/index.html",
+  "sha256": "6758f41054bc7030e3ec8b692c652285831984d9241b21cb7865c93917037e16",
+  "bytes": 133120,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "880860965495.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/files/r080310_koufuyoukou-besshiyoushiki.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/index.html",
+  "sha256": "88086096549518d89576d03e2d7e8cf70d4f1ebbca61f188f092ccfe80e0fc21",
+  "bytes": 39968,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7c61fa768535.xls",
+  "url": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/2019_keikakuchousho.xls",
+  "page": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/index.html",
+  "sha256": "7c61fa768535cdffff8473b5b366455e29602ef0e348b43118cc8d83de89fd98",
+  "bytes": 58368,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "afd5dc91155f.doc",
+  "url": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/2019_youshiki1_02.doc",
+  "page": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/index.html",
+  "sha256": "afd5dc91155f085785f29871b4fe6f239a8c6a6cd7c959873037539353bcf21a",
+  "bytes": 103424,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c8997ddacc9d.xls",
+  "url": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/2019_youshiki2.xls",
+  "page": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/index.html",
+  "sha256": "c8997ddacc9dbbe9f24035b163618bd16c60abfdf6e2f3ff683b3717129cbe88",
+  "bytes": 45568,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "504f3e113c21.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/2019_youshiki3.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/index.html",
+  "sha256": "504f3e113c213e817df627fea03b1e4fa02d16832aa98b8fb18254bd7721d998",
+  "bytes": 44821,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "dac2d96be583.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/2019_youshiki4_02.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/index.html",
+  "sha256": "dac2d96be583c5cb57dd38e192b690615255325b51ec7b842e459656ae9d5748",
+  "bytes": 142293,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0085d1d2b6c0.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/2019_check_02.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/index.html",
+  "sha256": "0085d1d2b6c0f776058f79517ce0753e76f491afcd3e87c16b67bc910a6d735f",
+  "bytes": 14050,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9b7dc68dc8ae.doc",
+  "url": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/r01-koufuyoukou.doc",
+  "page": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/index.html",
+  "sha256": "9b7dc68dc8aee30829138297accd9bf5dfbe759077225468babe0a5ace778ee3",
+  "bytes": 74752,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "704e661f0014.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/r01-koufuyoukou.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/tairyuu_sokushin/index.html",
+  "sha256": "704e661f00146fb52be0246eba9bb367d9031fe2790ae3bd7a3edb94e6e231e3",
+  "bytes": 58768,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "152abb2e34e6.docx",
+  "url": "https://www.chisou.go.jp/sousei/about/chiikiryugaku/files/02_chiikiryuugaku_youshiki_201225.docx",
+  "page": "https://www.chisou.go.jp/sousei/about/chiikiryugaku/index.html",
+  "sha256": "152abb2e34e6e4e057b3310d1195a6beab68f120ab469ac009984d99272bac27",
+  "bytes": 35241,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b56ba7b8b572.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/chiikiryugaku/files/03_chiikiryuugaku_beppyou_240110.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/chiikiryugaku/index.html",
+  "sha256": "b56ba7b8b572c14a5a7279a89965e9f6306a2c236cd4b29334861cfbc6e5a178",
+  "bytes": 101823,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "804532c13ebf.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/chiikiapproach/files/rchiikihyoukatool_workbook.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/chiikiapproach/index.html",
+  "sha256": "804532c13ebf93be30b5f9a3b07f070ddfdbe6efe7d6c870ca9ffd8958889d2c",
+  "bytes": 809305,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7e72716f4b84.docx",
+  "url": "https://www.chisou.go.jp/sousei/files/shinketsugou_karte.docx",
+  "page": "https://www.chisou.go.jp/sousei/keizai.html",
+  "sha256": "7e72716f4b84a773dddfb8e4c339c6fdd56fe5582d5a4aaa31df6b4bd866c210",
+  "bytes": 28407,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8f26a86147c8.xlsx",
+  "url": "https://www.chisou.go.jp/tiiki/toshisaisei/monitoring_sheet_202603.xlsx",
+  "page": "https://www.chisou.go.jp/tiiki/toshisaisei/index.html",
+  "sha256": "8f26a86147c87fffcd44cab3d70952ce55b74c2278aabf5ac87e2ce66f91f3b1",
+  "bytes": 74204,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f2e25c0dcad8.xlsx",
+  "url": "https://www.chisou.go.jp/tiiki/toshisaisei/monitoring_sheet_kisairei_202603.xlsx",
+  "page": "https://www.chisou.go.jp/tiiki/toshisaisei/index.html",
+  "sha256": "f2e25c0dcad8e596cd43661bee32858f77c8abe9fa30dd47dc0673602f979b40",
+  "bytes": 100042,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "cab94b70a13a.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/mirai/files/02_jigyoukennsuu_r5hosei.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/mirai/policy/policy1.html",
+  "sha256": "cab94b70a13a25cf44ac88037252abf69b46fe7ba79614773903118bfaf4afd1",
+  "bytes": 48152,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "cd14883e196d.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/mirai/files/03_jigyouichiran_r5hosei.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/mirai/policy/policy1.html",
+  "sha256": "cd14883e196da8c21886defac5d9f454968c253d76781dbf79eef0ff87af1f09",
+  "bytes": 154491,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "44eacfcdc4ab.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/mirai/files/02_jigyoukensuu_r5hosei2.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/mirai/policy/policy1.html",
+  "sha256": "44eacfcdc4abe25a890b28a55710bfbb33274a456616db6aa693eebb135b9ab9",
+  "bytes": 32053,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b0b5cb18d94e.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/mirai/files/03_jigyouitiran_r5hosei2.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/mirai/policy/policy1.html",
+  "sha256": "b0b5cb18d94eaae048749068305d2ce2fb359095e2cbfb116aa62cdd22f1f5c4",
+  "bytes": 29058,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bfc9958425ab.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/mirai/files/besshi3_r5jigyouichiran.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/mirai/policy/policy1.html",
+  "sha256": "bfc9958425abd02be7958f0905ebc9692651df7c720e7f19d5a19eda3b1a93a4",
+  "bytes": 147895,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "92e028e7b8c1.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/mirai/files/typesjigyouichiran2.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/mirai/policy/policy1.html",
+  "sha256": "92e028e7b8c171017035e64cc4207cea0537269c55ba03951b573a8282c93d33",
+  "bytes": 22064,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3f84d8ff0d37.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/mirai/files/besshi3_r5nizijigyouichiran.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/mirai/policy/policy1.html",
+  "sha256": "3f84d8ff0d373950bfe222cba3445eb4ba8e8cdd32e884611046ffd3713550a0",
+  "bytes": 34154,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "82cca581bd80.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/ccrc/shienmenu/files/r5torikumimoderuformat.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/ccrc/shienmenu/index.html",
+  "sha256": "82cca581bd80b6fbe6f7ec83f499eb4e3e207a72211ff93ea613ff0df8a350d7",
+  "bytes": 318392,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b6333c98c1f6.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/ccrc/shienmenu/files/tsumikiapproach_setsumei_sheet.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/ccrc/shienmenu/index.html",
+  "sha256": "b6333c98c1f653d304436a4a4604281283e3b377c95c606c3a50fab39a11f6e0",
+  "bytes": 405512,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4d4cc2b1c280.docx",
+  "url": "https://www.chisou.go.jp/sousei/about/ccrc/shienmenu/files/r05-03_ccrckousou_kisairei.docx",
+  "page": "https://www.chisou.go.jp/sousei/about/ccrc/shienmenu/index.html",
+  "sha256": "4d4cc2b1c280c1f401fd3a9aa9e7d180f1644cdffea2f1b4c932df891ab8fe91",
+  "bytes": 47223,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "cbf73e8f62b2.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/ccrc/shienmenu/files/220331_ccrcdounyujirei_worksheet.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/ccrc/shienmenu/index.html",
+  "sha256": "cbf73e8f62b2bbab862d67f5fb4bb060bd092e7942afbded6b107e70c5935d9c",
+  "bytes": 50399,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "dc758b5e8f9f.pptx",
+  "url": "https://www.chisou.go.jp/sousei/resas/pptx/01_workshop1_slide.pptx",
+  "page": "https://www.chisou.go.jp/sousei/resas/resas_houkoku.html",
+  "sha256": "dc758b5e8f9f75617e775c85013c288e359c37a2eaeeac8f9a17e786cdb89a37",
+  "bytes": 5996115,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6bc0a82e02e2.pptx",
+  "url": "https://www.chisou.go.jp/sousei/resas/pptx/02_workshop2_slide.pptx",
+  "page": "https://www.chisou.go.jp/sousei/resas/resas_houkoku.html",
+  "sha256": "6bc0a82e02e25bef905dc4d46927ed490595b845417a1dfa669fdb37e2a181ec",
+  "bytes": 1405944,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f2cd305a04b7.pptx",
+  "url": "https://www.chisou.go.jp/sousei/resas/pptx/03_tokamachishi_kanko_data.pptx",
+  "page": "https://www.chisou.go.jp/sousei/resas/resas_houkoku.html",
+  "sha256": "f2cd305a04b744ef49e083490c9f132b37ec147965c77cac7243aa3e4e4823a6",
+  "bytes": 11954821,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1f95445db864.pptx",
+  "url": "https://www.chisou.go.jp/sousei/resas/pptx/04_fieldwork_slide.pptx",
+  "page": "https://www.chisou.go.jp/sousei/resas/resas_houkoku.html",
+  "sha256": "1f95445db8648e7aab63abaff60e203f15eb96906ff16f8211edc3e445e02152",
+  "bytes": 471497,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8644432cc325.pptx",
+  "url": "https://www.chisou.go.jp/sousei/resas/pptx/05_workshop3_slide.pptx",
+  "page": "https://www.chisou.go.jp/sousei/resas/resas_houkoku.html",
+  "sha256": "8644432cc32523c0bb86709d5c0f52dbd492d3df4be311ed6566fe9bfd2e6ff5",
+  "bytes": 2262038,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4738d46a143c.pptx",
+  "url": "https://www.chisou.go.jp/sousei/resas/pptx/06_houkokukai_slide.pptx",
+  "page": "https://www.chisou.go.jp/sousei/resas/resas_houkoku.html",
+  "sha256": "4738d46a143ced6a8fed3f3e079220aa69e6486f6fa6a138d2a5850c1110be23",
+  "bytes": 8402963,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "66ec4acea0e8.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/resas/xlsx/beppyo1_date_rikatsuyo.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/resas/resas_houkoku.html",
+  "sha256": "66ec4acea0e854b35affede0622cb01f3f900bbb715072cc807556ef35ace356",
+  "bytes": 53420,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f315e8d1ea95.docx",
+  "url": "https://www.chisou.go.jp/sousei/about/green/files/ouboshinseisho.docx",
+  "page": "https://www.chisou.go.jp/sousei/about/green/index.html",
+  "sha256": "f315e8d1ea954b0307623cd3f14b6f69b5acdd7ea9cd8aa1e9626118793c55af",
+  "bytes": 57717,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5747edcb192a.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/files/05_form1-1_r8daigaku_main-a.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/index.html",
+  "sha256": "5747edcb192ad8ba8542de2f299a69b6256294f074fccc6e3071d8b4918f0982",
+  "bytes": 169481,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "57b69fd227d0.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/files/06_form1-2_r8daigaku_backdata-a.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/index.html",
+  "sha256": "57b69fd227d06626de7022d5a84906a8606dbb18d606f55158e5e117ea388dd6",
+  "bytes": 62686,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5dae0fb7d25b.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/files/07_form1-3_1-15_r8daigaku_plan-a.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/index.html",
+  "sha256": "5dae0fb7d25b2ea4b02865d46d0d0371d9057edf4bd05c58143e565343a7bb42",
+  "bytes": 478869,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f9c5d4b593e8.xlsx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/files/08_r8daigaku_checklist-a.xlsx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/index.html",
+  "sha256": "f9c5d4b593e8b615fcf670c27e5742d365f251ba441e0274eefc2201200ef222",
+  "bytes": 33618,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "290f3a90d9e4.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a1a.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "290f3a90d9e4d8cba5f195cf835566702efcf20fcb1c59630425604309e65ca9",
+  "bytes": 247296,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "584256faaa1f.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a1b.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "584256faaa1f470c66f8cf2a2a4bb7599ae5b636729a23f43a2998d621df11ed",
+  "bytes": 29184,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a75ff5d3d322.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a1c.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "a75ff5d3d3221b48ed27ed1d460f3d7581d0d409ce77130ba25214266833101a",
+  "bytes": 138752,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6ccb6138959b.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a1d.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "6ccb6138959ba87b346df4cc7d2aebdafa8c1def1941e92c4225cc6910e452b4",
+  "bytes": 50688,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "76a4fab944cb.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a1e.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "76a4fab944cb3a2bec4c290f5a0b6279ccc3afee44c805d18305bebf766fcbde",
+  "bytes": 79872,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "985bfcd04764.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a1f.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "985bfcd04764e1bb2102c0dda18535e4e9663036e858ad4fd83acd761885d838",
+  "bytes": 78848,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "14d8a2813fb5.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a1g.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "14d8a2813fb5acd006ea46bcb897417128e11cb12207dd724b55807cf65e8b5c",
+  "bytes": 73728,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c276a26a4133.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a2a.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "c276a26a4133462cd9ef89b645c50b861b67c213597902e968f4bd52ab558c55",
+  "bytes": 108032,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9b3d4b3bf0c7.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a2b.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "9b3d4b3bf0c7bf3128791706116afc4cd4c49c4ee1f6de93540b097fa4efae83",
+  "bytes": 30720,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3c2b431cc1aa.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a2c.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "3c2b431cc1aabda74b21bb3f1654a5dfa710ccd884ab2e028fd5286572d47e0f",
+  "bytes": 104448,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b52716207097.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a2d.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "b527162070971ca1d6bcf46567be454f9d447da431cf15c30a13382c41fac3fe",
+  "bytes": 65536,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bad56e850a9f.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a2e.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "bad56e850a9f28d31d2933f8bb228a351c438b0c1137edb225012d43ff25ac23",
+  "bytes": 73216,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b31874cb3d55.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a2f.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "b31874cb3d552be5836a7a13a49959cc401fe2a5de9d3587cb63ac842e530795",
+  "bytes": 71168,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "81480162645c.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a2g.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "81480162645ca4d816ed69c112ab749f7c0e420a554e8f49a55d92bbc6d3fb3a",
+  "bytes": 70144,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5f8f9cbc9c07.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a3a.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "5f8f9cbc9c07e0cca93b2cf4e65c308558dca1ae8f5acd4dfcf2a046d3d92f17",
+  "bytes": 226304,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "51dfcced4577.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a3b.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "51dfcced457748377415259e97f9c75ce60673f24d96676305f4d2db706c4497",
+  "bytes": 171520,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "efc397e38bcb.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a3c.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "efc397e38bcb5a50c3b9b92e0a516c8aa083f42af188b41c5870a195327a8945",
+  "bytes": 50176,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0eee3478a117.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a3d.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "0eee3478a117c473737082fe66735188af0fcb7a81f7358ed1661307f5e4fa7d",
+  "bytes": 164864,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "aab1a87a48d1.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a3e.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "aab1a87a48d159d5cca3bd767c78072d56f51f868234dce548ed7d5614b93c10",
+  "bytes": 81408,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "dbe29efe7e9c.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-a3f.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "dbe29efe7e9ca6637f40be2f4a7c3137dfa1f6162f5b2dce6f6bd1ec2fea87a9",
+  "bytes": 169984,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "481e1ce129e0.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-ba.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "481e1ce129e03e00baeb1f58c473e0b2a95fdf28cb2335293b570d086fecb693",
+  "bytes": 176128,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0d58a8f20e82.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-bb.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "0d58a8f20e8234b4014a1338145e085f79479be6e8be45dc4701ca88fe1be5b9",
+  "bytes": 33280,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5988455eb77e.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-bc.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "5988455eb77e2325e254e8137cd967d1557b4c66b6d32f16f7703ff831cb88e6",
+  "bytes": 110592,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b2ec645356d0.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-bd.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "b2ec645356d048873f8b443cafab85bda2b0fcf3ffe678aa337777fcf2c98449",
+  "bytes": 46080,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "51e48a1d8d5e.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-be.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "51e48a1d8d5e637efc1971545b778b8e98aade6a741ae51757b5c422cc30c3be",
+  "bytes": 74240,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "56c8a0669575.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-bf.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "56c8a0669575da730a1b6164d04f7a74f6ebe28123be4dd4c57d45bd378e260e",
+  "bytes": 74752,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "be0719ca89fc.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-bg.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "be0719ca89fcd2f41e15596edcf52ee2c0d4458fcf72bc7d3fd8d87630001935",
+  "bytes": 70144,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "aaeb9fb69854.xls",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/xls/yoshiki-bh.xls",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "aaeb9fb6985459d7447bfbe540382e8b592b979f4cb5ebe4cc7905ac53bfda99",
+  "bytes": 20480,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b48e07f08ec1.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-bi.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "b48e07f08ec1902382ea1828d66544e402c24e6053cc37e73be369b1007c6f76",
+  "bytes": 29696,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c5004ddacee8.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-bj.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "c5004ddacee8cd803b05656d59d24ecab8830922c4c590a1e6bd57c062f2ace6",
+  "bytes": 30720,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ce123f0e1f7e.doc",
+  "url": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/doc/yoshiki-ca.doc",
+  "page": "https://www.mhlw.go.jp/bunya/kenkyuujigyou/toriatukai04/index.html",
+  "sha256": "ce123f0e1f7ead39dda28416a540593a617f8e1ca0cd9efe00fdcc7b3265e614",
+  "bytes": 156160,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "cafe89cd7db2.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler01.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "cafe89cd7db2d0b8003c5ccd2420ebefcdf5d247a4656d020c2f08adc6d7d737",
+  "bytes": 34304,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0663b9a31440.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler02.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "0663b9a31440fbbb743ba6687717d5d3b9d3b543a7349b0d654dd0e9f40c5cc1",
+  "bytes": 40960,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e0310a4903b9.xls",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler03.xls",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "e0310a4903b97a1a47b3ac352a91c833d7eabcc184281ccb6d19d40a5fb36401",
+  "bytes": 24576,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "490efde88740.xls",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler04.xls",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "490efde887401f53bab361b846357a5dc59a567ad96918a7eb96dd90c29d18f0",
+  "bytes": 20480,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5620a562bdf5.xls",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler05.xls",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "5620a562bdf5224dfced88e44cdf6662f7ce9bb3fa0638119ee954469949f774",
+  "bytes": 19968,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a7fc144fdd27.xls",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler06.xls",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "a7fc144fdd273e36276bc2f423df89f3baed7376414905480334b61a962827d5",
+  "bytes": 35328,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d560d42def67.xls",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler07.xls",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "d560d42def67b3593d487e3f1cee90c2b4dc36d79d7b1255463da728af10fcbd",
+  "bytes": 22016,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ccfa2572a8d6.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler08.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "ccfa2572a8d69281e29b8e80fdc2bf5649b91bbd3b96c856a3c7967141bd2363",
+  "bytes": 47616,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7c05e2f9eb49.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler09.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "7c05e2f9eb4944baa99fef2f930e6b14ad517b7e5ed4581ae8f525bda40e02b7",
+  "bytes": 45568,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0af005cb0de8.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler10.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "0af005cb0de8e72731a38bb7dfa718e0563f5b72b5aa0f9c2893a208f6076af6",
+  "bytes": 40448,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bbbd70731975.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler11.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "bbbd70731975b9c15576a7849ec0bf44ce9531ea8fb99863a80760ea97bf29f4",
+  "bytes": 37376,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "61922185726b.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler12.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "61922185726b1e175459e8f418e2dfea9ef5a6672db8916695e05ffcd623cc36",
+  "bytes": 34304,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "dc3017d3226e.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler13.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "dc3017d3226e726d98b0388e57983f530e4acf437a159d2d1bae9ff7d821ed4c",
+  "bytes": 37888,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "522433b4964e.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler14.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "522433b4964e1e855758cb2cbaf3d0dd6700f1c4f5d8969eb9459ead89591f23",
+  "bytes": 38912,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ffb97569d378.doc",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler15.doc",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "ffb97569d3783b1c8c9b08a71cf29fe2b56e313f27156ae54b718955a7cd00fe",
+  "bytes": 38912,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "73552569a642.xls",
+  "url": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/library/miyagi-roudoukyoku/download/dl/boiler16.xls",
+  "page": "https://jsite.mhlw.go.jp/miyagi-roudoukyoku/1/120/122/12242.html",
+  "sha256": "73552569a6423c8304ed4f59d3d7a3010c2147db05de3dcac212333d730ffd20",
+  "bytes": 22528,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3320cc2fbb22.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456760.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "3320cc2fbb22e70a0056e8b6bff71d689e8adf1c3eb57d574800832a7120e527",
+  "bytes": 46587,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "baaf6e397906.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456761.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "baaf6e397906193809fa66e8abd6f4c82003fbd181dd2dba7b5ea7e9852ffe3f",
+  "bytes": 30321,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "77ed74e88e44.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5160492.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "77ed74e88e4418fc66892136112755ba7e6891d60486e930fffb6d7f5d75186e",
+  "bytes": 18327,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "08cbd5afa7ce.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456762.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "08cbd5afa7ce7b5b4305463d7da8227ec66f3f4242153caf7dd0ef8aeee9af75",
+  "bytes": 35152,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "80318e9cf86a.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456763.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "80318e9cf86ad25bc63fd736f52525328a82ee0c5c1547d2aef0358230f3dcc4",
+  "bytes": 22395,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "79a24d20657c.docx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456755.docx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "79a24d20657c65789ea0e28745031d4557bff33860d61272e3f99f704ba535d7",
+  "bytes": 17906,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "892d05042559.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5462076.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "892d050425598c783f17cd8a7c8105d8724c4cd4e7000e561af0d434fe436d5a",
+  "bytes": 25389,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "23b999c03f8f.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456765.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "23b999c03f8fff64b7449865afdad19e6468ccf32ad86f060208016442a9cb9a",
+  "bytes": 21306,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d769645a1df0.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456766.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "d769645a1df0eaa71ec2a1861112724837ff4c178f9e3daf291c9def66977af9",
+  "bytes": 24309,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6ad0082a7273.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456767.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "6ad0082a72739a0aa596f0ccaf7fd12b3f711bf762f8062a3493ecf84e31dbb0",
+  "bytes": 23222,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b81b7c19b395.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5462077.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "b81b7c19b395f055d63b1f0d644957de2d9313552727787f6351cd3eb3b25b08",
+  "bytes": 23164,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8ca88a453f87.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456769.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "8ca88a453f871fdf88525e2fb49905119ba028172a396dd3d0b5e26118992f86",
+  "bytes": 23044,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "564ff79ed6c2.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4506/5456770.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ippan/kenkouiryouhukushi/koureisya/336672.html",
+  "sha256": "564ff79ed6c2e8e5e219fffddced7ca65951856fae714c9eb5156c27cc401886",
+  "bytes": 21917,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "15e1b7662b01.docx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4510/5404413_1.docx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4510.html",
+  "sha256": "15e1b7662b01ca99b70b1f95ead62a9f12cb2075bba43b1609e033a66bd6f9cf",
+  "bytes": 14025,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "33914890dfb5.docx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4510/5538011_1.docx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4510.html",
+  "sha256": "33914890dfb5f29376e25bc0c0778c632a2bc88ff7e94fd01abfdd6d12bb3892",
+  "bytes": 15869,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4fc84e2cb5bc.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4507/5278937_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4507.html",
+  "sha256": "4fc84e2cb5bc86c59cbebd7a400bf78f520bbbc50a872777733d624d60171deb",
+  "bytes": 147898,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c00825da124f.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4507/5287046_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4507.html",
+  "sha256": "c00825da124f07f7987ba66aeff063ce0c598a2bd18012c4d5270636c4dde42e",
+  "bytes": 109064,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5dd1393f1f2d.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462079_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "5dd1393f1f2d44b1dbddc205cf14599fc7b3baff6f9418fc18c50941dd31c26c",
+  "bytes": 32237,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ba36cda1b674.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456775_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "ba36cda1b674d3ba48800facb602baedce7582a9bedda50dc6a1555a82568415",
+  "bytes": 26826,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ca5071f543ae.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462080_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "ca5071f543ae6827e5f9e35f791e252d0995d22bef34c5da901977907c9b5f5f",
+  "bytes": 25078,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8cb3b4589b84.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456777_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "8cb3b4589b84ea04b682cc73cc900f40caf1c65ea76abc99a9618b7f3d1898e2",
+  "bytes": 29356,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "65caba047000.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462081_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "65caba0470005b6763f6677ceeff054f6092b729109dd87389b499e31dfe2ad9",
+  "bytes": 30944,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1f9c50974a6c.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456779_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "1f9c50974a6c95883422b4cf46ca1a643599aea6c552bcd490c3338c2ccaa8c7",
+  "bytes": 29397,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2576e3a1f2dd.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462082_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "2576e3a1f2dd75690ae1f6ad119dca5d170724e55003b19af2b1c9ec13c32e02",
+  "bytes": 30845,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "23425f92dd43.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462498_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "23425f92dd43194499296749f59f6ec0282168d34bace14a094a3b6aed98efde",
+  "bytes": 29337,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "53addb6af749.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462083_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "53addb6af749f8dbe9944514bdf1ba1f3f470294c11d0628188db01e11d257e2",
+  "bytes": 25131,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8c32a826a35c.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456783_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "8c32a826a35cd1eed7f244bdb0eb3e8f903570765ae938cadcc2abe4554f83dc",
+  "bytes": 28604,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a46fcd030a9b.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462084_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "a46fcd030a9bf0c136dff97b00b8f2fe16dadf3236dc2a1675345bf71c1794f2",
+  "bytes": 52294,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5a9f25391715.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456785_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "5a9f25391715bb75384e6d9f49e413171f51bf2a8bf9787456be13d2cdd931d1",
+  "bytes": 28459,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "907f6aac2ac6.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462085_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "907f6aac2ac6900cbd9722cddd4b875d71472902d079d59f7fadde32bbd1ae9a",
+  "bytes": 37492,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "fc2466491016.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456787_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "fc2466491016a8f4585c2e74059103c0fa260c219467f9397ffabb6ad7018f6c",
+  "bytes": 30578,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bbf73ae284ea.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462086_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "bbf73ae284ea477782e07ddab802036ca76bafdb800ecd038394535bb09cf82c",
+  "bytes": 36917,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c52980542115.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462088_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "c52980542115a44cb42c193932003f6dd1d95bd04ebfd027bb8d713f07815f70",
+  "bytes": 41783,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7496a602db04.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462089_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "7496a602db04626710f7cae4d5dfaa44de022357fdc41cd6f6baaccbed624847",
+  "bytes": 42976,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1331545252d0.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456791_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "1331545252d0359e56aeab43e81d26a60323fc582603f7b933b0e2b9fa5bb217",
+  "bytes": 28833,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ebda108f5385.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456792_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "ebda108f538538987708f1c916e884db80400fb753f5a17edf1c534fff37bbf6",
+  "bytes": 28904,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "747382fb06c7.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456793_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "747382fb06c70547cea1518786a3ade45f764561e1ec1aa25fa8d3bf20e743d4",
+  "bytes": 29039,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d0186c9f6fbb.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462090_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "d0186c9f6fbb06451fef2f3e4e330a878bd4da757d93a04467ebdecbf7f13417",
+  "bytes": 47561,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8ae49372a78e.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5456795_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "8ae49372a78eb18ec04f2ef7709c502ac4450435a6a3f8f03bc23bb2bc403d73",
+  "bytes": 29411,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "328fcfb8aa8a.xlsx",
+  "url": "https://www.pref.shiga.lg.jp/documents/4508/5462091_1.xlsx",
+  "page": "https://www.pref.shiga.lg.jp/ed00/4508.html",
+  "sha256": "328fcfb8aa8ab552ab442dae2be47a7b1a9c6ddadedb0b8f1877deda17ea806b",
+  "bytes": 30077,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "65fd8fc64112.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001028766.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "65fd8fc641125d579b14135ce255f1564cd7be8214d0261ae1da36286ef67072",
+  "bytes": 81920,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f1a576b6a665.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000738408.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "f1a576b6a665d527019795dfe59ea899ec6351e6a459ecd572afc51c3e70039f",
+  "bytes": 81408,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0eb0abc4ceb7.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000738409.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "0eb0abc4ceb743c37e3fce386deee74fbda0b80deb320b8465a75ef31d115b82",
+  "bytes": 47104,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "732804c2ba8e.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000738410.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "732804c2ba8e24988ef7a84b7e1c5a7bb7c50ede9a69025d6d92572d76622e7d",
+  "bytes": 59904,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f9e4b83cfa11.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000738411.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "f9e4b83cfa110c7c6eb57db9ec728e80cb09e4f94e3307e7f667d069b0dad2a9",
+  "bytes": 42496,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4a734bc04a43.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000738413.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "4a734bc04a4302689e62181bc9caa0c5f22b58e108b9bd271ed2df4f31b26dd4",
+  "bytes": 50176,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bda3990c7563.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000738414.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "bda3990c7563146f1276dcfe87bc7b53b30c21995a1c9145a247d27e1a2116db",
+  "bytes": 50176,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "48f656f91874.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000738415.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "48f656f918740a120b188d51164f83e86c27a01486fe1b5ee9026c6ec84a357b",
+  "bytes": 50176,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bb8bb02f86c3.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000738419.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "bb8bb02f86c327e843b7d523849a08c66d6fafe08ac325db5d45c75f3f8cecad",
+  "bytes": 49152,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "20a0704cae17.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000838781.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "20a0704cae17e87e069d0e0a77d20dc481462743fd5f040a4025c122edaa1122",
+  "bytes": 54617,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3394879f98ae.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000838783.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "3394879f98ae8a2351c1fc50c954ef129b43ee0860c4135f965e9493bd69a10b",
+  "bytes": 48128,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2871e1493027.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000838784.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "2871e1493027538ce9b19629784eab46a07ee67a66b04a925f8fff7f3de1a402",
+  "bytes": 54272,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "99d3c64abd49.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/000838785.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "99d3c64abd4995bc9b51c84f4aa6f794ed50b87b04efe092bec73cb3b9afb401",
+  "bytes": 40448,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "66fe660951f5.docx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001028771.docx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_00038.html",
+  "sha256": "66fe660951f50800b85c904fcf8115fa5acabd146f472f6287fcdd36ca502b1c",
+  "bytes": 23623,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a0ed7d119990.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001233078.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01642.html",
+  "sha256": "a0ed7d119990a8eae984252a267fc94e5d68ec3844f9f323df565e6de1718960",
+  "bytes": 9193,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "87c3c4a02fbc.doc",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001168083.doc",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01642.html",
+  "sha256": "87c3c4a02fbc1fd0d0593d93fccc36e99c844411d2363a90a5230dd7225337f1",
+  "bytes": 41472,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "cc660f42833a.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001001584.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01642.html",
+  "sha256": "cc660f42833ac994c408760d590b5c0bdb6ca6d70506a0cc6fabb2dc89ec3135",
+  "bytes": 19227,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d4cd93c20141.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001168084.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01642.html",
+  "sha256": "d4cd93c2014162e2a79e1c5918d2d6f289253d26d69afb0e27eff1b36cc22c8f",
+  "bytes": 17019,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "109fb6b04bd9.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001198307.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/16800558_00002.html",
+  "sha256": "109fb6b04bd9fddfee5185543f0e3ef8ad9d4b420823c192250f4ed4ad5aa6c1",
+  "bytes": 353360,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5bef9a4be6ed.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001198308.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/16800558_00002.html",
+  "sha256": "5bef9a4be6edf63ce4a59d89d04587cc59fc04d527bdb9a2cc55f9f28bebeba1",
+  "bytes": 358458,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "66ab050be8f5.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001198310.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/16800558_00002.html",
+  "sha256": "66ab050be8f5fe95e1151fade8bf24ef49ef286038148642db9795511f464f33",
+  "bytes": 2282458,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "86d48fb6616a.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001196695.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/16800558_00002.html",
+  "sha256": "86d48fb6616a2a7a95ce1f40dcef8e3427a5d601bee0dec69561af5c00bab1c2",
+  "bytes": 24350,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7afa3b35bb13.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001196696.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/16800558_00002.html",
+  "sha256": "7afa3b35bb1303828f050dc5a07d0e611d8638cfc4d2012aa6f316f424d1e8a2",
+  "bytes": 27670,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "eb9f7246c89a.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231060.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/16800558_00002.html",
+  "sha256": "eb9f7246c89a67fb0a1a6a70c0b8cdeafa61488889df10dd85337cdd5d439f0c",
+  "bytes": 298295,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "17ff1df50576.xls",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001232070.xls",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "17ff1df5057648d02886586f03ce606aa9bd39cf8ab4a3e071f5faf639972aab",
+  "bytes": 35328,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9731700e1240.xls",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001232063.xls",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "9731700e1240f770662d0327bf5b6936e57f49b9dcf0233dd9e4ec45a5eceb97",
+  "bytes": 37888,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "909f287883dd.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231263.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "909f287883ddbe8791065bead1479e60750ccae5573d3e84a9ba6df3a160efa1",
+  "bytes": 15084,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c185ac0c7e09.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231264.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "c185ac0c7e09fd53c814f78e91d48a3c9f5333fe47135280ba015f5e80c75f72",
+  "bytes": 15079,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "71325f5d67a3.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231265.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "71325f5d67a366e387fd73e059e28377251cdaf5cf403e9f7a7dad2a63836312",
+  "bytes": 15097,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a7eff7239ad4.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231266.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "a7eff7239ad4fa66ff5855d848f802d922aa6c8795f9129f0ef03f9acc29f33e",
+  "bytes": 16996,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e0c18328bf0f.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231267.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "e0c18328bf0f1a181be760d4ddc309705f2d4c3abde7c5f5529c0b50d05888eb",
+  "bytes": 14679,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b28f64942115.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231268.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "b28f6494211550f4df80cde5a3a53bbbc609cce21bd137cecaf855560c7ace0c",
+  "bytes": 14750,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1e3e50320fac.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231293.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "1e3e50320fac024b8d372f890bbafbf5518b1d3d7ccfeeecf755a7bbd9642dc0",
+  "bytes": 16646,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6f5a29a54a65.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231294.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "6f5a29a54a65cb50b603fb23adff6bbdc80a65b3f04fcc0a279a55fba431a0c7",
+  "bytes": 14745,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6caa936030bb.xlsx",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001231295.xlsx",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "6caa936030bb2090173f67116411715af913d26e80d3c79fc7be3bd982663915",
+  "bytes": 16755,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4f7ae74bd494.xls",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001192182.xls",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "4f7ae74bd4942bc91d148fd2168a2d1cadcdddd3ace3308c4a481f4c808d064d",
+  "bytes": 40448,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "10d3220c8a3a.xls",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001194857.xls",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "10d3220c8a3a23f36cde2e6e32f9eedb4963174ca7de63355d237d679db29ff2",
+  "bytes": 40448,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "980d474873f1.xls",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001200586.xls",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "980d474873f17c41ea99438af21c44e7af8976a92635221f6ca58d2002b1a9ae",
+  "bytes": 40448,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "280eeacbc025.xls",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001214387.xls",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "280eeacbc025829adf4c4b85e6da5b6c934a4416fa4507886bf1d51a34144387",
+  "bytes": 37376,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6f4ffd0d3453.xls",
+  "url": "https://www.city.kitakyushu.lg.jp/files/001214397.xls",
+  "page": "https://www.city.kitakyushu.lg.jp/contents/924_01118.html",
+  "sha256": "6f4ffd0d345344d33bab14e9d1fb733a25299f434fb3e7a59b15da233df7b14b",
+  "bytes": 40448,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "601b454ae18a.xls",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoshiki00.xls",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "601b454ae18a0a1cf1f3c9c5e308071533df94e5773f5a7a54570e9d84d0891a",
+  "bytes": 32768,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "53b8e08db82b.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki1.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "53b8e08db82bea29f82afef88816793aa7c39ce2d77fd920dce24b0121ef3e49",
+  "bytes": 24935,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d69c497857a0.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki2.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "d69c497857a058b0569eccf5a11b4d8de10a7b3e155609480b7902e076f4e719",
+  "bytes": 26224,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "042013a70940.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki3.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "042013a70940f160ef644def08a3f799f6f42060e91eb7bcfb3d0bcf8f7ab039",
+  "bytes": 25280,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0f2763c870dd.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki4.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "0f2763c870dd4dd28cec7dfca016949fd73fab9ff476438beba85202f4cfa692",
+  "bytes": 46654,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "270ca9388072.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki5.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "270ca93880723a0d6e2ae484813bd22044cb2680fc7cacb621b9d1901a457cfd",
+  "bytes": 25211,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "eb4f25844669.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki6.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "eb4f2584466900a49e462d8f1d822b15daa423ec35ef18f7114e38d5c6400f5c",
+  "bytes": 23376,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8f6b8def5950.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki7.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "8f6b8def5950411c475da2ff9c53748c9ae4f535f2b9bc76b58ccbbac0350f34",
+  "bytes": 24709,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "993bca20a921.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki8.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "993bca20a9216df19549a00dc4270fab624d1d891b562dce62169b57bdca35f9",
+  "bytes": 26916,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e5008ce54093.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki9.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "e5008ce5409328e87af0d18ae96f6bb5e2f77172ef86c3b14ec2b449615fdc5a",
+  "bytes": 25281,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1b602b9dd0e3.xlsx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki10no1.xlsx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "1b602b9dd0e3bd98ea02fc51a6b294eb45d94c9158636fa6b79c8e94ee273dd6",
+  "bytes": 13327,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b7b9480f7ae2.xlsx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki10no2.xlsx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "b7b9480f7ae2bfeeba0ba27c9c21ac3a0923857e412c56651e3f02d14c8f37dd",
+  "bytes": 13930,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d49e92fccecd.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11570/yoghiki11.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikoboyoshiki.html",
+  "sha256": "d49e92fccecdb2425945edb3b31a6128dc977bf1c3b363ea1acd01b1fec04e39",
+  "bytes": 26239,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d7dc5bd3d801.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11569/kobosettitosisin.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikobohaihusiryo.html",
+  "sha256": "d7dc5bd3d801af5e6c20f7676a96fd2ccd0779cf45e037ca87eb58d1fea076ff",
+  "bytes": 332114,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "10e96abf1815.pptx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11569/kobotaisyohanizu.pptx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikobohaihusiryo.html",
+  "sha256": "10e96abf1815921bacaa2e5c25240058a52bc6125d2fed380297a9ce7b0b08bd",
+  "bytes": 1475237,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3d44948f3619.xlsx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11569/raiensyasuriyosyasu.xlsx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikobohaihusiryo.html",
+  "sha256": "3d44948f36191ddc76732730ca24ac108bd390b1ec3864455dd72af8f7182f45",
+  "bytes": 24507,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bd78d0192757.doc",
+  "url": "https://www.pref.osaka.lg.jp/documents/11569/kyoteisyoan.doc",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikobohaihusiryo.html",
+  "sha256": "bd78d01927571c9024a2cd7a60b851c8f867cf1324fe1a487fbd5e5f30a2e5b4",
+  "bytes": 145408,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ace5bb244da0.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11569/kanriyoryoan.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikobohaihusiryo.html",
+  "sha256": "ace5bb244da032fae9dec0cab19bf177a820b0a4b19c6b0549483eac6be7680c",
+  "bytes": 993389,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1605cbec9845.doc",
+  "url": "https://www.pref.osaka.lg.jp/documents/11569/sumiyoshi-manual.doc",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikobohaihusiryo.html",
+  "sha256": "1605cbec984548d3e3737e0cd06f5d022226fdf9e56baa40fbdc911d8ce5ddac",
+  "bytes": 457728,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "21886dc3dbcb.pptx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11569/sumiyoshikoennogoiyo.pptx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/pfikobohaihusiryo.html",
+  "sha256": "21886dc3dbcb81dba494fce6eb4869c4a17bba876e3bdf28ff17f397852f601c",
+  "bytes": 8112558,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d0f5817dd465.xlsx",
+  "url": "https://www.pref.osaka.lg.jp/documents/11571/shitugikaito20.xlsx",
+  "page": "https://www.pref.osaka.lg.jp/o130140/koen/shiteikanri/sumiyoshippfikaito.html",
+  "sha256": "d0f5817dd465010aba32763a9d36103b8ba1657c48a8106aebcda9b996c0ca5b",
+  "bytes": 33402,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "085f3ec8628f.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/141353/koutuusiboujikotahatukeihou.docx",
+  "page": "https://www.pref.osaka.lg.jp/o130080/kotsukeikaku/annzenntaisaku/r8koutuusiboujikotahatukeihou.html",
+  "sha256": "085f3ec8628faef6acff731712fa02509809e883b2505f71b08e951f3107bafc",
+  "bytes": 22948,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "76afd1c1b656.doc",
+  "url": "https://www.pref.osaka.lg.jp/documents/141353/kinnkyuutaisakuyouryou_2.doc",
+  "page": "https://www.pref.osaka.lg.jp/o130080/kotsukeikaku/annzenntaisaku/r8koutuusiboujikotahatukeihou.html",
+  "sha256": "76afd1c1b65633ed68cc425c00545cea409c3a86418f7dc5b6d3cd19fe12ac6f",
+  "bytes": 39936,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6bbd5fe559d2.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/2434/umekita2ki_hoshin_1.docx",
+  "page": "https://www.pref.osaka.lg.jp/o140030/daitoshimachi/umekita2ki/index.html",
+  "sha256": "6bbd5fe559d2d152bd90b417f5875edcca5971ed94a2516df4f3b954962b04ae",
+  "bytes": 726107,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2242f3d39388.doc",
+  "url": "https://www.pref.osaka.lg.jp/documents/2434/umekita2ki_hoshin_gaiyou_1.doc",
+  "page": "https://www.pref.osaka.lg.jp/o140030/daitoshimachi/umekita2ki/index.html",
+  "sha256": "2242f3d39388685750af5ed56814eff370dd85b4e968ea578509a35922038477",
+  "bytes": 1268224,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "07bf90e52968.pptx",
+  "url": "https://www.pref.osaka.lg.jp/documents/12984/osaka20sdgs20vision~20230409.pptx",
+  "page": "https://www.pref.osaka.lg.jp/o020050/kikaku_keikaku/sdgs/index.html",
+  "sha256": "07bf90e52968b7c4bf977512c111c68fe21de8513bf539813b4268a4a1638ab1",
+  "bytes": 4181361,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bda5213fe058.pptx",
+  "url": "https://www.pref.osaka.lg.jp/documents/12984/sankou.pptx",
+  "page": "https://www.pref.osaka.lg.jp/o020050/kikaku_keikaku/sdgs/index.html",
+  "sha256": "bda5213fe0587a7d1db76652008ca865ced31bf24ad12b723a3bf868764dc32d",
+  "bytes": 2954733,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3fdd8c781fb9.docx",
+  "url": "https://www.pref.osaka.lg.jp/documents/12984/vision.docx",
+  "page": "https://www.pref.osaka.lg.jp/o020050/kikaku_keikaku/sdgs/index.html",
+  "sha256": "3fdd8c781fb9ace17efe3cb7bbf86ad6aeae2b8470739089827c1d0265305b4a",
+  "bytes": 559609,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d26115ea2f0a.doc",
+  "url": "https://www.pref.osaka.lg.jp/documents/14728/youkou.doc",
+  "page": "https://www.pref.osaka.lg.jp/o070050/koho/ba_kokoku/index.html",
+  "sha256": "d26115ea2f0a56124dddfac65a5876d29d753b7e481363557b81dc5325c4c682",
+  "bytes": 35328,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f0a69028f0d9.doc",
+  "url": "https://www.pref.osaka.lg.jp/documents/14728/koukoku-keisaikizyun.doc",
+  "page": "https://www.pref.osaka.lg.jp/o070050/koho/ba_kokoku/index.html",
+  "sha256": "f0a69028f0d989574948cbaf19127afd845359b20f371830da0ad45ae076fc2c",
+  "bytes": 34816,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d54071b47872.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/keisihinissikiR80701.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "d54071b478720eb41764fe3ed5fef5b1d42f8b9919edc75808c73015d7483326",
+  "bytes": 453467,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b41d4e870596.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/01_sinseisyo20001.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "b41d4e8705963ae7e1933cbb318764ddf59685ba6e3378cc6f2af982a2d1bb6a",
+  "bytes": 123835,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b82ccd811579.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/bessi1.xls",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "b82ccd81157908e757b1352005fe48f562e6d2d9abe3deea0f152a3852ac302e",
+  "bytes": 62464,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7d94549acb74.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/sonotasyakaiseiR0807.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "7d94549acb74d036733d2c4ea17254f737b9e9549eb8f9b8de5cf2e0a93a6880",
+  "bytes": 102914,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8031b5218345.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/kikaitousetsubityousyoR8.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "8031b521834559d4b7081a049f1ebbb01e4985364bb1e303a0a84fa8bb402366",
+  "bytes": 21194,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ca7e970b6774.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/06_gijutusyokuinmeibo20005.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "ca7e970b6774ecd37bc3f6576791ffa1d40e27532c73525849fca546e5512970",
+  "bytes": 64073,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1abea00a8d04.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/Book1.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "1abea00a8d04cfd74c2b09539b912f0261007cbca8da1ba607d83f3aa028a6a4",
+  "bytes": 16953,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d8021442391f.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/(yousiki4gou)CPD.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "d8021442391fc00624180657e9f25588626e09ec0d3bacaf7e2ca65d67428f54",
+  "bytes": 9677,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c5c2603f1762.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/(yousiki5gou)ginousyameibo.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "c5c2603f1762acc424f56fc4f41f2e6f58919dc04305ebd396f07115e6520e8a",
+  "bytes": 10178,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bc8a9425b253.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/09_koujikeirekisyo.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "bc8a9425b253f48b5c8b72014dd7ec17378142e890b392d24fa08b65b75b01f1",
+  "bytes": 46225,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3ee781055595.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/zaimu_hojin.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "3ee781055595ec00ddfad151db3bfd4491e65aa4300b4dd0b5249e9b11a3b417",
+  "bytes": 142595,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7ac6aaf5fb28.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/zaim_kojin.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "7ac6aaf5fb28377aef83ec536e30c23b1844d8e85ac7f03026d1bed729647b24",
+  "bytes": 171402,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d13a58102463.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/kabunushishihon.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "d13a58102463364f10e876d462886f7252f54f1f492cb2f273ff67e7b8faaf09",
+  "bytes": 171279,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2c7234ac6c20.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/chuuki.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "2c7234ac6c202eef16a1db739292aab312b17536991bb2750f1aaeaf69c4929b",
+  "bytes": 171267,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "eea9b31e84a2.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/fuzokumeisaihyou.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "eea9b31e84a2cbc0830d6ad2b60cc78e4b2f135228c6572f790913ca0258428c",
+  "bytes": 171535,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f9296e4dd8dd.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/kengyoujigyou.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "f9296e4dd8dd1f9255fb01f23dc516900afab88be9f517150a889274ec59d194",
+  "bytes": 171350,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ac6554f524bd.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/tesuuryouharituke.xls",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "ac6554f524bdc425bcd6ad2ac8f14b5690c740f1542d4d34dfe33aaf0e8b9496",
+  "bytes": 17408,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d9d764b43bf4.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/koujishuruibetufuhyou.xls",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "d9d764b43bf4767156df108fe650187f42fade30f01eab71d6c8f41f95f1f489",
+  "bytes": 18944,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5358a5c4a49f.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/CCUSdoui.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "5358a5c4a49fbfcb95679102fac21476530d2eff0e31dd1f7071662aa7a25f03",
+  "bytes": 18578,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "604c0a5d5b75.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/91048/jisyusengen.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/32988.htm",
+  "sha256": "604c0a5d5b758cad6786837347beb8c92e4e88dca731b147af0769f9a009e71e",
+  "bytes": 17849,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7a13acfed43a.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/106666/20240118_kaitaiyoushiki.xls",
+  "page": "https://www.pref.tottori.lg.jp/28184.htm",
+  "sha256": "7a13acfed43ac44ae4e3231e3e0cb09edf3b8ebf1a896f9246ceafb9d3bc04c8",
+  "bytes": 97280,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6940a2250ca7.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/106666/kaitaikouzigyou.xls",
+  "page": "https://www.pref.tottori.lg.jp/28184.htm",
+  "sha256": "6940a2250ca760db79ceb39adc795564b02351ba2e5b6781ca868c6a7a7250f7",
+  "bytes": 108544,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "57628258b1f9.doc",
+  "url": "https://www.pref.tottori.lg.jp/secure/106666/haigyoutodoke.doc",
+  "page": "https://www.pref.tottori.lg.jp/28184.htm",
+  "sha256": "57628258b1f99d242ce4228c84144070dae7797d2e6c4c27e108407ece037b97",
+  "bytes": 24576,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e91db6ba6046.xlsx",
+  "url": "https://www.pref.tottori.lg.jp/secure/106668/20240118_joukasouyoushiki.xlsx",
+  "page": "https://www.pref.tottori.lg.jp/28184.htm",
+  "sha256": "e91db6ba6046764f99f3bebf6795c2c3e1cce44ad044e3d65cf98cb7fb5d33c3",
+  "bytes": 72058,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "57fd95f4af11.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/106668/20240118_tokujyoukasouyoushiki.xls",
+  "page": "https://www.pref.tottori.lg.jp/28184.htm",
+  "sha256": "57fd95f4af11f9b86011322b67d8276377520f513fdb2f829e4bef6388e0b5f8",
+  "bytes": 57856,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8e72e17a8cd5.doc",
+  "url": "https://www.pref.tottori.lg.jp/secure/1008237/sinseisyo.doc",
+  "page": "https://www.pref.tottori.lg.jp/28184.htm",
+  "sha256": "8e72e17a8cd50347ccd6a5ea506dd6996f56f83955b13a0d683aa35fe6e6c8f9",
+  "bytes": 83456,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "52fcc0c7a313.docx",
+  "url": "https://www.pref.tottori.lg.jp/secure/1115674/R08youshikisyuu.docx",
+  "page": "https://www.pref.tottori.lg.jp/45149.htm",
+  "sha256": "52fcc0c7a313c01db86b9797403e0dabc6073228b26bc445bdb65c2779f73e6e",
+  "bytes": 31050,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "433f0c9641ff.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/1115674/R08shijikyougi.xls",
+  "page": "https://www.pref.tottori.lg.jp/45149.htm",
+  "sha256": "433f0c9641ff0bafe0534a7471f6d81b08c8f52cd65b5d14f6e9a9804f6b3af3",
+  "bytes": 34304,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "dff9617efb2d.doc",
+  "url": "https://www.pref.tottori.lg.jp/secure/1115674/R8utiawasekiroku.doc",
+  "page": "https://www.pref.tottori.lg.jp/45149.htm",
+  "sha256": "dff9617efb2d0fcab4ab3901a0a7466291f5786527b7d02c4d78a71c5cbe533b",
+  "bytes": 37376,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "58594ac8d2f8.docx",
+  "url": "https://www.pref.tottori.lg.jp/secure/1115674/yousiki.docx",
+  "page": "https://www.pref.tottori.lg.jp/45149.htm",
+  "sha256": "58594ac8d2f8fe93bb1f0b30bbffc9d5ddb77746ff62a79fcea7fcea12e98ea9",
+  "bytes": 29179,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3c4ff534b404.doc",
+  "url": "https://www.pref.tottori.lg.jp/secure/1115674/sijikyougi.doc",
+  "page": "https://www.pref.tottori.lg.jp/45149.htm",
+  "sha256": "3c4ff534b404e88ef54ea757e996d5ae9685f5ac14af547de12c55e14b37f273",
+  "bytes": 43008,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "28fce3f27520.doc",
+  "url": "https://www.pref.tottori.lg.jp/secure/1115674/utiawasekiroku.doc",
+  "page": "https://www.pref.tottori.lg.jp/45149.htm",
+  "sha256": "28fce3f275203297f572f36af2577d514b54d16ffc7b1b5a91f5e61154c92ac8",
+  "bytes": 33792,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "62e442427a09.docx",
+  "url": "https://www.pref.tottori.lg.jp/secure/1101134/2026kensayoukouyousiki.docx",
+  "page": "https://www.pref.tottori.lg.jp/117312.htm",
+  "sha256": "62e442427a0901be0a9a90d9e25166c0cab537b3ca478460b5d0c62573a87657",
+  "bytes": 24573,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4a0a2310572b.docx",
+  "url": "https://www.pref.tottori.lg.jp/secure/1384121/R08shounin.docx",
+  "page": "https://www.pref.tottori.lg.jp/32169.htm",
+  "sha256": "4a0a2310572b56262cd4e7775663f21b18df13eb6c241220e37738ccfada0df5",
+  "bytes": 15184,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9383e58e5e43.docx",
+  "url": "https://www.pref.tottori.lg.jp/secure/90324/nyuusatusho.docx",
+  "page": "https://www.pref.tottori.lg.jp/32169.htm",
+  "sha256": "9383e58e5e43d2235a3c5cecff3b352a98646d92fb1e2a970a6eb09937bb292e",
+  "bytes": 17268,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2465cd575ed8.doc",
+  "url": "https://www.pref.tottori.lg.jp/secure/90172/190312_sinbunya_yousiki1-8.doc",
+  "page": "https://www.pref.tottori.lg.jp/32171.htm",
+  "sha256": "2465cd575ed8bf39953fcaafdb77387465fbd44b4db60093c23288f747fd77ab",
+  "bytes": 107520,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5f7981dbc286.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/90172/yousiki3.xls",
+  "page": "https://www.pref.tottori.lg.jp/32171.htm",
+  "sha256": "5f7981dbc286a01ac4080483214259403962453454434a1ab603369a88dbaa57",
+  "bytes": 32256,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ce98377eedb5.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/1320981/sokuryoutyousahyou.xls",
+  "page": "https://www.pref.tottori.lg.jp/32876.htm",
+  "sha256": "ce98377eedb5ebbb6a48213790586fd7b22421f6af37b4585a5b54ca99b41f64",
+  "bytes": 70144,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b5a36ab86d03.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/1320981/R5gyoutai.xls",
+  "page": "https://www.pref.tottori.lg.jp/32876.htm",
+  "sha256": "b5a36ab86d03f9757a55a15caaeef52f624841dac3ad251f83eed72bac168b15",
+  "bytes": 32256,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0cb109589694.xls",
+  "url": "https://www.pref.tottori.lg.jp/secure/1320981/sekkeityousahyou.xls",
+  "page": "https://www.pref.tottori.lg.jp/32876.htm",
+  "sha256": "0cb109589694d20daca3e3ae77c98d514010774acb9497fb0e881354c9aefa80",
+  "bytes": 69120,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a2b2c1fe4be2.doc",
+  "url": "https://www.city.shinjuku.lg.jp/content/000014221.doc",
+  "page": "https://www.city.shinjuku.lg.jp/fukushi/file07_08_00050.html",
+  "sha256": "a2b2c1fe4be27e222cf22bfd4ad45350def4febad58f5d24526d31f896919151",
+  "bytes": 38400,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "62ca400c70fc.doc",
+  "url": "https://www.city.shinjuku.lg.jp/content/000014223.doc",
+  "page": "https://www.city.shinjuku.lg.jp/fukushi/file07_08_00050.html",
+  "sha256": "62ca400c70fc4b0d6d062073a6515a5fe3f206802164a8268db85aa204b3ae1b",
+  "bytes": 48640,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "57427ef5ffb8.xlsx",
+  "url": "https://www.city.shinjuku.lg.jp/content/000014225.xlsx",
+  "page": "https://www.city.shinjuku.lg.jp/fukushi/file07_08_00050.html",
+  "sha256": "57427ef5ffb8d8e039037a8151fb1fe4047a4f4c9648462dfc4795a6a1afd25a",
+  "bytes": 32910,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "aa090c315015.xlsx",
+  "url": "https://www.city.shinjuku.lg.jp/content/000014226.xlsx",
+  "page": "https://www.city.shinjuku.lg.jp/fukushi/file07_08_00050.html",
+  "sha256": "aa090c315015267f42f376b9f3d3ecc22f517e7ae62b2b28eb85bf745c4377ce",
+  "bytes": 23456,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "54abdf1fe0c4.xlsx",
+  "url": "https://www.city.shinjuku.lg.jp/content/000014227.xlsx",
+  "page": "https://www.city.shinjuku.lg.jp/fukushi/file07_08_00050.html",
+  "sha256": "54abdf1fe0c4dba2814895fae8b607e486c2616be5184b2430915c203d219f2b",
+  "bytes": 41731,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f4f6f0c85394.xlsx",
+  "url": "https://www.city.shinjuku.lg.jp/content/000014228.xlsx",
+  "page": "https://www.city.shinjuku.lg.jp/fukushi/file07_08_00050.html",
+  "sha256": "f4f6f0c85394b3b4a76924c84a52a566a5dbf2744a35fcc340cce541243fc75f",
+  "bytes": 28368,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "14de2038ac36.xlsx",
+  "url": "https://www.city.shinjuku.lg.jp/content/000014229.xlsx",
+  "page": "https://www.city.shinjuku.lg.jp/fukushi/file07_08_00050.html",
+  "sha256": "14de2038ac36942b2e2845f6a642f0cfbf8d14c7d4605e93736a77858ebaa645",
+  "bytes": 33867,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "72688302463d.xls",
+  "url": "https://www.city.shinjuku.lg.jp/content/000014230.xls",
+  "page": "https://www.city.shinjuku.lg.jp/fukushi/file07_08_00050.html",
+  "sha256": "72688302463df90b4a8c5280ffaa82ac368ed6dc56c96cc2ff9bcc9cd4eec3d5",
+  "bytes": 29184,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "45969eaaa6c9.xls",
+  "url": "https://www.city.shinjuku.lg.jp/content/000014231.xls",
+  "page": "https://www.city.shinjuku.lg.jp/fukushi/file07_08_00050.html",
+  "sha256": "45969eaaa6c92028aad0328e6a2fca18089b655e3d6424be9f0eff7397afafae",
+  "bytes": 29696,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9be1b9615e42.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/01-1_kyougisyo_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "9be1b9615e42755d4db65fa5c7ee652896f5465cebb145a0bcd55220f84782fc",
+  "bytes": 27558,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "19f9c6806296.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/01-2_ininjyou_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "19f9c68062961cf8ff64028c49daf5e3050c290fec9d3469ca2719404ae8859d",
+  "bytes": 23004,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "444fb5169132.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/01-3_kyougisyoudaku_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "444fb516913261ddeb6699adb14690d705f464b7a0c06bfb9fb626b7e3dc7002",
+  "bytes": 17225,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3436ae45d29b.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/02-1_dourojyoseibi_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "3436ae45d29b04d3163b5ae02cf626a85c2074077f408edaa1b9def5d0258950",
+  "bytes": 20433,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6fe81f018d6e.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/02-2_dourojyoseibisyoudaku_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "6fe81f018d6e0b870d838a2452222f330ac45d4d32011b841a0d9970d2985528",
+  "bytes": 18012,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c6402aad7477.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/02-3_tochisiyousyoudaku_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "c6402aad747743049a437b6bd7b9e303ea989cacbd69e4aa3806aad0392e8071",
+  "bytes": 17872,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bc3f9f619648.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/03-1_koufusinsei_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "bc3f9f6196482c1fe5d1cf3b5a4096886e05485a284c12676a87fd741333f37e",
+  "bytes": 19181,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ea727ec509b2.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/03-2_koufusinseisyoudaku_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "ea727ec509b289f521bd813088bb288ba2cb7ca6e426fda323b9bb65d33d0a39",
+  "bytes": 17539,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c40cc1d02efa.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/03-3_kanryousinkoku_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "c40cc1d02efa40cefe30207a70f03a5221db99420ce9e7794b2bcea2382afc70",
+  "bytes": 17741,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "88712d681d21.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/03-4_hiyousinkoku_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "88712d681d21e94a64f9225cf625f30148b033267e5feb44f96269dc273feeda",
+  "bytes": 19623,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4eb8b6b175c3.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/03-6_hojyokinseikyu_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "4eb8b6b175c3a088f4e1defe0aadf7eb8977a46b520240c88e69183fea04018f",
+  "bytes": 18732,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "51aaa33c989e.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/03-7_hojyokinjyuryoininjyou_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "51aaa33c989eab706d507450e7803296446627e81e1a615e04a3e9d0d8502b68",
+  "bytes": 16460,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2dd2823ea36a.xlsx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/03-8_uchiwakesyo_sankou_20240902.xlsx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "2dd2823ea36af35149dc49ab0a4ef9cdb547196dc7d0bf0935429eee79e237c7",
+  "bytes": 13977,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "62037b8c69b6.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/04-1_jyusyohenkou_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "62037b8c69b6e76896c0c3edc3578e6d791008f0d172e79c9b8c971cbb59e23c",
+  "bytes": 15310,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "28016edbc9a3.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/04-2_torisage_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "28016edbc9a326a82981f2547c2074fc5e941a439091152347616d13ea6f7de9",
+  "bytes": 19108,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e0dd1f76713d.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/04-3_dourosoudanhyou_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "e0dd1f76713d6c2d01347f19734ae06437c3fcd235cdef208eb1587b8c6a0b11",
+  "bytes": 19292,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f07e8bb1c7c2.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/05-1_kaitori_jizencyosairai_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "f07e8bb1c7c2e061d38d0fa5e59e29c82cf177a2d79031b8fdf13f37348505bd",
+  "bytes": 20593,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "923a12556d8d.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/05-2_kaitori_jizencyosa_check_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "923a12556d8d628ad349938ff3e124cd37de72a03dfd7187927a2276ce27f348",
+  "bytes": 23455,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "125a704404a8.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/05-3_kaitori_kenkihou_checklist_20240902.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "125a704404a8332d5fd1ae1af6e073a28b6946d785c6774ec9d9d589d211d068",
+  "bytes": 18773,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ac78a4d97f7a.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/01_kyougi_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "ac78a4d97f7afe6d1d917c91302d089020543d8f5797382634f08b3f678b1d19",
+  "bytes": 24111,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8e0a6983e740.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/02_ininjyou_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "8e0a6983e74036c33ace439a5f647e5b53e259d386612c36070638c2fdc48ad5",
+  "bytes": 21351,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "17ff29918f28.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/03_kyougisyoudaku_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "17ff29918f283ff2494c9da30d92a42a54c2e00dc15037d5f33350edf7bed417",
+  "bytes": 19824,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5f27de2ffc64.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/04_dourojyouseibi_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "5f27de2ffc6450f095e03b82b33a240b5c26279ddf34d8803f5d5761a90c0868",
+  "bytes": 19059,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1b3214c311b4.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/05_dourojyoseibisyoudaku_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "1b3214c311b46db662b2a3845dc06a42850b8f6f8c0eed7427e98a9d6964314d",
+  "bytes": 20892,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "08e1d0b43512.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/06_tochisiyousyoudaku_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "08e1d0b43512a844d8f2b2d47ee605b47821c45c879a5f8f96395bf4497ebe78",
+  "bytes": 20920,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f5b56035929b.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/08_dourojyoseibikakunin_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "f5b56035929bde2e56cbb136029c07a88eb896893f7304830207f2b248f29fb9",
+  "bytes": 31379,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f6e8b4237f15.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/09_kouhusinsei_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "f6e8b4237f15cfce625a7d6e00fb49ba705b5999af9556afee0b5676c27edefd",
+  "bytes": 21720,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "556c434d0f8d.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/10_kouhusinseisyoudaku_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "556c434d0f8dacaf55254e65f16e7deffae9cd3321d90d0f9ae8e6e93a0e74da",
+  "bytes": 20293,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bbc49c5d4ff6.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/12_kanryousinkoku_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "bbc49c5d4ff612bbe9a8c91df8feb1ca1186288917d0eaba452e328c98ca5eaf",
+  "bytes": 20148,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "58aa221eb348.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/13_hiyousinkoku_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "58aa221eb348ac8eddc10a8b2bf2933959607939e03ae41ac42eaf28a422e10c",
+  "bytes": 21551,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "09f2d63b710e.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/14_hojyokinseikyu_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "09f2d63b710e4243aa694435f73fd7d664b983272eea87fff2ffb65ad74587c3",
+  "bytes": 20682,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6c9f9e6254fa.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/15_hojyokinzuryoininjyou_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "6c9f9e6254fab1f34d6072605bcf6eddb2818cabd5ed8b101f18e4c27ff2c820",
+  "bytes": 19203,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "366b1d8cf5d7.xlsx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/16_uchiwakesyo_sankou_20230411.xlsx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "366b1d8cf5d7f6677fdcf65bd4e016facf7201bdfdf1e6a3662de4e058fa96d1",
+  "bytes": 14244,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3bccc794b873.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/17_jyusyohenkou_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "3bccc794b8734e4695605f0fabd13e95a6b918e212282b989c237df705be04e5",
+  "bytes": 14267,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c46eaf2926f9.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/18_torisage_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "c46eaf2926f9f6184a8b74417a9a398c8e5c2c1d6a3cae84552bd9ac143ddcf1",
+  "bytes": 21831,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "aa77354d3aec.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/20_dourosoudanhyou_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "aa77354d3aec9f7988b54a41d636225ead20f913973d1df47923ea50812155c0",
+  "bytes": 20816,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "185f9fe686c9.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/21_inkanhenkou_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "185f9fe686c9f5ec5a5e9c46eafd2d823db5ae8a1b93f28073548713e32c6cb0",
+  "bytes": 20026,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b3dea5fb4161.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/22_kaitori_jizencyosairai_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "b3dea5fb4161c6bd3321e15ca1da5a764108a36edeca1ee7567fb52a96431c25",
+  "bytes": 19435,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6d9e85e1640d.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/23_kaitori_jizencyosachecklist_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "6d9e85e1640d246406e18d1311e8cfda5ccb3fdd88711e19a5b9f94f09f6168a",
+  "bytes": 21877,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "287b88a6e6ad.docx",
+  "url": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.files/24_kaitori_kenkihouchecklist_20230210.docx",
+  "page": "https://www.city.yokohama.lg.jp/business/bunyabetsu/kenchiku/bosai/kyoai/tetsuduki/youshiki.html",
+  "sha256": "287b88a6e6adb73dd567230ab8465951760ce884667af3628ec24f2741ae1d31",
+  "bytes": 17572,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "30718ba8e233.docx",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/544846.docx",
+  "page": "https://www.pref.hiroshima.lg.jp/site/roudouiinkai/wn500731.html",
+  "sha256": "30718ba8e2339c6bf9d9c00885d8b36b7d72dcbd8f8e5fd0670761558bfd89c5",
+  "bytes": 28205,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "eec83a961a33.doc",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/544855.doc",
+  "page": "https://www.pref.hiroshima.lg.jp/site/roudouiinkai/wn500731.html",
+  "sha256": "eec83a961a33a1d5a6b5831433987ddbda4d8d1aa6194359c0b3b8595b0db238",
+  "bytes": 72704,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5f7d49332493.doc",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/546282.doc",
+  "page": "https://www.pref.hiroshima.lg.jp/site/roudouiinkai/wn500731.html",
+  "sha256": "5f7d49332493dca2f73af4bfe4787ab001c888c9f7023e2b2853555363dd74a6",
+  "bytes": 29184,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0d2686f99c6e.doc",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/546286.doc",
+  "page": "https://www.pref.hiroshima.lg.jp/site/roudouiinkai/wn500731.html",
+  "sha256": "0d2686f99c6efbf3d6cea6bcbaab3204efd0adec06e69d610a4d5f0cc601d7ae",
+  "bytes": 28672,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "13b0fc45d960.doc",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/546291.doc",
+  "page": "https://www.pref.hiroshima.lg.jp/site/roudouiinkai/wn500731.html",
+  "sha256": "13b0fc45d960efae7ec21d7bf32f1a55175789d56a4ef0a043c333e76f98e864",
+  "bytes": 36864,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d5637d3179dc.doc",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/546362.doc",
+  "page": "https://www.pref.hiroshima.lg.jp/site/roudouiinkai/wn500731.html",
+  "sha256": "d5637d3179dcddba6682cbcf02d99183aaed722332c95d74da2ae498aaa7877a",
+  "bytes": 28672,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b6ceab7c198f.doc",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/546316.doc",
+  "page": "https://www.pref.hiroshima.lg.jp/site/roudouiinkai/wn500731.html",
+  "sha256": "b6ceab7c198f0891e8b68e37a433a71b47c60487c2ce3f67bc03304d65b5aac1",
+  "bytes": 28672,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1c0e2041bc4c.docx",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/430549.docx",
+  "page": "https://www.pref.hiroshima.lg.jp/site/roudouiinkai/wn500708.html",
+  "sha256": "1c0e2041bc4c11cac525c082e0596de94a610c1635ff76413dae6c73cdd65bca",
+  "bytes": 16912,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c7bbcb36ef86.docx",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/650673.docx",
+  "page": "https://www.pref.hiroshima.lg.jp/site/nyusatsukeiyaku/denshiiriguchi.html",
+  "sha256": "c7bbcb36ef8640f68aa6c4851e8ed88c2a4fe8101fb9d7f29b288d63ba164fba",
+  "bytes": 32941,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b9c62791982a.docx",
+  "url": "https://www.pref.hiroshima.lg.jp/uploaded/attachment/463611.docx",
+  "page": "https://www.pref.hiroshima.lg.jp/site/nyusatsukeiyaku/denshiiriguchi.html",
+  "sha256": "b9c62791982ade19742eb44dfeb84856a805ece143b51bac8af9cd8922d7f871",
+  "bytes": 30097,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1140a7b0a990.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/01_.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "1140a7b0a990a90b60997f202362cad9b4974cb727f0b05d17eaf5ba06aa0438",
+  "bytes": 95164,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4b4550c2e01b.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/2.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "4b4550c2e01bf39b357c17eb87030dd8df11abad56b5881ca9b02e39a744f6ba",
+  "bytes": 39035,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "fd8074af65d4.doc",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/03_1.doc",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "fd8074af65d46102b3c0dec7da2581904b5845b9760ae58eafebc7f9a4f54eb0",
+  "bytes": 95232,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4d91930729e1.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/04.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "4d91930729e1e8c82ce05473f58ecbb9df85d4a18506728ff69521de94f5fe2c",
+  "bytes": 15990,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ae4475bb571b.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/05.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "ae4475bb571b4e2eaf393a3e17af0de0b59dcb07bb6c5804755561fd3b3a0e21",
+  "bytes": 31874,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f0ea57afd414.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/06.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "f0ea57afd414363db322a2e03e8d1ab20052b148928eeac4799840b0961f0563",
+  "bytes": 25670,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "83dcdc541a5c.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/7.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "83dcdc541a5cb1d080cfe33c42ebdc8db84b4ef70d3b0953cbb9197edac98c2a",
+  "bytes": 233568,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "27a454b2b45d.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/08.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "27a454b2b45df4393388a3396d0813ebe13cbe6ed3547e3caf6d7161895ed915",
+  "bytes": 15889,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ab071a207ef7.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/09.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "ab071a207ef7d93337dc8f54dea873c26f3c1d934997383daa7ba9a6f8d83160",
+  "bytes": 16010,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c93352817c71.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/10.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "c93352817c71495aa96ecfb242883d63b969e94d8bc2eb4b066c82cfc42eb2ac",
+  "bytes": 185619,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ed92d1967e60.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/11_2.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "ed92d1967e6058f600c6e65cb16562f7a53736c1d6da47c3334c2366e63c9254",
+  "bytes": 60451,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "73d094a3d56b.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/12_1.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "73d094a3d56b249e898a18382af846dfec8deff26d51ecb462739a5dcc3e9f0b",
+  "bytes": 155619,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9ba797df7fe8.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/13.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "9ba797df7fe8fa1604413fca7fdf605f479a4e336c7e3417136d49c28ee74fa8",
+  "bytes": 16933,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "73bf04b36a3d.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/14.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "73bf04b36a3d8d19361715bda9aafd39963d98d57154c5fe39e118edb22165b9",
+  "bytes": 57218,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "adc85c995224.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/15_1.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "adc85c9952242184596f3894b68bcd4b5e7947d73f97b1808eec0f76fe0476a4",
+  "bytes": 41070,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e864cbbdcbd5.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/16.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "e864cbbdcbd5dea36bb2922306772eeccde5428931a49974de1ca5fcc58986a4",
+  "bytes": 16874,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d41ceb861924.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/17.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "d41ceb86192406e007734fd25dd9abf0c6e24844f0310168425e55cbd0c03e04",
+  "bytes": 15999,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a3a80167b109.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/18.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "a3a80167b10967b96f4d67f23881090e5d55dc5a950e67b8427c20fd128db4d6",
+  "bytes": 36696,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "cc9d853e5175.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/19.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "cc9d853e51753888e365df4e7f73ba9ce857eb7d57c2481fe8972b0db13d7aa9",
+  "bytes": 25827,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c75141b5e3a9.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/20_1.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "c75141b5e3a98d91cb09f5abb7f3f64a159cb27711d28841baf4657917584a7b",
+  "bytes": 90080,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6303eff18297.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/documents/21.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/shisetsu/teikihoukokuyousiki.html",
+  "sha256": "6303eff182976d43165bd6a51699dacc1f55c6983f711e72214df3f90c45d560",
+  "bytes": 13781,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e26fe9b68762.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/machizukuri/kaihatsu/kenchiku/teki/documents/henkoutodoke.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/machizukuri/kaihatsu/kenchiku/teki/index.html",
+  "sha256": "e26fe9b687629700514d6c002af43778632bc7b794e26f0f2bb42db1e6a0ba74",
+  "bytes": 21912,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c239774489b2.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/machizukuri/kaihatsu/kenchiku/teki/documents/saisiyouhaisitodoke.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/machizukuri/kaihatsu/kenchiku/teki/index.html",
+  "sha256": "c239774489b2ef635420a9a7dadc33101ef6eb91b44558bba983732411dcd28d",
+  "bytes": 22119,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c81967b1cc68.doc",
+  "url": "https://www.city.kagoshima.lg.jp/suido/gesuido/gesuisyori/documents/hiryoumusyoukyoutosinnseisyo.doc",
+  "page": "https://www.city.kagoshima.lg.jp/suido/gesuido/gesuisyori/satumasoirukoukokuyou.html",
+  "sha256": "c81967b1cc685389c441d5bd2bf88edd25f616604eff50211fea4e001f52ab4c",
+  "bytes": 36864,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5593de622ee6.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kenkofukushi/fukushi/hogo1/kenko/fukushi/hogo/documents/sennkoumousikomisyokourei.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kenkofukushi/fukushi/hogo1/kenko/fukushi/hogo/kourei08.html",
+  "sha256": "5593de622ee6d1ae35bed6aa07eeabafce69760f93d0dc5b24964f7efe0e7ae3",
+  "bytes": 22164,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7cd2cdffd808.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/sinseisyo.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku.html",
+  "sha256": "7cd2cdffd808347494ebf7419cc5bed8ae00c1a64744d6e163121e76ed352e24",
+  "bytes": 164501,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1f828a86c568.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/seiyakusyo.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku.html",
+  "sha256": "1f828a86c568552f576233d06ac68cc6166e76b888acb7485175b86af9a617a0",
+  "bytes": 22686,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7d3ba9be934c.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/inin.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku.html",
+  "sha256": "7d3ba9be934cfd6b84dcc6efa6646ccd898f107a54477cd83570c411327e25d7",
+  "bytes": 147862,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6a968095c9d8.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/seisou.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku.html",
+  "sha256": "6a968095c9d8ffd4e35a8f728ba73c742850b2793592b26b0dcb1b10e0f68a60",
+  "bytes": 30052,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d3c89759f704.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/byouinseisou_1.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku.html",
+  "sha256": "d3c89759f704f150d8fbf88acaf3bbaa93c01d81a88ea10f89d2c3bf9efd7ffe",
+  "bytes": 124811,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "18c2b8fb9051.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/byouingasu.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku.html",
+  "sha256": "18c2b8fb905144186a9038342f54d367d88599b6460e1663f1ffce43c1a14862",
+  "bytes": 12563,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "29c0ae230bfa.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/suidou.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku.html",
+  "sha256": "29c0ae230bfa8ccc899de3d248d59a6b103e09ad76b6a5e6a5386a621ce9ca18",
+  "bytes": 36017,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2d5d60c37cb3.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/densan.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku-tyukan.html",
+  "sha256": "2d5d60c37cb3148926bb7c24673549eb882aa3854381d4670dace68c2405b065",
+  "bytes": 131647,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "907d9123c926.docx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/13.docx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku-tyukan.html",
+  "sha256": "907d9123c926a356ce9e05103bbaa99ad9d5b0fbe3e92cdd84be6ff15068ceff",
+  "bytes": 31746,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2dbb42ce55ff.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/5.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku-tyukan.html",
+  "sha256": "2dbb42ce55ff6a1e988198b29cc240f6aec8ed9ee7c160a8998ed25f155f3117",
+  "bytes": 125503,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c3a0976592ba.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/6-9.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku-tyukan.html",
+  "sha256": "c3a0976592ba409cb654ce088d7493b928f9e73f56f6f847eb02e355b431cc79",
+  "bytes": 29560,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e60b48dbf0af.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/10-11.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku-tyukan.html",
+  "sha256": "e60b48dbf0aff0cf270496c4bf4dc70a1f4e295bb9a7c96481f2ac228e6c4060",
+  "bytes": 124832,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9bceae7bacd8.xlsx",
+  "url": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/documents/12.xlsx",
+  "page": "https://www.city.kagoshima.lg.jp/kikakuzaisei/zaisei/keiyaku/shise/nyusatsu/shikaku/gyomuitaku-tyukan.html",
+  "sha256": "9bceae7bacd8592d6598931609cbe475b9f84170975c3257e7aa28c2dac7d9a1",
+  "bytes": 12679,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "863e082c469d.docx",
+  "url": "https://www.city.kagoshima.lg.jp/anshin/documents/mousikomisyo.docx",
+  "page": "https://www.city.kagoshima.lg.jp/anshin/henou.html",
+  "sha256": "863e082c469db594f5d3ac997cb0c0727c38a0036422d48b5b35586019c4d017",
+  "bytes": 23659,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "88eaa7a116b1.xls",
+  "url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenchiku/documents/kenchiku-koji-jizenkyogi-r080401.xls",
+  "page": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenchiku/denshinouhin.html",
+  "sha256": "88eaa7a116b152cdfdd7b2ad0b9dc989c057c69bdaf3d11dcf2f175752ad0424",
+  "bytes": 92672,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bab7601adb1f.pptx",
+  "url": "https://www.soumu.go.jp/main_content/000661259.pptx",
+  "page": "https://www.soumu.go.jp/ict_seisan/index.html",
+  "sha256": "bab7601adb1fdbf363c30520e93c3c1ceca436ee3435f26788ba32af8989000e",
+  "bytes": 51659,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "eb18da47d675.doc",
+  "url": "https://www.soumu.go.jp/main_content/000630998.doc",
+  "page": "https://www.soumu.go.jp/ict_seisan/index.html",
+  "sha256": "eb18da47d6755f8025d6addd22d1ed3f07c10b0c008cdd6d0a6646710f668874",
+  "bytes": 107008,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b90718ff55e7.xlsx",
+  "url": "https://www.soumu.go.jp/main_content/000630999.xlsx",
+  "page": "https://www.soumu.go.jp/ict_seisan/index.html",
+  "sha256": "b90718ff55e724f03c63631d0d5f536f73718af3e10fa7e294a69746056514a2",
+  "bytes": 62868,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7ec77e338354.doc",
+  "url": "https://www.soumu.go.jp/main_content/000598082.doc",
+  "page": "https://www.soumu.go.jp/ict_seisan/index.html",
+  "sha256": "7ec77e338354470da1b6db08768f2089ebda8cdb798e41f5286254bac2cec0a8",
+  "bytes": 50176,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "29dc60dd5fa8.doc",
+  "url": "https://www.soumu.go.jp/main_content/000631000.doc",
+  "page": "https://www.soumu.go.jp/ict_seisan/index.html",
+  "sha256": "29dc60dd5fa8de6b62b87c00bdfe8db09989879031a75df38a56a5b87241401a",
+  "bytes": 52224,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f296ac80bd45.doc",
+  "url": "https://www.soumu.go.jp/main_content/000631265.doc",
+  "page": "https://www.soumu.go.jp/ict_seisan/index.html",
+  "sha256": "f296ac80bd45031c457ffdb5dfb05ea142bca3d5c97d9487541a88afcc327b36",
+  "bytes": 59904,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5d48cdfbd23a.xlsx",
+  "url": "https://www.soumu.go.jp/main_content/000919730.xlsx",
+  "page": "https://www.soumu.go.jp/ict_seisan/index.html",
+  "sha256": "5d48cdfbd23a2b62cd847808b3e2da98928177d5e64ab5fc20bca599e10f0b00",
+  "bytes": 54901,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6b19c6f88938.xlsx",
+  "url": "https://www.soumu.go.jp/main_content/000631008.xlsx",
+  "page": "https://www.soumu.go.jp/ict_seisan/index.html",
+  "sha256": "6b19c6f8893803e1d67bc8b433b6ec5ea8c0bab1c6544fd04f6fc8a6ce4d9588",
+  "bytes": 54891,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "485a8b478dc9.xlsx",
+  "url": "https://www.soumu.go.jp/main_content/000620328.xlsx",
+  "page": "https://www.soumu.go.jp/menu_seisaku/ictseisaku/ictriyou/bigdata.html",
+  "sha256": "485a8b478dc948187e4034d0ce39ef73bf26f75a735be9f50aa2fc6760ed68cb",
+  "bytes": 55587,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6b522233da5b.docx",
+  "url": "https://www.soumu.go.jp/main_content/000883780.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/tokuteiriyoujoho/index.html",
+  "sha256": "6b522233da5b95da0747a60ce075e5ef0694fba0a4985dd904436a0169116e8f",
+  "bytes": 18302,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b493c2edee31.docx",
+  "url": "https://www.soumu.go.jp/main_content/000883781.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/tokuteiriyoujoho/index.html",
+  "sha256": "b493c2edee3160ce054c127683b0bae7610d8531ecbb0625bd1fed6b65ef3f6d",
+  "bytes": 16847,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1b0be7bbbe30.docx",
+  "url": "https://www.soumu.go.jp/main_content/000883782.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/tokuteiriyoujoho/index.html",
+  "sha256": "1b0be7bbbe30200691d9f7bdd993a1463eaba21fc56012cf34a456c25c30ccd5",
+  "bytes": 17050,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2f72fd66bf04.docx",
+  "url": "https://www.soumu.go.jp/main_content/001076962.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/index.html",
+  "sha256": "2f72fd66bf045510c27ec02bbdc7b62fe6da5323a8c4a0cc12e5bf78d2917795",
+  "bytes": 16939,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5b9137a7be41.docx",
+  "url": "https://www.soumu.go.jp/main_content/001073867.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/index.html",
+  "sha256": "5b9137a7be41a83a234fe689e8b3504697b3552d78904c54980a12f9a9f04f60",
+  "bytes": 32702,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "911bed5d2104.docx",
+  "url": "https://www.soumu.go.jp/main_content/001073859.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/index.html",
+  "sha256": "911bed5d21049f77a6ef7cb39d0f5f69d1820ca0c322b485e67836e0e5fef838",
+  "bytes": 20758,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2b7f793a112a.docx",
+  "url": "https://www.soumu.go.jp/main_content/001073860.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/index.html",
+  "sha256": "2b7f793a112a34651ff17cadce0a0ea9747344c2804da2337ae925cf160922d4",
+  "bytes": 22235,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "93a0bb423113.docx",
+  "url": "https://www.soumu.go.jp/main_content/001073861.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/index.html",
+  "sha256": "93a0bb423113ef5a106692d71ed3c7a0a3abcf9d888bcbf4bd907711f9431e61",
+  "bytes": 23599,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "392ef2f3c62c.docx",
+  "url": "https://www.soumu.go.jp/main_content/001073862.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/index.html",
+  "sha256": "392ef2f3c62c1470c3d54c2c4cd39403199d9ce4f385d313ff2a8ffb4c0e4b46",
+  "bytes": 23209,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "746708446184.docx",
+  "url": "https://www.soumu.go.jp/main_content/001073863.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/index.html",
+  "sha256": "7467084461844e59d5fcd445fd8198121aac9e9a4dc7a1f6fcd1452c5ef26f1c",
+  "bytes": 22195,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ddf7d86c43bc.docx",
+  "url": "https://www.soumu.go.jp/main_content/000689496.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/index.html",
+  "sha256": "ddf7d86c43bc66ea0181044844214cb8a4d7557ed87b0cf1d4fa2c6c5e67810b",
+  "bytes": 120245,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "904a6b0a1d88.docx",
+  "url": "https://www.soumu.go.jp/main_content/000620773.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/tel_number/index.html",
+  "sha256": "904a6b0a1d885f70645c85edbd987bbcbac60a9ef5712777fcfc7b4e945bf3d0",
+  "bytes": 31392,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8ab9a64196dc.docx",
+  "url": "https://www.soumu.go.jp/main_content/000844547.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/denkishikaku.html",
+  "sha256": "8ab9a64196dc677238f1ccba44a508f184242ab16de37dfd1d7d8ec0aa760dfe",
+  "bytes": 48360,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5b53d20589a7.docx",
+  "url": "https://www.soumu.go.jp/main_content/000844548.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/denkishikaku.html",
+  "sha256": "5b53d20589a7b824611cf3af0bc280447dbc4f0588f40d5f414d5b6293319109",
+  "bytes": 39761,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "604225b7f2c1.docx",
+  "url": "https://www.soumu.go.jp/main_content/000844550.docx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/denkishikaku.html",
+  "sha256": "604225b7f2c18b09c82b756544b79295785b25c8e7e956cb4c3d8388553a0fa2",
+  "bytes": 54549,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "090d3cbf354a.xlsx",
+  "url": "https://www.maff.go.jp/e/attach/xls/index-1.xlsx",
+  "page": "https://www.maff.go.jp/e/index.html",
+  "sha256": "090d3cbf354a2befad8ad1c9ecbdc98d3c9a75c50fec52da27769466851ccba7",
+  "bytes": 17553,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e777471d0681.xlsx",
+  "url": "https://www.maff.go.jp/j/shokusan/syoutori/attach/xls/index-3.xlsx",
+  "page": "https://www.maff.go.jp/j/shokusan/syoutori/index.html",
+  "sha256": "e777471d068102d872bf30224f880ee5cc5430edb4a16ec015460cfdd2fe8ce1",
+  "bytes": 32681,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c8853483bbb5.docx",
+  "url": "https://www.maff.go.jp/j/shokusan/sijyo/info/attach/doc/index-19.docx",
+  "page": "https://www.maff.go.jp/j/shokusan/sijyo/info/index.html",
+  "sha256": "c8853483bbb51755e5184e09c1d3953e593f21295823662f03ffb779358bb1ad",
+  "bytes": 26180,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5aaa1a509610.docx",
+  "url": "https://www.maff.go.jp/j/shokusan/sijyo/info/attach/doc/index-23.docx",
+  "page": "https://www.maff.go.jp/j/shokusan/sijyo/info/index.html",
+  "sha256": "5aaa1a5096103444f8ca8bf8d4961a8e308783dd8f0db0715000fe1f09e96997",
+  "bytes": 63828,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0309a8356c3b.xlsx",
+  "url": "https://www.maff.go.jp/j/shokusan/sijyo/info/attach/xls/index-4.xlsx",
+  "page": "https://www.maff.go.jp/j/shokusan/sijyo/info/index.html",
+  "sha256": "0309a8356c3b01dc19e9f7793e51d52cc6899727249e825b1ffd4ef5276ca632",
+  "bytes": 200292,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "55cd3ed254e0.docx",
+  "url": "https://www.maff.go.jp/j/shokusan/sijyo/info/attach/doc/index-21.docx",
+  "page": "https://www.maff.go.jp/j/shokusan/sijyo/info/index.html",
+  "sha256": "55cd3ed254e0af523dc41195026838b0523420b7a8d71acb86640f3d80d0c32f",
+  "bytes": 16076,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0bcb713191e4.docx",
+  "url": "https://www.maff.go.jp/j/shokusan/sijyo/info/attach/doc/index-15.docx",
+  "page": "https://www.maff.go.jp/j/shokusan/sijyo/info/index.html",
+  "sha256": "0bcb713191e48d2cba088c02771200e3249d034ce982ef5732dc8aba94891640",
+  "bytes": 16959,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1cc2647f972c.docx",
+  "url": "https://www.maff.go.jp/j/shokusan/sijyo/info/attach/doc/index-20.docx",
+  "page": "https://www.maff.go.jp/j/shokusan/sijyo/info/index.html",
+  "sha256": "1cc2647f972cca715f64645f0c8fbba6cf24dee6cbe9e5194ee3817670ec4eb6",
+  "bytes": 16039,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5890fd9c7c91.docx",
+  "url": "https://www.maff.go.jp/j/shokusan/sijyo/info/attach/doc/index-17.docx",
+  "page": "https://www.maff.go.jp/j/shokusan/sijyo/info/index.html",
+  "sha256": "5890fd9c7c918f338fea7cec927de7b0a74478ae5c9f3c7b102103eb3edf7b48",
+  "bytes": 15703,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "05dbe2e0ff1e.docx",
+  "url": "https://www.maff.go.jp/j/shokusan/sijyo/info/attach/doc/index-14.docx",
+  "page": "https://www.maff.go.jp/j/shokusan/sijyo/info/index.html",
+  "sha256": "05dbe2e0ff1ee5c41a282d04bae124551e55347c1e64a10358c8d4c3c2a0e6b6",
+  "bytes": 34709,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e99e1bc0308e.xlsx",
+  "url": "https://www.maff.go.jp/j/shokusan/sijyo/info/attach/xls/index-7.xlsx",
+  "page": "https://www.maff.go.jp/j/shokusan/sijyo/info/index.html",
+  "sha256": "e99e1bc0308ead6ca0ee4f4c17a06ef4aa6cff8d0a9d4cad3ef588383592c132",
+  "bytes": 94429,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "91ad01075a33.xlsx",
+  "url": "https://www.maff.go.jp/j/syouan/seisaku/trace/attach/xls/index-3.xlsx",
+  "page": "https://www.maff.go.jp/j/syouan/seisaku/trace/index.html",
+  "sha256": "91ad01075a334c0e49bf0954666e0be7a47643166d5e9789705d09bddeac80eb",
+  "bytes": 29702,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d72dfb251ad1.xlsx",
+  "url": "https://www.maff.go.jp/j/syouan/seisaku/trace/attach/xls/index-4.xlsx",
+  "page": "https://www.maff.go.jp/j/syouan/seisaku/trace/index.html",
+  "sha256": "d72dfb251ad14d0c091bc66780108c03d7c4e2850bc2447c185bf29922158801",
+  "bytes": 30315,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b7ca3ee8a420.xlsx",
+  "url": "https://www.maff.go.jp/j/syouan/seisaku/trace/attach/xls/index-5.xlsx",
+  "page": "https://www.maff.go.jp/j/syouan/seisaku/trace/index.html",
+  "sha256": "b7ca3ee8a42020f8b966065c3540eeb522ef44492532491a895975944d45abed",
+  "bytes": 35642,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f78599e470f2.xlsx",
+  "url": "https://www.maff.go.jp/j/syouan/seisaku/trace/attach/xls/index-6.xlsx",
+  "page": "https://www.maff.go.jp/j/syouan/seisaku/trace/index.html",
+  "sha256": "f78599e470f2454fb79058c1cc057f64e5234311c6e4d115591a9470b402564b",
+  "bytes": 35548,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1d5de79caf61.xlsx",
+  "url": "https://www.maff.go.jp/j/syouan/seisaku/trace/attach/xls/index-7.xlsx",
+  "page": "https://www.maff.go.jp/j/syouan/seisaku/trace/index.html",
+  "sha256": "1d5de79caf619287f0ab9b2bed0fe0c23f0e627c544b8b053edc1fc73b275012",
+  "bytes": 35773,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e32d3818f33a.docx",
+  "url": "https://www.maff.go.jp/j/syouan/access/attach/doc/index-2.docx",
+  "page": "https://www.maff.go.jp/j/syouan/access/index.html",
+  "sha256": "e32d3818f33a297862bda97c54fe695922928ed5a49da58d143d8ee05fe6f216",
+  "bytes": 21124,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "751c37deaf87.xlsx",
+  "url": "https://www.maff.go.jp/j/syouan/access/attach/xls/index-24.xlsx",
+  "page": "https://www.maff.go.jp/j/syouan/access/index.html",
+  "sha256": "751c37deaf87368ebf18a2d98d918e3510687f676e5944f81a967609081801bb",
+  "bytes": 22955,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d4931c0a8397.xlsx",
+  "url": "https://www.maff.go.jp/j/syouan/access/attach/xls/index-40.xlsx",
+  "page": "https://www.maff.go.jp/j/syouan/access/index.html",
+  "sha256": "d4931c0a8397db8181aebcf2ee27c6c3ef81eff7f64bd26d2c085169a14d61d6",
+  "bytes": 835802,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "33b88b85ec09.xlsx",
+  "url": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/attach/xls/epa_n-38.xlsx",
+  "page": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/epa_n.html",
+  "sha256": "33b88b85ec09ce0947ae61a36ff49995ea7239bd2e455c7b67ae23e81701e9dc",
+  "bytes": 192315,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "deea9bf59d42.docx",
+  "url": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/attach/doc/epa_n-5.docx",
+  "page": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/epa_n.html",
+  "sha256": "deea9bf59d42241155960ae268f80b0d1658b0124f31ca7765513685f42a4fa5",
+  "bytes": 16661,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "74805c72856f.docx",
+  "url": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/attach/doc/epa_n-6.docx",
+  "page": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/epa_n.html",
+  "sha256": "74805c72856f7a075a9ff146714700a64ee6aa363e303745827c2075bae2a052",
+  "bytes": 23293,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b2ce28d2346e.docx",
+  "url": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/attach/doc/epa_n-1.docx",
+  "page": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/epa_n.html",
+  "sha256": "b2ce28d2346ecdf005dad8ee8ac3186753d165455d4e96c2b5244adcbc95ca50",
+  "bytes": 18588,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1dd746856889.docx",
+  "url": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/attach/doc/epa_n-4.docx",
+  "page": "https://www.maff.go.jp/j/kokusai/renkei/fta_kanren/epa_n.html",
+  "sha256": "1dd746856889e28554d875b8a0f73888127a62692b9b263bfaee8b298ae13d9b",
+  "bytes": 18199,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b7c2068501de.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/sien/sizai/attach/xls/service-145.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/sien/sizai/service.html",
+  "sha256": "b7c2068501ded2740d659cc2e932f6c403b6d8377b0f3ed44df061a113002b53",
+  "bytes": 321185,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4fd9edf2b110.docx",
+  "url": "https://www.maff.go.jp/j/seisan/sien/sizai/attach/doc/service-33.docx",
+  "page": "https://www.maff.go.jp/j/seisan/sien/sizai/service.html",
+  "sha256": "4fd9edf2b1106f2bc1d521d078b523a5daeaa24f9f1a5779c71a5015677a6da2",
+  "bytes": 25317,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "89378ec999ec.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/sien/sizai/attach/xls/service-136.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/sien/sizai/service.html",
+  "sha256": "89378ec999ecc53eb57bd9088eabb29c9718bbc2a90c9b033b7c033447c5724b",
+  "bytes": 24453,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "323a1b0c779a.docx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/attach/doc/index-1.docx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/index.html",
+  "sha256": "323a1b0c779aee2789a65fa08db1eafb58ea16308d1e0ce8dd7856a19e469555",
+  "bytes": 70333,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5723361a4e6a.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/attach/xls/index-1.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/index.html",
+  "sha256": "5723361a4e6af694abfd4fb4897959829e8a47a5c2b5e55b3819592a1c3de56f",
+  "bytes": 49121,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1ac16dc2a929.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/attach/xls/index-2.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/index.html",
+  "sha256": "1ac16dc2a929657a16a7657438e8a7b8a3bc520ce1a96f002fb6b8549499b1c4",
+  "bytes": 18098,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e4192b42e419.doc",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/attach/doc/index-2.doc",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/index.html",
+  "sha256": "e4192b42e4194c09a37afee4bae585852292a9ce90f08f9a75182fa17c53d203",
+  "bytes": 98816,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "24218a842a9a.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/attach/xls/index-4.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/yuuki/index.html",
+  "sha256": "24218a842a9a72a507cb3cf7d00c22b03fcddb4ecf9fa26cb12ea4ed45e9f3be",
+  "bytes": 156282,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "dd57db850a58.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/attach/xls/index-10.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/index.html",
+  "sha256": "dd57db850a58c1a783467b3bc1583c7f942aad90b70831f7aa2123a6d92fcdf0",
+  "bytes": 37899,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d178a961e0e2.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/attach/xls/index-15.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/index.html",
+  "sha256": "d178a961e0e2cb1b1fd340ee0c22bfaf53b383b656ff0d7bc7df01cbb86d830c",
+  "bytes": 29349,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c5c806516258.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/attach/xls/index-16.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/index.html",
+  "sha256": "c5c80651625837c004a54b0938850649c860557eed432df17fe611b923ac7e0d",
+  "bytes": 26307,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f44bdd6751f3.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/attach/xls/index-17.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/index.html",
+  "sha256": "f44bdd6751f3671f8587fffd217a0cf9ff02fdbbb45d69ac781096302c0aac7d",
+  "bytes": 23261,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6c6bad96a510.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/attach/xls/index-18.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/index.html",
+  "sha256": "6c6bad96a510d10506f5b52bd862fd7c4cb0d2920ebb1e986f02a56e01c1bb38",
+  "bytes": 30176,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f0c2d870f3ae.xlsx",
+  "url": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/pdf/nakaboshi-6.xlsx",
+  "page": "https://www.maff.go.jp/j/seisan/kankyo/ondanka/index.html",
+  "sha256": "f0c2d870f3ae10631afb2ccbccd6b61f54acddc16685f99c2a7774f806bee91a",
+  "bytes": 15865,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9ef2ed3ae0ca.docx",
+  "url": "https://www.maff.go.jp/j/seisan/sien/sizai/attach/doc/sumaten-1.docx",
+  "page": "https://www.maff.go.jp/j/seisan/sien/sizai/sumaten.html",
+  "sha256": "9ef2ed3ae0ca2942bbef4be5be8cb088536a6ac6294161a604a5f533c6c18c38",
+  "bytes": 89644,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "78c3f000f05f.docx",
+  "url": "https://www.maff.go.jp/j/seisan/sien/sizai/attach/doc/sumaten-2.docx",
+  "page": "https://www.maff.go.jp/j/seisan/sien/sizai/sumaten.html",
+  "sha256": "78c3f000f05fe7a271cc2af0f9f060b5f239ffe27584c818fa18ecdf5854b0e8",
+  "bytes": 19938,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "fb1d6161db27.xlsx",
+  "url": "https://www.mlit.go.jp/totikensangyo/const/content/001855481.xlsx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/totikensangyo_const_tk1_000193.html",
+  "sha256": "fb1d6161db272b5965c678b6f65d8b297bd528b8b0babcf6cff22734158f8115",
+  "bytes": 15333,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b273c1ea43ac.docx",
+  "url": "https://www.mlit.go.jp/totikensangyo/const/content/001499464.docx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/1_6_bt_000092.html",
+  "sha256": "b273c1ea43acc296a18aebf81cc0a0309ca53983d2e5d07a8c812891a7db39f4",
+  "bytes": 67656,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "aaab86d33a63.doc",
+  "url": "https://www.mlit.go.jp/totikensangyo/const/content/001499467.doc",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/1_6_bt_000092.html",
+  "sha256": "aaab86d33a6386a5138840f69c48b0d96c8df233c5312907754b1503ce5ac470",
+  "bytes": 131072,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6aa752a986e7.docx",
+  "url": "https://www.mlit.go.jp/totikensangyo/const/content/001331105.docx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/1_6_bt_000092.html",
+  "sha256": "6aa752a986e7b173f285843e3ff6e6500a81615274dea396de29338c814ec8be",
+  "bytes": 50892,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "581c3a9b5ee2.doc",
+  "url": "https://www.mlit.go.jp/totikensangyo/const/content/001329294.doc",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/1_6_bt_000092.html",
+  "sha256": "581c3a9b5ee25c9f761ad27a1ce8d7bb40e876267d12f22e47941e47b4c2cfc4",
+  "bytes": 120832,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2fe1e2fb429f.docx",
+  "url": "https://www.mlit.go.jp/totikensangyo/const/content/002001399.docx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/1_6_bf_000025.html",
+  "sha256": "2fe1e2fb429f4ecffd9edd5c6f33abcba0aac1f70aaac8cb8c72f2fe80fcf78d",
+  "bytes": 53974,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "df1a91ef5160.docx",
+  "url": "https://www.mlit.go.jp/totikensangyo/const/content/002001400.docx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/1_6_bf_000025.html",
+  "sha256": "df1a91ef5160e13dc944d590056268917b5bbcd7b2599de04b85bee09307d7a9",
+  "bytes": 69530,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "2ba361e4d802.xlsx",
+  "url": "https://www.mlit.go.jp/totikensangyo/const/content/002001401.xlsx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/1_6_bf_000025.html",
+  "sha256": "2ba361e4d8020b5bc456ba7d45d948a8eb81d9a5d3a87aca6fcdc12026d57419",
+  "bytes": 23771,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "caec43f6656a.docx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/002004864.docx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_tk1_000001_00019.html",
+  "sha256": "caec43f6656a12f3232516e8241cdc2ae14e4aecdc93303a848f503726961166",
+  "bytes": 53067,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c4e9733b22cd.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/002004866.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_tk1_000001_00019.html",
+  "sha256": "c4e9733b22cd926cce465957e0b986c033020ea8f60865b046c1ee141083cfe6",
+  "bytes": 258991,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ad21046c86d9.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001598199.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00041.html",
+  "sha256": "ad21046c86d92609060403d3fea68671feb5081b9563f1f5bb924ff4ec178e75",
+  "bytes": 17200,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8d85b26cbff9.docx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001714501.docx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00041.html",
+  "sha256": "8d85b26cbff9437d8ec5a52e582d0e34a6007a47c81008ceb66c9041925daf4f",
+  "bytes": 20222,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7cfa414b89d7.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001609955.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00041.html",
+  "sha256": "7cfa414b89d778523eb9e3fcdf1a1fd3ae87b1e770e41be5bec0243847556d96",
+  "bytes": 276022,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0c2a744e3c66.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001877006.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00041.html",
+  "sha256": "0c2a744e3c6693fd73ef95c1067202f09c0192a7251d7c4f566ffde3dbfc2bb6",
+  "bytes": 22001,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6aec2312784d.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001873420.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00042.html",
+  "sha256": "6aec2312784de9aaac8d0485d1ceb4751765a0f986491b46d49d87d8ece323cf",
+  "bytes": 461130,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3fb9e75bfd6b.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001873421.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00042.html",
+  "sha256": "3fb9e75bfd6b5131934602b7962bc63eb1c1dfbb665f1267001927a266357845",
+  "bytes": 661793,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5de45676bf3f.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001873422.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00042.html",
+  "sha256": "5de45676bf3ffc18348fd051b2fd69dd55d798353f2a4ad5bd40750e20732f15",
+  "bytes": 14192,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6a746a5f0e9f.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001873423.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00042.html",
+  "sha256": "6a746a5f0e9f9cd5ddc033012aecd96fedf6babdbca0cfdb0f6a5f2889c75bda",
+  "bytes": 188054,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "815927ac346b.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001873424.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00042.html",
+  "sha256": "815927ac346b8b56325449ad8323afddd9bd4d97b2779298112f8d217e899a50",
+  "bytes": 44835,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4426cec28fea.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001873425.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00042.html",
+  "sha256": "4426cec28feabfbb4a2e381c4bc3d9c4fc90c86a66c3103caeceb864a0a2892c",
+  "bytes": 20232,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e0172defde5c.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001873426.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00042.html",
+  "sha256": "e0172defde5cfcee4a8d6b9d41e6a56e8c97d039c611628547e9db698b5fd5b4",
+  "bytes": 16868,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "aa8510e23b3c.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001609881.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00042.html",
+  "sha256": "aa8510e23b3cafb8699cab4b096275a31d2238717d8a4a82e0c600652d8b519b",
+  "bytes": 21346,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b3e7d4d53b37.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001598251.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_fr1_000001_00042.html",
+  "sha256": "b3e7d4d53b372a35d428f9d4e7fb06ff6e96000b730d4df2d57fab48b173fa5f",
+  "bytes": 22733,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "88eba6abc8b4.docx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/002017516.docx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_tk1_000001_00055.html",
+  "sha256": "88eba6abc8b44294837c3a4d0a50f907d75c21aee76977f91aae3873c404d4b9",
+  "bytes": 29723,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "82d5b1b2c829.docx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/dai3youshiki_tokuteininusi.docx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/butsuryuukouritsukahou.html",
+  "sha256": "82d5b1b2c829645b703087299251d55590d8e1e0f1f018bc2e3970287aab9a7f",
+  "bytes": 44228,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6efbc4ee10fd.xlsx",
+  "url": "https://www.mlit.go.jp/common/001278297.xlsx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/totikensangyo_const_tk2_000101.html",
+  "sha256": "6efbc4ee10fd035168e542f50def7d64835f098cf03c33420aefac3e896a780f",
+  "bytes": 23344,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "37b12c0119d5.xlsx",
+  "url": "https://www.mlit.go.jp/common/001278298.xlsx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/totikensangyo_const_tk2_000101.html",
+  "sha256": "37b12c0119d5456894b4e798ad1dbbde19879a8a666b483577b229c9c8badfdb",
+  "bytes": 26498,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5b04436b5a62.xlsx",
+  "url": "https://www.mlit.go.jp/common/001278299.xlsx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/totikensangyo_const_tk2_000101.html",
+  "sha256": "5b04436b5a628f399f2cc649989cc71955516161e3261e706f4b23b1df046f5e",
+  "bytes": 25580,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "98e701a93389.xlsx",
+  "url": "https://www.mlit.go.jp/common/001278300.xlsx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/totikensangyo_const_tk2_000101.html",
+  "sha256": "98e701a93389228f61e1a7fa3f8c12dd22a338446f8a097b27b0fb688dc38b07",
+  "bytes": 40352,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6cfb6bd67f39.xlsx",
+  "url": "https://www.mlit.go.jp/common/001278301.xlsx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/totikensangyo_const_tk2_000101.html",
+  "sha256": "6cfb6bd67f39cb45211167aa2e78f65d97af4e0ef3c1fca2e83ea794587a93cf",
+  "bytes": 41057,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3c0d7cb5fc5d.xlsx",
+  "url": "https://www.mlit.go.jp/common/001278302.xlsx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/totikensangyo_const_tk2_000101.html",
+  "sha256": "3c0d7cb5fc5df021b44eca83c36f3f2d8a68241078dcbd4e506ca9099b9b755b",
+  "bytes": 27092,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "fb0b82c9bcf6.xlsx",
+  "url": "https://www.mlit.go.jp/common/001428962.xlsx",
+  "page": "https://www.mlit.go.jp/totikensangyo/const/totikensangyo_const_tk2_000101.html",
+  "sha256": "fb0b82c9bcf618ae370816e7de8c6f7cdbcf9f7fb7426b928de7c07d92485124",
+  "bytes": 25539,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e33adea7cd89.xlsx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001964609.xlsx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_tk3_000001_00062.html",
+  "sha256": "e33adea7cd8905e7ad30471cefba973c27f34cd76082035d939a3be1dc2a6a13",
+  "bytes": 78303,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1c779acfa685.doc",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001750011.doc",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_tk3_000001_00066.html",
+  "sha256": "1c779acfa6857266f3e32d845539c4e3c322646f16a44eb7f1d6d63b116f241c",
+  "bytes": 90112,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c5b4ecea0d2f.docx",
+  "url": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001750013.docx",
+  "page": "https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/tochi_fudousan_kensetsugyo_const_tk3_000001_00066.html",
+  "sha256": "c5b4ecea0d2fa6824dc70d0a09c7da91f94a1fcc2bafc7dec0bcaa6eb3347fe6",
+  "bytes": 34395,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3eb443d51963.doc",
+  "url": "https://www.mlit.go.jp/sogoseisaku/jouhouka/content/001600891.doc",
+  "page": "https://www.mlit.go.jp/sogoseisaku/jouhouka/sosei_jouhouka_fr1_000028.html",
+  "sha256": "3eb443d5196323891df80c68d916c16380ee0a4ca4de1b90850aa4de86c87e7c",
+  "bytes": 61440,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5185983b98aa.xlsx",
+  "url": "https://www.mlit.go.jp/sogoseisaku/jouhouka/content/mlit_y2meisyo.xlsx",
+  "page": "https://www.mlit.go.jp/sogoseisaku/jouhouka/sosei_jouhouka_fr1_000028.html",
+  "sha256": "5185983b98aa2467fc8cea6d4d2a22a7fc9e7ca27141a9fabf30b86b53aa5356",
+  "bytes": 12570,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6ceddeea6086.xlsx",
+  "url": "https://www.mlit.go.jp/sogoseisaku/jouhouka/content/mlit_y41donyu.xlsx",
+  "page": "https://www.mlit.go.jp/sogoseisaku/jouhouka/sosei_jouhouka_fr1_000028.html",
+  "sha256": "6ceddeea6086a301b19b06782785ab376038bc4e7d79454ebb492785aecc6368",
+  "bytes": 227659,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "572a020fe57d.xlsx",
+  "url": "https://www.mlit.go.jp/sogoseisaku/jouhouka/content/mlit_y41donyubypass.xlsx",
+  "page": "https://www.mlit.go.jp/sogoseisaku/jouhouka/sosei_jouhouka_fr1_000028.html",
+  "sha256": "572a020fe57da880944437e3c0b7ed27f87c08c88e4ddbd312a58bb5d67ed917",
+  "bytes": 236676,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b6aa277902d6.xlsx",
+  "url": "https://www.mlit.go.jp/sogoseisaku/jouhouka/content/mlit_y42donyu.xlsx",
+  "page": "https://www.mlit.go.jp/sogoseisaku/jouhouka/sosei_jouhouka_fr1_000028.html",
+  "sha256": "b6aa277902d61f03a607584d152f4293ae78af6b13f7c26d60c443895dfa7284",
+  "bytes": 195304,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b102b54e3133.pptx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_g_5134/r9_schedule.pptx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/01_seido/02_schedule/index.html",
+  "sha256": "b102b54e313397616dba6a36b66db42863452bf4edb56c569cffdf7273f0f330",
+  "bytes": 91359,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f86d7f9b7789.xlsx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_g_5157/202608_koubo_faq.xlsx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/01_seido/05_faq/index.html",
+  "sha256": "f86d7f9b77896f7d4bb067bd80262e88781a4ca3d85083ff5d95d7468a28058f",
+  "bytes": 22775,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ad52d75f8c57.xlsx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_g_3685/202508_koubo_faq.xlsx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/01_seido/05_faq/index.html",
+  "sha256": "ad52d75f8c570c867d771f180e8c244cb62bf9c23d01aa29bf7390c742f5f8b9",
+  "bytes": 32503,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e0baf661f585.xlsx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_g_2537/202409_koubo_faq.xlsx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/01_seido/05_faq/index.html",
+  "sha256": "e0baf661f58521a8ba04767377fb22903a86feffc7e52fe69d777e96de077113",
+  "bytes": 30551,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c7703b0206c7.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_22_koubo_2026_kensuta/s-22.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/22_startup_support/download.html",
+  "sha256": "c7703b0206c76cf6e83bbf605f6fcdb94a7bde9486b348c1f403b62e28ff0b78",
+  "bytes": 45658,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9bae77cb027a.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_22_koubo_2026_kensuta/s-22_e.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/22_startup_support/download.html",
+  "sha256": "9bae77cb027ad5cbb47ebcf547ced5f49b83cd6f10b734aa8ae7e068f8d8d45b",
+  "bytes": 45074,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "de52ad06451c.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_11_g_5021/s-31.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/11_shourei/koubo.html",
+  "sha256": "de52ad06451cb061cd8c74893f323f35a62aeedbb6173fdc9c23da1f344e4cb5",
+  "bytes": 35501,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e6383f4990d5.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_11_g_5021/shourei_zaiseki.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/11_shourei/koubo.html",
+  "sha256": "e6383f4990d556e483e9f8a6c620f145f68d932f81895d256b742e98f7344133",
+  "bytes": 22649,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e7ba134fe084.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_11_g_5021/u-31.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/11_shourei/koubo.html",
+  "sha256": "e7ba134fe0847c7de961c08039fa20dc19ac1bc3764810b7920d30c32d165c35",
+  "bytes": 20875,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "87bc8c403d2d.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_20_r8_g_4367/r8_kakunin.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/20_tokushourei/download.html",
+  "sha256": "87bc8c403d2d4a213a2f4c563ccc3f585de453f3564f434a2a7842bb1f74a85a",
+  "bytes": 33669,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e3af54a34bef.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3505_g_4272/abs_s-64-1_j.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/05_sendou/koubo.html",
+  "sha256": "e3af54a34bef85a85b4cc6466a9bfc9a2cf8bf457f9cca9f56d90ed3bbd9af67",
+  "bytes": 30485,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "de6bacaf14fb.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3505_g_4272/abs_s-64-1_e.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/05_sendou/koubo.html",
+  "sha256": "de6bacaf14fb44ea82951c34b7e666e672cd2c5600d3d4b9afddf55d88bf6065",
+  "bytes": 30292,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "5335004279bc.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3505_g_4272/en_s-64-2_e.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/05_sendou/koubo.html",
+  "sha256": "5335004279bca1def0856dfc1cc7118423683e534c4e32835dbcea340d57540e",
+  "bytes": 34126,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f376c35f28f9.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3505_g_4272/cv_s-64-3_e.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/05_sendou/koubo.html",
+  "sha256": "f376c35f28f99088441226c3c9edd9158283e8bec85b047a91acc7dead19f67d",
+  "bytes": 33394,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e558a0d1d104.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3505_g_4272/jp_s-64-4_j.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/05_sendou/koubo.html",
+  "sha256": "e558a0d1d10452fe791ebf533e67e90995b52530074050edf48994a75a210366",
+  "bytes": 30853,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "65a0ad54eb87.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3505_g_4272/jp_s-64-4_e.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/05_sendou/koubo.html",
+  "sha256": "65a0ad54eb87249e98e8b6d4eb3ae7e1a809b473757b4f5c5902f4dbf517eb24",
+  "bytes": 30869,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3ecfbd2805e8.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3505_g_4272/loi_s-64-L_e.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/05_sendou/koubo.html",
+  "sha256": "3ecfbd2805e874e02bc6f54a20f55176daa74e2553c2206260a8408385695544",
+  "bytes": 25234,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8192b6f95290.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3501_g_5001/r8_jp_kyoka_s-61.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/01_kyoka/koubo.html",
+  "sha256": "8192b6f95290cefd4aad86472cb4c25a9451f9c157b8487f49fdf78c5b276316",
+  "bytes": 56326,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a90302acf002.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3501_g_5018/r8_en_kyoka_s-61.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/01_kyoka/koubo.html",
+  "sha256": "a90302acf0020e1407d99896389bb63bd5fb87ae89c128e85b9b22b41e99431d",
+  "bytes": 53840,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "22b2a38b8fb0.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_35_04_renkei_2023/r6_jp_renkei_s-63-1.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/04_renkei/koubo.html",
+  "sha256": "22b2a38b8fb04c2590b4f1dd29867c38a506d807e7f56e3c784e02a6f6ae6777",
+  "bytes": 51826,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "294f3bb6ea17.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_35_04_renkei_2023/r6_en_renkei_s-63-1.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/04_renkei/koubo.html",
+  "sha256": "294f3bb6ea17ce67846c8d7334721a38988bd1ade4852d219c0b702c6ce2a80d",
+  "bytes": 52891,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b6107bcdd06c.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_35_04_renkei_2023/r6_jp_renkei_letter_of_intent.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/04_renkei/koubo.html",
+  "sha256": "b6107bcdd06c2c26fd1f5aa05ab0a1def31922bb1ac542916dcea6664f0ac23f",
+  "bytes": 30298,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "42275a20f0ca.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_35_04_renkei_2023/r6_en_renkei_letter_of_intent.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/04_renkei/koubo.html",
+  "sha256": "42275a20f0ca2802956e065fceac942f9df40a1dad67f3be3bd60a97535e16ee",
+  "bytes": 29092,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "8e62f12bfa9e.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3503_g_5002/r8_jp_kikoku_s-62.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/03_kikoku/koubo.html",
+  "sha256": "8e62f12bfa9efd293aae13e0725e6d2bb5f7b658b469e03c9f5921177018cf35",
+  "bytes": 54004,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "c151a6e64c7a.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_3503_g_5002/r8_jp_kikoku_consent_of_intent.docx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/35_kokusai/03_kikoku/koubo.html",
+  "sha256": "c151a6e64c7a7e27c4082c29b8b6726fd518393a732a727c2368f7152220ddb4",
+  "bytes": 21325,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6fc8342893e9.xlsx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_01_09_syosai_5389/syosai_20260918.xlsx",
+  "page": "https://www.jsps.go.jp/j-grantsinaid/01_seido/09_how_to_submit/yoshiki_syosai.html",
+  "sha256": "6fc8342893e98b27be6a70bfb948d34e1127bf723f3f754c8f956cc4016ebf72",
+  "bytes": 2115880,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "e8732e6498b3.xlsx",
+  "url": "https://www.jsps.go.jp/file/storage/j-pd/data/recruiting/master_bukyoku.xlsx",
+  "page": "https://www.jsps.go.jp/j-pd/pd_sin.html",
+  "sha256": "e8732e6498b3b1712469991a91510f8f3337827aa40638ccc95e0903bfbd7ba5",
+  "bytes": 92338,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f1fca680dfd2.docx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_hirameki_yoshiki/ht_syuryou.docx",
+  "page": "https://www.jsps.go.jp/j-hirameki/yoshiki.html",
+  "sha256": "f1fca680dfd252edcf4123f6f2f8144e9e37b73599b4b8dbb1a3670a0575af6d",
+  "bytes": 184615,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3011e3d9c84c.xlsx",
+  "url": "https://www.jsps.go.jp/file/storage/kaken_hirameki_yoshiki/ht_01.xlsx",
+  "page": "https://www.jsps.go.jp/j-hirameki/yoshiki.html",
+  "sha256": "3011e3d9c84c17ba3bdcd37c860c1450083da782e5fdd913c3fac17f3429feaf",
+  "bytes": 39783,
+  "fetched": "2026-11-03"
  }
 ]

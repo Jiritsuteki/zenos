@@ -1,0 +1,21 @@
+#!/bin/sh
+# ZENOS Office in the sandbox: no network, the system read-only, only the document's own folder writable, the
+# display socket, and a tmpfs for everything the engine writes while the document is open.
+#   zenos-office FILE [--level N]
+set -e
+f=$(realpath "$1"); shift
+here0=$(dirname "$(realpath "$0")")
+# the locked-down engine profile is made once, outside (bubblewrap cannot nest)
+PYTHONPATH="$here0/../../system/lib:/usr/lib/zenos" python3 -c 'import zoffice; zoffice._template()' 
+dir=$(dirname "$f")
+here=$(dirname "$(realpath "$0")")
+rt=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+set -- bwrap --unshare-net --unshare-pid --unshare-ipc --die-with-parent --new-session \
+  --ro-bind /usr /usr --ro-bind /etc /etc --symlink usr/bin /bin --symlink usr/lib /lib --symlink usr/lib64 /lib64 \
+  --proc /proc --dev /dev --tmpfs /tmp --tmpfs "$HOME" \
+  --bind "$rt" "$rt" --ro-bind-try /tmp/.X11-unix /tmp/.X11-unix --ro-bind-try "${XAUTHORITY:-$HOME/.Xauthority}" "${XAUTHORITY:-$HOME/.Xauthority}" \
+  --ro-bind "$here" "$here" --ro-bind-try "$here/../../system/lib" "$here/../../system/lib" \
+  --bind "$dir" "$dir" \
+  --setenv ZENOS_OFFICE_RAM "$rt" --setenv ZENOS_IN_SANDBOX 1 \
+  "${ZENOS_PYTHON:-/usr/bin/python3}" "$here/zenos_office.py" "$f" "$@"
+exec "$@"

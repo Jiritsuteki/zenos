@@ -1,9 +1,15 @@
 name: office-compat
-# Public Word/Excel/PowerPoint files opened and saved by the ZENOS apps and by LibreOffice, compared with the
-# originals (tests/office). Runs in Debian 13, as ZENOS does, when the office apps or the check change, and weekly.
+# Public Word, Excel and PowerPoint files from ministries and municipalities (tests/office/corpus.json), opened and
+# saved by the ZENOS office engine (system/lib/zoffice.py: LibreOffice in the ZENOS sandbox) and compared with the
+# originals. Runs in Debian 13, as ZENOS does, on every change that can touch it, and weekly. A change that makes any
+# file worse than tests/office/baseline.json fails.
 on:
   push:
-    paths: ["apps/**", "tests/office/**", ".github/workflows/office-compat.yml"]
+    paths: ["apps/**", "system/lib/zoffice.py", "system/lib/zsandbox.py", "system/fontconfig/**", "tests/office/**",
+            "packaging/debian/control.in", ".github/workflows/office-compat.yml"]
+  pull_request:
+    paths: ["apps/**", "system/lib/zoffice.py", "system/lib/zsandbox.py", "system/fontconfig/**", "tests/office/**",
+            "packaging/debian/control.in", ".github/workflows/office-compat.yml"]
   schedule:
     - cron: "17 3 * * 1"
   workflow_dispatch:
@@ -12,25 +18,32 @@ permissions:
 jobs:
   compat:
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
-    container: debian:trixie
+    timeout-minutes: 300
+    container:
+      image: debian:trixie
+      options: --privileged          # bubblewrap needs user namespaces inside the container
     steps:
       - uses: actions/checkout@v4
-      - name: Tools
+      - name: Tools (the same packages ZENOS depends on)
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends libreoffice-writer libreoffice-calc libreoffice-impress \
-            fonts-noto-cjk poppler-utils python3-openpyxl python3-pil python3-numpy nodejs npm ca-certificates
+          apt-get install -y --no-install-recommends libreoffice-writer libreoffice-calc libreoffice-impress bubblewrap \
+            fonts-noto-cjk fonts-ipafont-mincho fonts-ipafont-gothic fonts-ipaexfont-mincho fonts-ipaexfont-gothic \
+            fonts-crosextra-carlito fonts-crosextra-caladea fonts-liberation poppler-utils \
+            python3-openpyxl python3-pil python3-numpy ca-certificates
+          install -m 644 system/fontconfig/60-zenos-office.conf /etc/fonts/conf.d/60-zenos-office.conf
+          soffice --version
       - name: The public files
         run: python3 tests/office/fetch.py /tmp/office-corpus
-      - name: The ZENOS apps' own open/save code
-        run: npm install --no-audit --no-fund && node build.mjs
-        working-directory: tests/office/engines
-      - name: Open, save, compare
-        run: python3 tests/office/compat.py /tmp/office-corpus /tmp/office-results > /tmp/office-results.log
+      - name: Open, save, compare (and refuse anything worse than the baseline)
+        run: |
+          python3 tests/office/compat.py /tmp/office-corpus /tmp/office-results --engines zenos --jobs 4 \
+            --gate tests/office/baseline.json > /tmp/office-results.log
       - name: Results
         if: always()
-        run: cat /tmp/office-results/results.md >> "$GITHUB_STEP_SUMMARY" || true
+        run: |
+          cat /tmp/office-results/results.md >> "$GITHUB_STEP_SUMMARY" || true
+          tail -70 /tmp/office-results.log || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:

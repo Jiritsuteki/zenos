@@ -84,8 +84,9 @@ def bwrap():
     return shutil.which("bwrap")
 
 
-def run(argv, inputs=None, out_dir=None, timeout=120, stdin=None):
-    """run argv in the sandbox. inputs: {name inside /work/in: real path}. Returns CompletedProcess (text)."""
+def run(argv, inputs=None, out_dir=None, timeout=120, stdin=None, text=True):
+    """run argv in the sandbox. inputs: {name inside /work/in: real path}. Returns CompletedProcess (text, or bytes
+    with text=False)."""
     bw = bwrap()
     if not bw:
         raise Unavailable("bubblewrap is not installed")
@@ -117,4 +118,4 @@ def run(argv, inputs=None, out_dir=None, timeout=120, stdin=None):
         f.seek(0)
         fd = f.fileno()
         args += ["--seccomp", str(fd), "--"] + list(argv)
-        return subprocess.run(args, input=stdin, capture_output=True, text=True, timeout=timeout, pass_fds=(fd,))
+        return subprocess.run(args, input=stdin, capture_output=True, text=text, timeout=timeout, pass_fds=(fd,))
