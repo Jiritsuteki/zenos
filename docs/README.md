@@ -2,6 +2,8 @@
 
 This folder contains the main documentation for ZENOS.
 
+- [Glossary](GLOSSARY.md) — Short definitions of ZENOS terms, with links to their full explanations.
+
 - [ZENOS architecture](ARCHITECTURE.md) — Where the code lives, which parts run with which privileges, and how they communicate.
 - [How feedback becomes updates](FEEDBACK.md) — How user feedback is reviewed by AI and turned into proposals for maintainers.
 - [Formal verification of the ZENOS decisions](FORMAL_VERIFICATION.md) — Lean 4 definitions and proofs for decisions about classified data.
