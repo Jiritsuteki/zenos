@@ -23,3 +23,4 @@ This folder contains the main documentation for ZENOS.
 - [CONTRIBUTING.md](../CONTRIBUTING.md) — Contribution rules and checks to run before sending a change.
 - [SECURITY.md](../SECURITY.md) — Known security gaps and private vulnerability reporting instructions.
 - [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) — Third-party components used by ZENOS and their licenses.
+- [CITATION.cff](../CITATION.cff) — How to cite ZENOS (Citation File Format; GitHub shows it as "Cite this repository").

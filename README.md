@@ -178,6 +178,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for test commands and pull request requir
 Browse the [documentation index](docs/README.md) for the project's guides and design notes.
 To find a starting task, see the [good first issues](https://github.com/zenos-org/zenos/labels/good%20first%20issue).
 
+## Citing ZENOS
+
+Citation metadata is available in [CITATION.cff](CITATION.cff). GitHub's "Cite this repository" button provides APA and BibTeX citations from this file.
+
 ## License
 
 ZENOS is licensed under the [Apache License 2.0](LICENSE). The messenger (`messenger/`) links libsignal and is
