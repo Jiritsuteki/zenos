@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+title: ZENOS
+type: software
+authors:
+  - name: ZENOS Authors
+version: 0.1.2-preview
+date-released: "2026-10-29"
+license: Apache-2.0
+repository-code: "https://github.com/zenos-org/zenos"
+url: "https://zenos-os.org"
+abstract: "ZENOS is an open-source desktop OS that aims to keep information and data from leaking, by building the protection into the operating system itself. It is for anyone: companies, public offices, families and individuals, and people use it the way they use any computer today."
+keywords:
+  - operating system
+  - data loss prevention
+  - formal verification
+  - Lean 4
