@@ -949,8 +949,9 @@ if __name__ == "__main__":
     w = OfficeWindow(a[0], lvl)
     w.show_all()
     Gtk.main()
-    # the engine can still be writing into its profile while the window closes: remove the RAM copy again once
-    # the main loop is over, and once more when the process ends
-    import atexit
-    atexit.register(shutil.rmtree, w.ram, True)
+    # the engine writes its profile back when the process ends (LibreOfficeKit's own exit handler, seen in CI): the
+    # document was saved already, so remove the RAM copy and end the process without running the engine's handlers
+    sys.stdout.flush()
+    sys.stderr.flush()
     shutil.rmtree(w.ram, ignore_errors=True)
+    os._exit(0)
