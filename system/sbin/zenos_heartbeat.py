@@ -44,6 +44,18 @@ def read_beat():
         return None
 
 
+def read_beat_settled(tries=3, gap=0.06):
+    """a writer that rewrites the file in place leaves it empty for a moment; one empty read is
+    not silence, so look again shortly before treating the beat as unreadable"""
+    b = read_beat()
+    for _ in range(tries - 1):
+        if b is not None:
+            break
+        time.sleep(gap)
+        b = read_beat()
+    return b
+
+
 def watcher(run_sec):
     run_sec = float(run_sec)
     forever = run_sec <= 0
@@ -51,7 +63,7 @@ def watcher(run_sec):
     alarmed = False
     last = None                       # the last heartbeat this watcher could read
     while forever or time.time() - t0 < run_sec:
-        b = read_beat()
+        b = read_beat_settled()
         if b is not None:
             last = b if last is None else max(last, b)
         now = time.time()
