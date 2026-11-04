@@ -5134,5 +5134,213 @@
   "sha256": "3011e3d9c84c17ba3bdcd37c860c1450083da782e5fdd913c3fac17f3429feaf",
   "bytes": 39783,
   "fetched": "2026-11-03"
+ },
+ {
+  "file": "1e25006dcba6.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/files/05_form1-1_r8daigaku_main-b.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/index.html",
+  "sha256": "1e25006dcba6e1cf9f734bbc951c65f5087acc6c590e724e4483f89406006605",
+  "bytes": 182861,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "4d5a73f23ea1.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/files/06_form1-2_r8daigaku_backdata-b.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2026/index.html",
+  "sha256": "4d5a73f23ea1f73e623df9bc99329b06157e8e33187fd0f9620b3aee74c06382",
+  "bytes": 62686,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "3cd62d5f7af3.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2025/files/05_form1-1_r7daigaku_main-a.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2025/index.html",
+  "sha256": "3cd62d5f7af3d15f3307ee6d20ba7870712b0f20782e8af1674f9686ad3a839c",
+  "bytes": 170405,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "1c20ffe2d5a3.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2025/files/06_form1-2_r7daigaku_backdeta-a.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2025/index.html",
+  "sha256": "1c20ffe2d5a3c22644b8b923da23a5f4e75c44b9c94085c0e3594c62fe7f0642",
+  "bytes": 59437,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "7058b04f2a5f.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2025/files/05_form1-1_r7daigaku_main-b.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2025/index.html",
+  "sha256": "7058b04f2a5f46d6513903340498de8825e145c49ff5163edfff1f3dea1f720e",
+  "bytes": 179676,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "25d66d56f53e.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2025/files/06_form1-2_r7daigaku_backdeta-b.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2025/index.html",
+  "sha256": "25d66d56f53e4f638974f437c8db17c63452ac1b362922988e83a30238032616",
+  "bytes": 59437,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "553986b01e78.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2024/files/05_form1-1_r6daigaku_main-a.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2024/index.html",
+  "sha256": "553986b01e7891c3d849c8a3322beb4d37a6cd951c65b45221f9d5a695d13bbc",
+  "bytes": 171409,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bdf5e45dacc1.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2024/files/06_form1-2_r6daigaku_backdeta-ab.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2024/index.html",
+  "sha256": "bdf5e45dacc1f6db5a88a7d78f8df76d0aa1bc0d011bb098445e3ecf105d18e9",
+  "bytes": 60307,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "be4cc389c59b.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2024/files/05_form1-1_r6daigaku_main-b.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2024/index.html",
+  "sha256": "be4cc389c59bc52603144cda8ce13ec84866c18083ae5acd3291bff6453e32eb",
+  "bytes": 180922,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a49ebf6bda8a.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/202301/files/1-1-1_0206_r5daigaku_jisshi_hontai.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/202301/index.html",
+  "sha256": "a49ebf6bda8a591e92556cadf429adcebdccaf595c087f8fcf12ab9c068e3cf3",
+  "bytes": 167324,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "70150caa3f45.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/202301/files/1-2_0206_r5daigaku_jisshi_backdeta.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/202301/index.html",
+  "sha256": "70150caa3f4501e435488fd42efa23b26b745519560a9a7880f2f6e3a5d743f5",
+  "bytes": 53354,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "24e03a2ad027.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/202301/files/1-1-2_0206_r5daigaku_tenkai_jisshi_hontai.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/202301/index.html",
+  "sha256": "24e03a2ad027207f162ee73ed4532111441314727109781ef97cf134a1c1aefb",
+  "bytes": 181126,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "13b5db238a00.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2023/files/1-1-1_0224_r4daigaku_gaiyou_hontai.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2023/index.html",
+  "sha256": "13b5db238a00736e3a26de2a4895eb77fbf681b29c949160bfdefa14a9a9c3f3",
+  "bytes": 92563,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "ef97bb171c41.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2023/files/1-2_0224_r4daigaku_gaiyou_backdata.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2023/index.html",
+  "sha256": "ef97bb171c41dd207f8a8f2228991755f577ab43608f6c70e93507c3c47ba1b2",
+  "bytes": 50010,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "012ea0a1e258.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2023/files/1-1-2_0307_r4daigaku_tenkai_gaiyou_hontai.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo/2023/index.html",
+  "sha256": "012ea0a1e2586f15d1ed069db188273eeb0327f3a70c993c873facd44b585f89",
+  "bytes": 90044,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "09956ea3f744.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/files/03_r3_honshinsei_gaiyou_210125.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo_r02-12-24.html",
+  "sha256": "09956ea3f744a6f7634ac7981033c7681b5b0bec8127723e0ae8d046f57d433e",
+  "bytes": 137905,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "a6714dfcdf12.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/files/07_r3_keikakusakusei_gaiyou.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo_r02-12-24.html",
+  "sha256": "a6714dfcdf12c1a9a0fa1c77db3163e578e5c8065de636a3272a87e1849401e2",
+  "bytes": 124361,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "9758ffd9ae76.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/files/01-2_r020701_2020_gaiyouyoushiki.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo_r02-01-17.html",
+  "sha256": "9758ffd9ae76ff2963a7426a9f2abbd2f7e90efd4557c59e76effb72c7bce8e2",
+  "bytes": 97577,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "d751aa9f5f7a.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/files/02-2_r020701_2020_gaiyoushiryou_newstyle.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo_r02-01-17.html",
+  "sha256": "d751aa9f5f7ab6d73e2cb425c03d11f3797c7a0a2838b91728e4065f562e2703",
+  "bytes": 116381,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "0144cfe6bced.pptx",
+  "url": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/h310424_2019bessi2.pptx",
+  "page": "https://www.chisou.go.jp/sousei/about/daigaku_kouhukin/koubo_h31-4-24.html",
+  "sha256": "0144cfe6bced16cc91f3696ac553fd0636eff7c8e24c6316323746f084dc1645",
+  "bytes": 77255,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f2de22699611.pptx",
+  "url": "https://www.soumu.go.jp/main_content/001052090.pptx",
+  "page": "https://www.soumu.go.jp/main_sosiki/joho_tsusin/broadband/index.html",
+  "sha256": "f2de226996116ad9b80c154d8c3570ccdae72834db599c801c24646bfb64548b",
+  "bytes": 422132,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "b7188027789d.pptx",
+  "url": "https://www.maff.go.jp/j/keiei/koukai/pamphletA4.pptx",
+  "page": "https://www.maff.go.jp/j/keiei/koukai/chiiki_keikaku.html",
+  "sha256": "b7188027789d1f11f6c94193bcc76f63da9c6caec8ef43bf9c0d25a5c3985274",
+  "bytes": 540229,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "bf8b0f2daabb.pptx",
+  "url": "https://www.maff.go.jp/j/keiei/koukai/pamphletA3.pptx",
+  "page": "https://www.maff.go.jp/j/keiei/koukai/chiiki_keikaku.html",
+  "sha256": "bf8b0f2daabb8408616ebbab299791471b9058dec684f08fc0029e7b8caa28bd",
+  "bytes": 536937,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "687f5c1fe3d9.pptx",
+  "url": "https://www.maff.go.jp/j/nousin/kanri/attach/pptx/tamen_siharai-2.pptx",
+  "page": "https://www.maff.go.jp/j/nousin/kanri/tamen_siharai.html",
+  "sha256": "687f5c1fe3d95a866c35bdf74b6af2e35b77c5708bc7721e2186af490ab0f397",
+  "bytes": 1327058,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "f58299e9ec26.pptx",
+  "url": "https://www.pref.niigata.lg.jp/uploaded/attachment/514154.pptx",
+  "page": "https://www.pref.niigata.lg.jp/site/saiyou3/r8gokaku1-dai-syuuki.html",
+  "sha256": "f58299e9ec260f4efa8b444b66f68f2a25116b0345fd21b0acdcf67f814f97ad",
+  "bytes": 78960,
+  "fetched": "2026-11-03"
+ },
+ {
+  "file": "6d8b6eb13283.pptx",
+  "url": "https://www.pref.niigata.lg.jp/uploaded/attachment/514156.pptx",
+  "page": "https://www.pref.niigata.lg.jp/site/saiyou3/r8gokaku1-dai-syuuki.html",
+  "sha256": "6d8b6eb13283237a8cd55e498929bf10ca231ad11901b3c26c55780bb82e20f0",
+  "bytes": 43638,
+  "fetched": "2026-11-03"
  }
 ]
