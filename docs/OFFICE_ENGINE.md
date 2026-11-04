@@ -82,6 +82,23 @@ cell values and formulas, and the pages drawn as images. `zenos` is this engine.
 LibreOffice's own; Microsoft Office is not used in the check, so "looks alike" means alike after saving, not alike
 in Microsoft Office.
 
+## What the measured losses are (looked into 5 Nov 2026)
+
+The check counts what is lost cell by cell; looking at the cells behind the counts:
+
+- Borders: in the workbook with the most lost borders that was looked at (109fb6b04bd9.xlsx), every cell that
+  lost its border is inside a merged area and is not its first cell. LibreOffice keeps the border of the merged
+  area as a whole, so nothing changes on the page; the count is the measuring, not a loss. Not yet checked for
+  the other 32 workbooks.
+- Input rules: after saving, LibreOffice writes some ranges as whole rows (`43:1041`), which is valid in the file
+  format but cannot be read by the library the check uses (openpyxl): 7 workbooks cannot be read at all after
+  saving, and their rules count as lost. The check will read the ranges itself.
+- Fonts and number formats: most of the cells counted as lost (about 800) hold an empty text ("") in the
+  original; after saving they are empty, and the check only counts cells that have a value. In a few cells the
+  font name becomes the replacement font (Noto Sans CJK) or bold or italic is lost; these are real and are next.
+- Fills: 1,600 empty cells in one workbook (2dbb42ce55ff.xlsx) lose a grey fill, and 36
+  empty cells in three population workbooks lose a fill. Whether this shows on a page is not yet checked.
+
 ## Not built yet
 
 - The engine's own dialogs (cell format, paragraph, page setup, find and replace with options): LibreOfficeKit
