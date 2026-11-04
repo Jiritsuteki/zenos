@@ -865,3 +865,8 @@ if __name__ == "__main__":
     w = OfficeWindow(a[0], lvl)
     w.show_all()
     Gtk.main()
+    # the engine can still be writing into its profile while the window closes: remove the RAM copy again once
+    # the main loop is over, and once more when the process ends
+    import atexit
+    atexit.register(shutil.rmtree, w.ram, True)
+    shutil.rmtree(w.ram, ignore_errors=True)
