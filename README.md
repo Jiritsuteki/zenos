@@ -42,7 +42,7 @@ config/       example configuration for the servers
 tests/        unit tests
 formal/       the decisions of keyd and guardd in Lean 4, with their proofs (zenos-decide)
 third_party/  modified KDE plasmoids (kept under their original GPL/LGPL licenses)
-docs/         architecture, security architecture, threat model, release process
+docs/         architecture, security, threat model, formal verification, glossary, design notes, release process
 feedback/     the feedback board: a Cloudflare Worker (src/worker.js) with a D1 database
 site/         the project website (zenos-os.org): a static site, no build step
 tools/        site-features/build.py (feature pages for site/) and github_activity.py (the board's activity feed)
