@@ -1,6 +1,7 @@
 # Contributing to ZENOS
 
-Thank you for helping. A few rules keep the project trustworthy:
+Thank you for helping. Everyone taking part is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md);
+reports go to hello@zenos-os.org. A few rules keep the project trustworthy:
 
 1. **No unverified security claims.** If a change makes something "secure", add or update the row in
    [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) and include a test that demonstrates it.
