@@ -132,8 +132,8 @@ def ribbon(kind):
                          ("Alignment", align + [("Wrap text", "format-text-direction-ltr", ".uno:WrapText", None, True),
                                                 ("Merge & center", "format-justify-center", ".uno:ToggleMergeCells", None, True)]),
                          ("Number", [("Currency", "format-currency", ".uno:NumberFormatCurrency", None, True),
-                                     ("Percent", "format-percent", ".uno:NumberFormatPercent", None, True),
-                                     ("Thousands", "format-number", ".uno:NumberFormatThousands", None, True),
+                                     ("Percent", "format-number-percent", ".uno:NumberFormatPercent", None, True),
+                                     ("Thousands", "gnumeric-format-thousand-separator", ".uno:NumberFormatThousands", None, True),
                                      ("Date", "x-office-calendar", ".uno:NumberFormatDate", None, True),
                                      ("Add decimal", "format-precision-more", ".uno:NumberFormatIncDecimals", None, False),
                                      ("Remove decimal", "format-precision-less", ".uno:NumberFormatDecDecimals", None, False)]),
@@ -183,7 +183,7 @@ def ribbon(kind):
                                         ("Page break", "insert-page-break", ".uno:InsertPagebreak", None, False),
                                         ("Comment", "edit-comment", ".uno:InsertAnnotation", None, False),
                                         ("Footnote", "insert-text", ".uno:InsertFootnote", None, False),
-                                        ("Page number", "format-number", ".uno:InsertPageNumberField", None, False)])]),
+                                        ("Page number", "format-list-ordered", ".uno:InsertPageNumberField", None, False)])]),
                 ("Layout", [("Page", [("Portrait", "object-rotate-left", "orient_portrait", None, False),
                                       ("Landscape", "object-rotate-right", "orient_landscape", None, False)]),
                             ("Text", [("Vertical text", "format-text-direction-vertical", "vertical_text", None, False)])]),
@@ -272,7 +272,29 @@ class OfficeWindow(Gtk.Window):
             side.get_style_context().add_class("zo-slides")
             side.add(self.slide_box)
             body.pack_start(side, False, False, 0)
-        body.pack_start(scroll, True, True, 0)
+        if self.kind == CALC:            # the row numbers and column letters beside the cells, as in a spreadsheet
+            self.scroll = scroll
+            grid = Gtk.Grid()
+            corner = Gtk.DrawingArea(); corner.set_size_request(46, 22)
+            self.colhdr = Gtk.DrawingArea(); self.colhdr.set_size_request(-1, 22); self.colhdr.set_hexpand(True)
+            self.rowhdr = Gtk.DrawingArea(); self.rowhdr.set_size_request(46, -1); self.rowhdr.set_vexpand(True)
+            corner.connect("draw", lambda w, cr: self._hdr_bg(w, cr))
+            self.colhdr.connect("draw", self._draw_cols)
+            self.rowhdr.connect("draw", self._draw_rows)
+            scroll.set_hexpand(True); scroll.set_vexpand(True)
+            grid.attach(corner, 0, 0, 1, 1); grid.attach(self.colhdr, 1, 0, 1, 1)
+            grid.attach(self.rowhdr, 0, 1, 1, 1); grid.attach(scroll, 1, 1, 1, 1)
+            self.hdr = {"rows": [], "columns": []}
+            for adj in (scroll.get_hadjustment(), scroll.get_vadjustment()):
+                adj.connect("value-changed", lambda *_: self.update_headers())
+            scroll.connect("size-allocate", lambda *_: self.update_headers())
+            try:
+                self.view.connect("invalidate-header", lambda *_: self.update_headers())
+            except TypeError:
+                pass
+            body.pack_start(grid, True, True, 0)
+        else:
+            body.pack_start(scroll, True, True, 0)
         root.pack_start(body, True, True, 0)
         if self.kind == CALC:
             self.sheet_box = Gtk.Box()
@@ -433,9 +455,71 @@ class OfficeWindow(Gtk.Window):
         self.zoom.connect("value-changed", lambda z: self.view.set_zoom(z.get_value() / 100.0))
         self.zoom_label = Gtk.Label(label="100%")
         self.zoom.connect("value-changed", lambda z: self.zoom_label.set_text("%d%%" % z.get_value()))
+        self.zoom.connect("value-changed", lambda z: GLib.timeout_add(150, lambda: (self.update_headers(), False)[1]))
         bar.pack_end(self.zoom_label, False, False, 0)
         bar.pack_end(self.zoom, False, False, 0)
         return bar
+
+    # ---------------- spreadsheet headers (LibreOfficeKit gives the positions; this window draws them)
+    def update_headers(self):
+        if self.kind != CALC or not getattr(self, "_ready", False):
+            return
+        h, v = self.scroll.get_hadjustment(), self.scroll.get_vadjustment()
+        z = max(0.25, self.zoom.get_value() / 100.0)
+        tw = 15.0 / z                      # twips per screen pixel at this zoom (96 dpi)
+        q = ".uno:ViewRowColumnHeaders?x=%d&y=%d&width=%d&height=%d" % (
+            h.get_value() * tw, v.get_value() * tw, max(1, h.get_page_size()) * tw + 3000, max(1, v.get_page_size()) * tw + 3000)
+        try:
+            self.hdr = json.loads(self.view.get_command_values(q) or "{}")
+        except (ValueError, GLib.Error):
+            return
+        self.colhdr.queue_draw()
+        self.rowhdr.queue_draw()
+
+    @staticmethod
+    def _hdr_bg(w, cr):
+        a = w.get_allocation()
+        cr.set_source_rgb(0.953, 0.953, 0.953)
+        cr.rectangle(0, 0, a.width, a.height)
+        cr.fill()
+
+    def _draw_hdr(self, w, cr, key, horizontal, offset):
+        self._hdr_bg(w, cr)
+        a = w.get_allocation()
+        es = self.hdr.get(key) or []
+        if not es:
+            return
+        cr.select_font_face("sans-serif", 0, 0)
+        cr.set_font_size(11)
+        prev = es[0].get("size", 0)
+        for e in es[1:]:
+            end = e.get("size", prev)
+            s0, s1 = prev - offset, end - offset
+            prev = end
+            if s1 < 0:
+                continue
+            if s0 > (a.width if horizontal else a.height):
+                break
+            cr.set_source_rgb(0.78, 0.78, 0.78)
+            if horizontal:
+                cr.rectangle(s1 - 0.5, 0, 1, a.height)
+            else:
+                cr.rectangle(0, s1 - 0.5, a.width, 1)
+            cr.fill()
+            txt = str(e.get("text", ""))
+            ext = cr.text_extents(txt)
+            cr.set_source_rgb(0.27, 0.27, 0.27)
+            if horizontal:
+                cr.move_to((s0 + s1) / 2 - ext.width / 2, a.height / 2 + ext.height / 2)
+            else:
+                cr.move_to(a.width / 2 - ext.width / 2, (s0 + s1) / 2 + ext.height / 2)
+            cr.show_text(txt)
+
+    def _draw_cols(self, w, cr):
+        self._draw_hdr(w, cr, "columns", True, self.scroll.get_hadjustment().get_value())
+
+    def _draw_rows(self, w, cr):
+        self._draw_hdr(w, cr, "rows", False, self.scroll.get_vadjustment().get_value())
 
     # ---------------- engine events
     def opened(self, view, result, data):
@@ -450,7 +534,7 @@ class OfficeWindow(Gtk.Window):
             self._ready = True
             self.status.set_text("Ready")
             self.refresh_parts()
-            GLib.timeout_add(800, lambda: (self.refresh_parts(), False)[1])
+            GLib.timeout_add(800, lambda: (self.refresh_parts(), self.update_headers(), False)[2])
             if self.kind == IMPRESS:
                 threading.Thread(target=self._thumbs, daemon=True).start()
             if os.environ.get("ZENOS_OFFICE_SELFTEST") == "1":

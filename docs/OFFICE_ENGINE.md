@@ -39,7 +39,8 @@ network.
   - The layout: the ribbon of the office suites people know (Microsoft Office; ONLYOFFICE, the open-source suite
     on GitHub with the same layout, is the reference): File, Home, Insert, Layout, Review, View, plus Formulas and
     Data for spreadsheets and Design for slides; the font, size and style boxes and toggle buttons follow the
-    engine's state (LOKDocView "command-changed"); spreadsheets have the name box, the formula bar (LOKDocView
+    engine's state (LOKDocView "command-changed"); spreadsheets have the row numbers and column letters (positions from LibreOfficeKit's
+    `.uno:ViewRowColumnHeaders`, drawn by the window), the name box, the formula bar (LOKDocView
     "formula-changed", "address-changed") and sheet tabs; presentations have the slide list with pictures (the
     pages made in the separate sandbox, drawn small). Commands that would take the document out of its place
     (Save As, Send, links to the outside) are not offered.
@@ -83,8 +84,6 @@ in Microsoft Office.
 
 ## Not built yet
 
-- Row and column headers (A, B, C ... and 1, 2, 3 ...) beside the cells of a spreadsheet: LOKDocView does not draw
-  them, and the window does not draw them yet.
 - The engine's own dialogs (cell format, paragraph, page setup, find and replace with options): LibreOfficeKit
   hands them to the window as separate windows, and this window does not show them yet; the ribbon offers the
   commands that need no dialog.
