@@ -38,7 +38,23 @@ struct Bundle {
 }
 
 #[wasm_bindgen]
-pub struct Device { name: String, store: InMemSignalProtocolStore, bundle: String }
+pub struct Device { name: String, store: InMemSignalProtocolStore, bundle: String, peers: Vec<String>, pre_ids: Vec<u32> }
+
+/// Everything a device must keep between visits, as `export()` writes it and `Device::restore` reads it: the private
+/// keys and the sessions. The page keeps it only encrypted (zkeystore.js: AES-GCM with a key the page cannot read).
+#[derive(Serialize, Deserialize)]
+struct Saved {
+    v: u32,
+    name: String,
+    #[serde(rename = "regId")] reg_id: u32,
+    identity: String,
+    signed: String,
+    kyber: String,
+    pre: Vec<(u32, String)>,
+    sessions: Vec<(String, String)>,
+    known: Vec<(String, String)>,
+    bundle: String,
+}
 
 #[wasm_bindgen]
 impl Device {
@@ -73,7 +89,61 @@ impl Device {
             kyber: Signed { id: 1, public: b64(&kkp.public_key.serialize()), sig: b64(&ksig) },
             pre_keys: Some(pres), pre_key: None,
         };
-        Ok(Device { name, store, bundle: serde_json::to_string(&bundle).map_err(e)? })
+        let pre_ids = (0..prekeys).map(|i| 100 + i).collect();
+        Ok(Device { name, store, bundle: serde_json::to_string(&bundle).map_err(e)?, peers: vec![], pre_ids })
+    }
+
+    /// The device's private keys and sessions as JSON, to be kept encrypted by the page (zkeystore.js). One-time
+    /// prekeys already used are not in it.
+    pub fn export(&self) -> R<String> {
+        let s = &self.store;
+        block_on(async {
+            let idkp = s.get_identity_key_pair().await?;
+            let reg_id = s.get_local_registration_id().await?;
+            let signed = s.get_signed_pre_key(1.into()).await?.serialize()?;
+            let kyber = s.get_kyber_pre_key(1.into()).await?.serialize()?;
+            let mut pre = vec![];
+            for id in &self.pre_ids {
+                if let Ok(r) = s.get_pre_key((*id).into()).await { pre.push((*id, b64(&r.serialize()?))); }
+            }
+            let mut sessions = vec![];
+            let mut known = vec![];
+            for p in &self.peers {
+                let a = ProtocolAddress::new(p.clone(), dev1());
+                if let Some(r) = s.load_session(&a).await? { sessions.push((p.clone(), b64(&r.serialize()?))); }
+                if let Some(k) = s.get_identity(&a).await? { known.push((p.clone(), b64(&k.serialize()))); }
+            }
+            Ok::<Saved, SignalProtocolError>(Saved { v: 1, name: self.name.clone(), reg_id, identity: b64(&idkp.serialize()),
+                signed: b64(&signed), kyber: b64(&kyber), pre, sessions, known, bundle: self.bundle.clone() })
+        }).map_err(e).and_then(|x| serde_json::to_string(&x).map_err(e))
+    }
+
+    /// A device as `export()` wrote it: the same identity, prekeys and sessions.
+    pub fn restore(saved: &str) -> R<Device> {
+        let x: Saved = serde_json::from_str(saved).map_err(e)?;
+        if x.v != 1 { return Err(JsError::new("unknown saved format")); }
+        let idkp = IdentityKeyPair::try_from(ub(&x.identity)?.as_slice()).map_err(e)?;
+        let mut store = InMemSignalProtocolStore::new(idkp, x.reg_id).map_err(e)?;
+        let mut peers = vec![];
+        let mut pre_ids = vec![];
+        block_on(async {
+            store.save_signed_pre_key(1.into(), &SignedPreKeyRecord::deserialize(&ub(&x.signed)?)?).await?;
+            store.save_kyber_pre_key(1.into(), &KyberPreKeyRecord::deserialize(&ub(&x.kyber)?)?).await?;
+            for (id, r) in &x.pre {
+                store.save_pre_key((*id).into(), &PreKeyRecord::deserialize(&ub(r)?)?).await?;
+                pre_ids.push(*id);
+            }
+            for (p, k) in &x.known {
+                store.save_identity(&ProtocolAddress::new(p.clone(), dev1()), &IdentityKey::decode(&ub(k)?)?).await?;
+            }
+            for (p, r) in &x.sessions {
+                store.store_session(&ProtocolAddress::new(p.clone(), dev1()), &SessionRecord::deserialize(&ub(r)?)?).await?;
+                peers.push(p.clone());
+            }
+            for (p, _) in &x.known { if !peers.contains(p) { peers.push(p.clone()); } }
+            Ok::<(), JsError>(())
+        })?;
+        Ok(Device { name: x.name, store, bundle: x.bundle, peers, pre_ids })
     }
 
     /// The public halves, in the relay's shape (`regId`, `identity`, `signed`, `kyber`, `preKeys`).
@@ -93,6 +163,7 @@ impl Device {
             ub(&b.signed.sig)?, b.kyber.id.into(), kem::PublicKey::deserialize(&ub(&b.kyber.public)?).map_err(e)?, ub(&b.kyber.sig)?,
             IdentityKey::decode(&ub(&b.identity)?).map_err(e)?).map_err(e)?;
         let local = ProtocolAddress::new(self.name.clone(), dev1());
+        if !self.peers.contains(&peer) { self.peers.push(peer.clone()); }
         let s = &mut self.store;
         block_on(process_prekey_bundle(&ProtocolAddress::new(peer, dev1()), &local, &mut s.session_store, &mut s.identity_store,
             &pb, at(now_ms), &mut rand::rng())).map_err(e)
@@ -120,6 +191,7 @@ impl Device {
         let s = &mut self.store;
         let r = block_on(sealed_sender_decrypt(&ub(envelope)?, &root, Timestamp::from_epoch_millis(now_ms as u64), None, name, dev1(),
             &mut s.identity_store, &mut s.session_store, &mut s.pre_key_store, &s.signed_pre_key_store, &mut s.kyber_pre_key_store)).map_err(e)?;
+        if !self.peers.contains(&r.sender_uuid) { self.peers.push(r.sender_uuid.clone()); }
         Ok(serde_json::json!({ "sender": r.sender_uuid, "text": String::from_utf8_lossy(&r.message) }).to_string())
     }
 }

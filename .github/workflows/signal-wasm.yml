@@ -3,7 +3,7 @@ name: signal-wasm
 # browsers (messenger/wasm), checked against the PC's libsignal through the real relay, and in Chromium.
 on:
   push:
-    paths: ["messenger/wasm/**", "tests/messenger_wasm*.js", ".github/workflows/signal-wasm.yml"]
+    paths: ["messenger/wasm/**", "tests/messenger_wasm*.js", "tools/sign_wasm_release.js", ".github/workflows/signal-wasm.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -30,9 +30,9 @@ jobs:
           ls -la pkg pkg-web
       - name: The browser build talks to the PC's libsignal through the relay
         run: (cd messenger && npm ci) && node tests/messenger_wasm.js
-      - name: In Chromium, WebKit (Safari's engine) and Firefox
+      - name: In Chromium, WebKit (Safari's engine) and Firefox (also the signed-release loader and the encrypted key store)
         run: |
-          npm install --no-save --no-audit --no-fund playwright@1.48.2
+          npm install --no-save --no-audit --no-fund playwright@1.56.0
           npx playwright install --with-deps chromium webkit firefox
           for e in chromium webkit firefox; do ENGINE=$e node tests/messenger_wasm_browser.js; done
       - uses: actions/upload-artifact@v4

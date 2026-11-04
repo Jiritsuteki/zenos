@@ -64,6 +64,16 @@ const j = async (p, method = "GET", obj, h = {}) => { const r = await fetch(R + 
   q = await j("/collect/" + aIntro.id, "GET", undefined, { "X-Owner": aIntro.tok });
   const out = await S.sealedSenderDecryptMessage(ub(q[0].body), S.PublicKey.deserialize(ub(trust)), Date.now(), null, "alice", 1, sess, ident, pks, spks, kpks);
   check("the PC opens the browser device's reply, from bob", Buffer.from(out.message()).toString() === "Received. 3 shelters open." && out.senderUuid() === "bob");
+  // the device's keys and sessions survive an export and a restore (what the page keeps, encrypted, between visits)
+  const bob2 = W.Device.restore(bob.export());
+  check("the restored device has the same identity", JSON.parse(bob2.bundle()).identity === JSON.parse(bob.bundle()).identity);
+  const env2 = await S.sealedSenderEncryptMessage(Buffer.from("One more after the restore."), S.ProtocolAddress.new("bob", 1), S.SenderCertificate.deserialize(ub(ac.cert)), sess, ident);
+  const got2 = JSON.parse(bob2.open(trust, b64(env2), Date.now()));
+  check("the restored device opens the PC's next message on the same session", got2.sender === "alice" && got2.text === "One more after the restore.", got2);
+  const back2 = bob2.seal("alice", bc.cert, "Still here.", Date.now());
+  const out2 = await S.sealedSenderDecryptMessage(ub(back2), S.PublicKey.deserialize(ub(trust)), Date.now(), null, "alice", 1, sess, ident, pks, spks, kpks);
+  check("and the PC opens its reply", Buffer.from(out2.message()).toString() === "Still here.");
+  check("a broken saved state is refused", (() => { try { W.Device.restore("{}"); return false; } catch { return true; } })());
   // the device's signature is what the relay checks for account requests
   const pth = "/channels?member=bob", ts2 = String(Date.now());
   const ch = await fetch(R + pth, { headers: { "X-Zenos-Auth": `bob ${ts2} ${bob.sign(`GET ${pth} ${ts2} ${sha("")}`)}` } });
