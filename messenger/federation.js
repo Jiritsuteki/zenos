@@ -200,6 +200,34 @@ function federation(ctx) {
       return send(res, 200, { ...Object.fromEntries(keep.map((k) => [k, b[k] === undefined ? null : b[k]])), org: cfg.org }), true;
     }
 
+    // ---- an attachment sent by a person at another organization: the ciphertext is fetched from the sender's relay
+    // (the key is only in the sealed message). The sender's relay gives it only to a listed organization that may
+    // receive the level the sender gave it.
+    if (req.method === "GET" && parts[0] === "fed" && parts[1] === "blob" && parts.length === 4) {
+      const by = u.searchParams.get("by"), level = Number(u.searchParams.get("level")) || 0;
+      if (!ctx.authed(req, by)) return send(res, 403, { error: "unsigned" }), true;
+      const d = outbound(parts[2], "message", level);
+      if (!d.allow) return send(res, 403, { error: "Not allowed: " + d.reason }), true;
+      if (!/^[0-9a-f]{32}$/.test(parts[3])) return send(res, 400, { error: "blob id" }), true;
+      const ts = String(Date.now()), p = "/fed/blobs/" + parts[3];
+      try {
+        const r = await fetch(d.entry.url.replace(/\/$/, "") + p, { headers: { "X-Zenos-Relay": `${me.org} ${ts} ${me.sign(reqText("GET", p, ts, ""))}` }, signal: AbortSignal.timeout(30000) });
+        const buf = Buffer.from(await r.arrayBuffer());
+        ctx.audit("fed-blob-fetched", { from_org: parts[2], status: r.status, bytes: buf.length });
+        res.writeHead(r.status, { "Content-Type": r.ok ? "application/octet-stream" : "application/json" }); res.end(buf);
+      } catch (err) { send(res, 502, { error: "the other organization's relay did not answer" }); }
+      return true;
+    }
+    if (req.method === "GET" && parts[0] === "fed" && parts[1] === "blobs" && parts.length === 3) {
+      const b = ctx.blobFor ? ctx.blobFor(parts[2]) : null;
+      const d = inbound(req, "", "message", b ? b.level : 5);
+      if (!d.allow) { ctx.audit("fed-refused", { from_org: d.from || null, reason: d.reason, kind: "blob" }); return send(res, 403, { error: "Not allowed: " + d.reason }), true; }
+      if (!b) return send(res, 404, { error: "gone" }), true;
+      ctx.audit("fed-blob-given", { to_org: d.from, bytes: b.data.length, level: b.level });
+      res.writeHead(200, { "Content-Type": "application/octet-stream" }); res.end(b.data);
+      return true;
+    }
+
     // ---- disaster alerts
     if (req.method === "POST" && parts[0] === "fed" && parts[1] === "alert") {
       const raw = await rawBody(req); let a; try { a = JSON.parse(raw); } catch { return send(res, 400, { error: "bad json" }), true; }

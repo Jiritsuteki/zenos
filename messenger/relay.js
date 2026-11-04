@@ -162,7 +162,15 @@ function bundleFor(acc) {                    // a key bundle for a new session; 
   return out;
 }
 // ---------- organizations reaching each other (federation.js, docs/FEDERATION.md) ----------
-const fed = require("./federation").federation({ DIR, audit, send, body, isAdmin, authed, deliverSealed, bundleFor, trust: ca.trustPub });
+// an encrypted attachment for another organization's relay: the ciphertext and the level its sender gave it
+function blobFor(id) {
+  if (!/^[0-9a-f]{32}$/.test(id || "")) return null;
+  const p = path.join(BLOBS, id);
+  if (!fs.existsSync(p)) return null;
+  let level = 5; try { level = Number(fs.readFileSync(p + ".level", "utf8")) || 5; } catch {}
+  return { data: fs.readFileSync(p), level };
+}
+const fed = require("./federation").federation({ DIR, audit, send, body, isAdmin, authed, deliverSealed, bundleFor, blobFor, trust: ca.trustPub });
 
 // ---------- calls (WebRTC via self-hosted LiveKit SFU). The relay only decides WHO may enter a room;
 // media is end-to-end encrypted with a key that travels inside libsignal messages, never through here.
@@ -344,7 +352,10 @@ http.createServer(async (req, res) => {
       const chunks = []; let size = 0;
       for await (const c of req) { size += c.length; if (size > MAX_BLOB) return send(res, 413, { error: "Attachment too large (max 25 MB)." }); chunks.push(c); }
       const id = require("crypto").randomBytes(16).toString("hex");
-      fs.writeFileSync(path.join(BLOBS, id), Buffer.concat(chunks)); sweepBlobs();
+      fs.writeFileSync(path.join(BLOBS, id), Buffer.concat(chunks));
+      // the level the sender gives the attachment: another organization's relay gets it only within that level
+      const lv = Math.max(1, Math.min(5, Number(u.searchParams.get("level")) || 5));
+      fs.writeFileSync(path.join(BLOBS, id + ".level"), String(lv)); sweepBlobs();
       audit("msg-blob-stored", { bytes: size });
       return send(res, 200, { id });
     }

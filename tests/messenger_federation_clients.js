@@ -1,5 +1,7 @@
 // Two ZENOS Messages clients at two organizations (client.js, unchanged UI): a message to "account@organization"
-// goes through both relays and comes back as a reply, end to end (Signal protocol, sealed sender).
+// goes through both relays and comes back as a reply, end to end (Signal protocol, sealed sender). A file crosses
+// too (the ciphertext fetched from the sender's relay, the key only in the sealed message), and a room with people
+// at both organizations carries messages and files both ways.
 //   node tests/messenger_federation_clients.js   (needs messenger/node_modules and zenos-decide built)
 const path = require("path"), os = require("os"), fs = require("fs"), crypto = require("crypto"), { spawn } = require("child_process");
 const MSG = path.join(__dirname, "..", "messenger");
@@ -39,6 +41,42 @@ const wait = async (f, ms = 15000) => { const t = Date.now(); while (Date.now() 
   check("sato replies", r.ok, r);
   const back = await wait(async () => (await j(za + "/api/all")).find((m) => m.dir === "in" && m.from === "sato@city.example"));
   check("zenos reads the reply, from sato@city.example", back && back.text === "Confirmed, 3 shelters open.", back);
+  // a file across organizations
+  const fileText = "School,Beds\nNorth,120\nSouth,80\n";
+  r = await (await fetch(za + "/api/attach?to=sato@city.example&level=2&name=shelters.csv&mime=text/csv&text=" + encodeURIComponent("The list."), { method: "POST", body: fileText })).json();
+  check("zenos sends a file to sato@city.example", r.ok, r);
+  const fm = await wait(async () => (await j(zb + "/api/all")).find((m) => m.dir === "in" && m.att && m.att.name === "shelters.csv"));
+  check("sato receives it, opened and checked (fingerprint)", fm && !fm.att.error && fm.att.size === fileText.length, fm);
+  const fbody = fm ? await (await fetch(zb + "/api/att/" + fm.att.sha256 + "?dl")).text() : "";
+  check("the file is what zenos sent", fbody === fileText, fbody);
+  // a room with people at both organizations
+  r = await j(za + "/api/rooms", "POST", { name: "Shelters (ministry + city)", members: ["sato@city.example"], level: 2 });
+  check("zenos makes a room with sato@city.example", r.ok && /^room-/.test(r.room.id), r);
+  const room = r.ok ? r.room.id : "";
+  const rc = await wait(async () => (await j(zb + "/api/channels")).find((c) => c.id === room));
+  check("the room appears at the city, with both members", rc && rc.members.includes("zenos@ministry.example") && rc.members.includes("sato@city.example"), rc);
+  r = await j(za + "/api/channel-send", "POST", { ch: room, text: "Shelter 4 opens at 18:00.", level: 2 });
+  check("zenos writes in the room", r.ok, r);
+  const rm = await wait(async () => (await j(zb + "/api/channel-messages?ch=" + room)).find((m) => m.dir === "in" && m.text === "Shelter 4 opens at 18:00."));
+  check("sato reads it in the room", rm && rm.from === "zenos@ministry.example", rm);
+  r = await j(zb + "/api/channel-send", "POST", { ch: room, text: "Noted, staff on the way.", level: 2 });
+  check("sato answers in the room", r.ok, r);
+  const rb = await wait(async () => (await j(za + "/api/channel-messages?ch=" + room)).find((m) => m.dir === "in" && m.text === "Noted, staff on the way."));
+  check("zenos reads the answer in the same room", rb && rb.from === "sato@city.example", rb);
+  r = await (await fetch(zb + "/api/attach?ch=" + room + "&level=1&name=photo.txt&mime=text/plain", { method: "POST", body: "a file into the room" })).json();
+  check("sato sends a file into the room", r.ok, r);
+  const ra = await wait(async () => (await j(za + "/api/channel-messages?ch=" + room)).find((m) => m.dir === "in" && m.att && m.att.name === "photo.txt"));
+  check("zenos receives the room's file from the city", ra && !ra.att.error, ra);
+  // the ministry's relay gives a file's ciphertext only to a listed relay, within the level the sender gave it
+  const up = async (lv) => (await (await fetch(A.url + "/blobs?level=" + lv, { method: "POST", body: "ciphertext" })).json()).id;
+  const cityRelay = { org: "city.example", sign: F.signer(path.join(B.HOME, ".local/share/zenos/msg/relay/relay-key.pem")).sign };
+  const asCity = async (id) => (await fetch(A.url + "/fed/blobs/" + id, { headers: (() => { const ts = String(Date.now()), p = "/fed/blobs/" + id;
+    return { "X-Zenos-Relay": `city.example ${ts} ${cityRelay.sign(F.reqText("GET", p, ts, ""))}` }; })() })).status;
+  check("an unsigned request for a file is refused", (await fetch(A.url + "/fed/blobs/" + (await up(1)))).status === 403);
+  check("the city's relay gets an L2 file", (await asCity(await up(2))) === 200);
+  check("the city's relay (listed up to L3) does not get an L4 file", (await asCity(await up(4))) === 403);
+  r = await j(za + "/api/channel-send", "POST", { ch: room, text: "x", level: 3 });
+  check("an L3 message in an L2 room is refused", !!r.error && /L2/.test(r.error), r);
   r = await j(za + "/api/send", "POST", { to: "sato@city.example", text: "x", level: 4 });
   check("L4 to the city (listed up to L3) refused", !!r.error && /level/.test(r.error), r);
   r = await j(za + "/api/send", "POST", { to: "someone@unlisted.example", text: "x", level: 1 });

@@ -29,8 +29,12 @@
   relay-to-relay request is signed with the sending relay's key (published at `/.well-known/zenos-relay`) and
   decided by `zenos-decide` ("federate"): `unlisted_refused`, `one_signer_not_enough`, `level_bound`,
   `publisher_cannot_message`. People write to `account@organization`; the receiving relay learns which relay sent
-  an envelope, not which person. Plain messages only across organizations for now (no channels, attachments,
-  calls).
+  an envelope, not which person. Across organizations: messages, files and rooms (no calls or approvals).
+- Files and rooms across organizations: a file sent to `account@organization` stays encrypted on the sender's
+  relay and is fetched by the recipient's relay with a signed request, only by a listed organization that may
+  receive the file's level. Rooms (groups kept by the members' devices) can include people at several
+  organizations; each message goes to each member as its own sealed message and each relay applies its own rules;
+  only the room's maker changes the members; the room's level caps every message.
 - Disaster alerts from a publish-only member (GEOID): signed, with issuer, label (official or simulation), area,
   source URL and the source's SHA-256; answer cards (safe / need help) counted per device without accounts; only
   counts go to another organization.

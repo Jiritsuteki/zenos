@@ -192,7 +192,7 @@ async function send(to, text, level, meta) {
   if (!st.peers[to] && !st.intros[to]) { const b = await rq("GET", `/keys/${to}`); if (b.intro) { st.intros[to] = b.intro; persist(); } }
   const t = stamp();
   meta = meta || {};
-  const payload = { text, level, t, ch: meta.ch || null, thread: meta.thread || null, id: meta.id || null,
+  const payload = { text, level, t, ch: meta.ch || null, room: meta.room || null, thread: meta.thread || null, id: meta.id || null,
                     kind: meta.kind || "msg", target: meta.target || null, emoji: meta.emoji || null, on: meta.on !== false, att: meta.att || null, ev: meta.ev || null, status: meta.status || null, cancel: !!meta.cancel,
                     rt: { mbx: st.mb.priv.id, uak: st.mb.priv.uak } };   // reply-to: only the recipient ever sees our private mailbox
   const sealed = await S.sealedSenderEncryptMessage(Buffer.from(JSON.stringify(payload)), addr, await senderCert(), sess, ident);
@@ -225,7 +225,8 @@ async function sendFed(to, text, level, meta) {
   const [acc, org] = to.split("@");
   if (level > PEOPLE[ACC].level) throw new Error(`Your clearance is L${PEOPLE[ACC].level}.`);
   meta = meta || {};
-  if (meta.ch || meta.att) throw new Error("Channels and attachments stay inside one organization for now.");
+  if (meta.ch && !(meta.room && meta.room.id === meta.ch)) throw new Error("Only rooms (not this relay's channels) reach other organizations.");
+  if ((meta.kind || "msg") !== "msg") throw new Error("Only messages and files reach other organizations for now.");
   const addr = S.ProtocolAddress.new(to, 1);
   if (!(await sess.getSession(addr))) {
     const b = await rq("GET", `/fed/keys/${org}/${encodeURIComponent(acc)}?by=${ACC}`);
@@ -237,15 +238,79 @@ async function sendFed(to, text, level, meta) {
     audit("msg-session-created", { peer: to });
   }
   const t = stamp();
-  const payload = { text, level, t, ch: null, thread: meta.thread || null, id: meta.id || null, kind: "msg",
-                    rt: { mbx: st.mb.priv.id, uak: st.mb.priv.uak, org: await myOrg() } };
+  const org0 = await myOrg();
+  const att = meta.att ? { ...meta.att, org: meta.att.org || org0 } : null;    // the other side fetches it from this relay
+  const payload = { text, level, t, ch: meta.ch || null, room: meta.room || null, thread: meta.thread || null, id: meta.id || null, kind: "msg", att,
+                    rt: { mbx: st.mb.priv.id, uak: st.mb.priv.uak, org: org0 } };
   const sealed = await S.sealedSenderEncryptMessage(Buffer.from(JSON.stringify(payload)), addr, await senderCert(), sess, ident);
   const dest = st.peers[to] || { mbx: st.intros[to], uak: null };
   if (!dest.mbx) throw new Error("No mailbox known for this person yet.");
   const r = await rq("POST", "/fed/send", { by: ACC, to_org: org, mbx: dest.mbx, uak: dest.uak, body: b64(sealed), level });
   if (r.error) throw new Error("Delivery failed: " + r.error);
-  hist.push({ scope: "dm", peer: to, from: ACC, dir: "out", text, level, t, id: payload.id, thread: payload.thread, kind: "msg", on: true }); saveHist();
-  recordMsg(hist[hist.length - 1]);
+  if (!meta.ch) { hist.push({ scope: "dm", peer: to, from: ACC, dir: "out", text, level, t, id: payload.id, thread: payload.thread, kind: "msg", on: true, att: pubAtt(att) }); saveHist();
+    recordMsg(hist[hist.length - 1]); }
+}
+
+// ---------- rooms: groups that can include people at other organizations ----------
+// A room is kept by its members' devices, not by a relay: the person who makes it lists the members (accounts here,
+// account@organization elsewhere). Every message carries the room (id, name, level, members) and goes to each
+// member as its own sealed message, so each relay applies its own rules to each member (for another organization:
+// the signed member list and its level, decided by zenos-decide). Only the person who made the room changes who is
+// in it. The room's level caps every message in it.
+const ROOMS_F = path.join(DIR, "rooms.json");
+let rooms = load(ROOMS_F, {});
+const saveRooms = () => fs.writeFileSync(ROOMS_F, JSON.stringify(rooms), { mode: 0o600 });
+const isRoom = (ch) => /^room-[0-9a-f]{16}$/.test(ch || "");
+async function hereOrg() { try { return await myOrg(); } catch { return "local"; } }   // rooms also work on a relay without federation
+async function absAddr(a) { return a.includes("@") ? a : a + "@" + await hereOrg(); }
+async function localAddr(a) { const [acc, org] = a.split("@"); return org === await hereOrg() ? acc : a; }
+async function makeRoom(name, members, level) {
+  if (level > PEOPLE[ACC].level) throw new Error(`Your clearance is L${PEOPLE[ACC].level}.`);
+  const me = await absAddr(ACC), list = [me];
+  for (const m of members || []) {
+    const a = await absAddr(String(m).trim().toLowerCase());
+    if (!FEDADDR.test(a)) throw new Error("Not an address: " + m);
+    if (!list.includes(a)) list.push(a);
+  }
+  if (list.length > 200) throw new Error("A room has at most 200 members.");
+  const id = "room-" + crypto.randomBytes(8).toString("hex");
+  rooms[id] = { id, name: String(name || "Room").slice(0, 60), level: Math.max(1, Number(level) || 1), members: list, by: me, t: stamp() };
+  saveRooms(); audit("msg-room-made", { room: id, members: list.length, level: rooms[id].level });
+  await sendRoom(id, `Room "${rooms[id].name}" made by ${PEOPLE[ACC].name.split(" · ")[0]}.`, 1, null, {});
+  return rooms[id];
+}
+async function sendRoom(id, text, level, thread, extra) {
+  const r = rooms[id]; extra = extra || {};
+  if (!r) throw new Error("Unknown room.");
+  if (level > r.level) throw new Error(`This room is L${r.level}. An L${level} message cannot go to it.`);
+  const mid = `${ACC}-${Date.now()}-${Math.floor(Math.random() * 1e6)}`, t = stamp(), me = await absAddr(ACC);
+  hist.push({ scope: "channel", ch: id, peer: "#" + r.name, from: ACC, dir: "out", text, level, t, thread: thread || null, id: mid,
+              kind: extra.kind || "msg", target: extra.target || null, emoji: extra.emoji || null, on: extra.on !== false, att: pubAtt(extra.att), ev: extra.ev || null, status: extra.status || null, cancel: !!extra.cancel });
+  saveHist();
+  if (!extra.kind || extra.kind === "msg") recordMsg(hist[hist.length - 1]);
+  const room = { id, name: r.name, level: r.level, members: r.members, by: r.by };
+  let delivered = 0; const failed = [];
+  for (const m of r.members) {
+    if (m === me) continue;
+    const to = await localAddr(m);
+    try { await send(to, text, level, { ch: id, room, thread: thread || null, id: mid, ...extra }); delivered++; }
+    catch (err) { failed.push(m); audit("msg-room-send-failed", { room: id, to: m, error: String(err.message || err).slice(0, 80) }); }
+  }
+  audit("msg-room-sent", { room: id, delivered, failed: failed.length, level });
+  return { delivered, failed };
+}
+/** A room message from `from` (an address as this device writes it): learn the room, if the sender is in it. */
+async function learnRoom(from, m) {
+  if (!m.room || !isRoom(m.ch) || m.room.id !== m.ch) return false;
+  const fromAbs = await absAddr(from), me = await absAddr(ACC), x = m.room;
+  const members = Array.isArray(x.members) ? x.members.map(String).filter((a) => FEDADDR.test(a)).slice(0, 200) : [];
+  if (!members.includes(fromAbs) || !members.includes(me)) return false;
+  const cur = rooms[m.ch];
+  if (!cur) rooms[m.ch] = { id: m.ch, name: String(x.name || "Room").slice(0, 60), level: Math.max(1, Math.min(5, Number(x.level) || 1)), members, by: String(x.by || fromAbs), t: stamp() };
+  else if (cur.by === fromAbs && x.by === cur.by) { cur.members = members; cur.name = String(x.name || cur.name).slice(0, 60); }   // only the maker changes the room
+  else if (!cur.members.includes(fromAbs)) return false;
+  saveRooms();
+  return true;
 }
 /** Open a sealed envelope: this relay's trust root first, then the listed organizations' roots. */
 async function openSealed(body) {
@@ -260,6 +325,7 @@ async function openSealed(body) {
 }
 
 async function sendChannel(ch, text, level, thread, extra) {
+  if (isRoom(ch)) return sendRoom(ch, text, level, thread, extra);
   extra = extra || {};
   const chans = await rq("GET", `/channels?member=${ACC}`);
   const c = (chans || []).find((x) => x.id === ch);
@@ -295,12 +361,14 @@ async function receiveSealed() {
       if (!org && !PEOPLE[from]) { audit("msg-dropped", { reason: "unknown sender" }); continue; }
       const m = JSON.parse(Buffer.from(out.message()).toString("utf8"));
       if (org) {                       // from another organization: plain messages only (no releases, calls, channels, attachments)
-        if (m.kind !== "msg" || m.ch || m.att || (m.rt && m.rt.org !== org)) { audit("msg-dropped", { reason: "not allowed across organizations", org }); continue; }
+        const roomOk = !m.ch || (isRoom(m.ch) && await learnRoom(from, m));
+        if (m.kind !== "msg" || !roomOk || (m.att && m.att.org !== org) || (m.rt && m.rt.org !== org)) { audit("msg-dropped", { reason: "not allowed across organizations", org }); continue; }
         if (m.rt && /^[0-9a-f]{32}$/.test(m.rt.mbx || "")) { st.peers[from] = { mbx: m.rt.mbx, uak: m.rt.uak }; persist(); }
         await ingest(from, { ...m, ev: null, status: null, target: null });
         continue;
       }
       if (m.rt && /^[0-9a-f]{32}$/.test(m.rt.mbx || "")) { st.peers[from] = { mbx: m.rt.mbx, uak: m.rt.uak }; persist(); }
+      if (isRoom(m.ch) && !(await learnRoom(from, m))) { audit("msg-dropped", { reason: "not a member of the room" }); continue; }
       await ingest(from, m);
     } catch (err) { audit("msg-decrypt-failed", { from, error: String(err).slice(0, 120) }); }
   }
@@ -327,7 +395,7 @@ async function ingest(fromAcc, m) {
   {
     try {
       if (m.level > PEOPLE[ACC].level) { audit("msg-dropped", { from: e.from, level: m.level }); return; }
-      if (m.att) m.att = await openAttachment(m.att);
+      if (m.att) m.att = await openAttachment(m.att, m.level);
       hist.push({ scope: m.ch ? "channel" : "dm", ch: m.ch || null, peer: m.ch ? ("#" + m.ch) : e.from,
                   from: e.from, dir: "in", text: m.text, level: m.level, t: m.t, thread: m.thread || null, id: m.id || null,
                   kind: m.kind || "msg", target: m.target || null, emoji: m.emoji || null, on: m.on !== false, att: m.att || null, ev: m.ev || null, status: m.status || null, cancel: !!m.cancel });
@@ -466,19 +534,23 @@ const restrict = (arr, remote, req) => {
 const ATT = path.join(DIR, "att"); fs.mkdirSync(ATT, { recursive: true, mode: 0o700 });
 const SAFE_INLINE = ["image/png", "image/jpeg", "image/gif", "image/webp"];
 const pubAtt = (a) => a && { sha256: a.sha256, name: a.name, mime: a.mime, size: a.size, error: a.error || null };
-async function sealAttachment(buf, name, mime) {
+async function sealAttachment(buf, name, mime, level) {
   const key = crypto.randomBytes(32), iv = crypto.randomBytes(12);
   const c = crypto.createCipheriv("aes-256-gcm", key, iv);
   const ct = Buffer.concat([c.update(buf), c.final(), c.getAuthTag()]);
   const sha256 = crypto.createHash("sha256").update(buf).digest("hex");
-  const r = await fetch(RELAY + "/blobs", { method: "POST", body: ct }); const j = await r.json();
+  const r = await fetch(RELAY + "/blobs?level=" + (Number(level) || 5), { method: "POST", body: ct }); const j = await r.json();
   if (!j.id) throw new Error(j.error || "upload failed");
   fs.writeFileSync(path.join(ATT, sha256), buf, { mode: 0o600 });
   return { id: j.id, key: key.toString("base64"), iv: iv.toString("base64"), sha256, name: String(name).slice(0, 120), mime: String(mime).slice(0, 80), size: buf.length };
 }
-async function openAttachment(a) {
+async function openAttachment(a, level) {
   try {
-    const r = await fetch(RELAY + "/blobs/" + a.id); if (!r.ok) throw new Error("not available (" + r.status + ")");
+    // from another organization: through this relay, which fetches the ciphertext from the sender's relay
+    const r = a.org && a.org !== MYORG && /^[0-9a-f]{32}$/.test(a.id || "")
+      ? await rqr("GET", `/fed/blob/${encodeURIComponent(a.org)}/${a.id}?by=${ACC}&level=${Number(level) || 1}`)
+      : await fetch(RELAY + "/blobs/" + a.id);
+    if (!r.ok) throw new Error("not available (" + r.status + ")");
     const ct = Buffer.from(await r.arrayBuffer());
     const d = crypto.createDecipheriv("aes-256-gcm", Buffer.from(a.key, "base64"), Buffer.from(a.iv, "base64"));
     d.setAuthTag(ct.subarray(ct.length - 16));
@@ -713,7 +785,7 @@ async function handle(req, res, remote) {
       const chunks = []; let size = 0;
       for await (const c of req) { size += c.length; if (size > 25 * 1024 * 1024) return json(res, 200, { error: "Attachment too large (max 25 MB)." }); chunks.push(c); }
       try {
-        const att = await sealAttachment(Buffer.concat(chunks), q.get("name") || "file", q.get("mime") || "application/octet-stream");
+        const att = await sealAttachment(Buffer.concat(chunks), q.get("name") || "file", q.get("mime") || "application/octet-stream", level);
         const text = String(q.get("text") || ""), thread = q.get("thread") || null;
         // a file presented in a call: same end-to-end encrypted attachment, tagged with the call room
         const extra = q.get("kind") === "share" ? { att, kind: "share", ev: { room: String(q.get("room") || "").slice(0, 40) } } : { att };
@@ -898,7 +970,17 @@ async function handle(req, res, remote) {
     }
     if (u.pathname === "/api/contacts") return json(res, 200, await rq("GET", "/accounts"));
     if (u.pathname === "/api/messages") return json(res, 200, restrict(hist.filter((m) => m.peer === u.searchParams.get("peer") && !m.ch), remote, req));
-    if (u.pathname === "/api/channels") return json(res, 200, await rq("GET", `/channels?member=${ACC}`));
+    if (u.pathname === "/api/channels") {
+      const here = await rq("GET", `/channels?member=${ACC}`);
+      return json(res, 200, [...(Array.isArray(here) ? here : []),
+        ...Object.values(rooms).map((r) => ({ id: r.id, name: r.name, members: r.members, level: r.level, kind: "room", by: r.by }))]);
+    }
+    if (u.pathname === "/api/rooms" && req.method === "POST") {      // a room that can include people at other organizations
+      const b = await readBody(req);
+      if (capErr(b.level)) return json(res, 200, { error: capErr(b.level) });
+      try { return json(res, 200, { ok: true, room: await makeRoom(b.name, b.members, Number(b.level) || 1) }); }
+      catch (err) { return json(res, 200, { error: err.message }); }
+    }
     if (u.pathname === "/api/channel-messages") { const ch = u.searchParams.get("ch"); return json(res, 200, restrict(hist.filter((m) => m.ch === ch), remote, req)); }
     if (u.pathname === "/api/channel-send" && req.method === "POST") {
       let b = ""; for await (const c of req) b += c;

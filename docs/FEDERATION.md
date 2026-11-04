@@ -8,6 +8,15 @@ Built and tested (tests/messenger_federation.js, tests/messenger_federation_clie
   section 2), with the proven decision `decideFederate`;
 - `account@organization` addresses in the client: a message and its reply between two clients at two
   organizations, end to end;
+- files across organizations: the file is encrypted on the sender's device (AES-256-GCM, the key only inside the
+  sealed message), the ciphertext stays on the sender's relay with the level the sender gave it, and the
+  recipient's relay fetches it with a signed request (`/fed/blob`, `/fed/blobs`); the sender's relay gives it only
+  to a listed organization that may receive that level (decided by `decideFederate`, kind "message");
+- rooms: groups that can include people at several organizations, kept by the members' devices rather than by a
+  relay. The person who makes a room lists the members (`account` here, `account@organization` elsewhere); every
+  message carries the room (id, name, level, members) and goes to each member as its own sealed message, so each
+  relay applies its own rules to each member. Only the person who made the room changes who is in it; the room's
+  level caps every message in it;
 - disaster alerts from a publish-only member, answer cards and counts (section 4);
 - the place decision `decidePlace` and the device-side geometry (section 7), not yet wired into the screens.
 
@@ -71,8 +80,9 @@ verification are not in that figure. These are estimates from assumed usage, not
   relay's signature verifies. Planned theorems: `unlisted_refused`, `level_bound`, `one_signer_not_enough` (one
   stolen signing key does not add an organization; the same shape as `one_key_not_enough` for releases).
 - Each relay records cross-organization deliveries (metadata only) in its own audit ledger.
-- Groups across organizations start with today's channel model; the design keeps the door open to MLS (RFC 9420)
-  and to IETF MIMI for interoperability with other messengers.
+- Groups across organizations are rooms kept by the members' devices (one sealed message per member, as Signal
+  groups began); the design keeps the door open to MLS (RFC 9420) for large groups and to IETF MIMI for
+  interoperability with other messengers.
 
 ## 3. Keeping who-to-whom small
 
