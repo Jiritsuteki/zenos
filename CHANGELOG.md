@@ -9,6 +9,16 @@
   check). ZENOS Office (`zenos-office`): the engine draws and edits the document in a ZENOS window; copying out goes
   only through the window and is refused from L3 up; the engine never prints; sealed files open into memory and
   are sealed again on saving. Fonts the files ask for are mapped to free fonts of the same widths.
+- The ZENOS Office window is laid out like the office suites people know (Microsoft Office, ONLYOFFICE): a ribbon
+  with File, Home, Insert, Layout, Review and View (Formulas and Data for spreadsheets, Design for slides), the font,
+  size and style boxes and buttons that follow the engine's state, a name box and formula bar and sheet tabs for
+  spreadsheets, a slide list with pictures of the slides, a status bar with the zoom. Commands that would take the
+  document out of its place (Save As, Send, Export of a sealed file) are not offered.
+- Printing from ZENOS Office goes through the ZENOS print path: the proved decision (`zdecide.flow` to "printer",
+  `print_max_level`), the audit log, and the banner (level, file, who, when) on every page of a sealed file. A plain
+  file can be exported as PDF next to it; a sealed one cannot.
+- Office files open in ZENOS Office from the file manager (`zenos-office.desktop`, the default applications of new
+  users).
 - tests/office: 642 public files from ministries and municipalities (was 105), measured cell by cell; the check
   runs on every change to the office code and refuses a change that makes any file worse than the baseline.
 

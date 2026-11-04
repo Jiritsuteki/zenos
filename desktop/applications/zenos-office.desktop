@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=ZENOS Office
+GenericName=Documents, sheets and slides
+Comment=Word, Excel and PowerPoint files in the ZENOS office window (no network, macros never run)
+Icon=/usr/share/zenos/icons/zenos-documents.svg
+Exec=/usr/bin/zenos-office %f
+MimeType=application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/msword;application/vnd.ms-word.document.macroEnabled.12;application/vnd.oasis.opendocument.text;application/rtf;text/rtf;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;application/vnd.ms-excel;application/vnd.ms-excel.sheet.macroEnabled.12;application/vnd.oasis.opendocument.spreadsheet;text/csv;application/vnd.openxmlformats-officedocument.presentationml.presentation;application/vnd.ms-powerpoint;application/vnd.ms-powerpoint.presentation.macroEnabled.12;application/vnd.oasis.opendocument.presentation;
+Categories=Office;
+NoDisplay=true

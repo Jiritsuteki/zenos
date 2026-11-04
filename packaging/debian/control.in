@@ -10,7 +10,7 @@ Depends: python3 (>= 3.11), ffmpeg, python3-gi, python3-gi-cairo, gir1.2-gtk-3.0
  python3-cryptography, python3-numpy, python3-opencv, python3-fonttools, python3-tk,
  nodejs (>= 24.22.1), kdialog, kde-cli-tools, inotify-tools, bubblewrap, xdg-user-dirs, xdotool, x11-utils, iptables, pulseaudio-utils, unattended-upgrades,
  plasma-desktop, plasma-workspace, kwin-x11, fcitx5, fcitx5-anthy, fonts-inter, fonts-morisawa-bizud-gothic, bpftrace, tpm2-tools,
- libreoffice-writer, libreoffice-calc, libreoffice-impress, liblibreofficekitgtk, gir1.2-lokdocview-0.1,
+ libreoffice-writer, libreoffice-calc, libreoffice-impress, liblibreofficekitgtk, gir1.2-lokdocview-0.1, gir1.2-poppler-0.18,
  fonts-ipafont-mincho, fonts-ipafont-gothic, fonts-ipaexfont-mincho, fonts-ipaexfont-gothic, fonts-crosextra-carlito,
  fonts-crosextra-caladea, fonts-liberation
 Recommends: sddm

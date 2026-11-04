@@ -27,10 +27,25 @@ network.
   writable. The document is copied into a tmpfs (`$XDG_RUNTIME_DIR`) and removed when the window closes.
   - Copying out: the engine's own clipboard stays inside the view (Ctrl+C never reaches the system clipboard,
     tested). Text leaves only through the window's Copy, which is refused from L3 up.
-  - Printing: the engine never prints. Pages are made as PDF from the saved copy, in a separate sandbox, and go to
-    ZENOS's print path, which keeps its limits and banner.
+  - Printing: the engine never prints. Pages are made as PDF from the saved copy, in a separate sandbox, and the
+    window prints them through ZENOS's print path: the decision is the proved one (`zdecide.flow` to "printer",
+    with `print_max_level` from /etc/zenos/policy.conf; without the decision program nothing above L0 prints), it
+    is written to the audit log, and every page of a sealed file carries the banner (level, file, who, when),
+    drawn by the window (tested: the banner text is read back from every page). A plain file can also be saved as
+    PDF next to it; a sealed file cannot, because the PDF would be a plain copy.
   - Saving: the engine writes the file in its own format (Word stays Word); the window writes it back to where it
-    came from. Sealed files are to go back through the vault and be sealed again (not wired yet).
+    came from. A sealed file is opened by zenos.py into a RAM folder (/dev/shm), the window writes back there, and
+    zenos.py seals it again at the same level when the window closes.
+  - The layout: the ribbon of the office suites people know (Microsoft Office; ONLYOFFICE, the open-source suite
+    on GitHub with the same layout, is the reference): File, Home, Insert, Layout, Review, View, plus Formulas and
+    Data for spreadsheets and Design for slides; the font, size and style boxes and toggle buttons follow the
+    engine's state (LOKDocView "command-changed"); spreadsheets have the name box, the formula bar (LOKDocView
+    "formula-changed", "address-changed") and sheet tabs; presentations have the slide list with pictures (the
+    pages made in the separate sandbox, drawn small). Commands that would take the document out of its place
+    (Save As, Send, links to the outside) are not offered.
+  - Opening: Office files open in this window from the file manager (desktop/applications/zenos-office.desktop
+    and the default applications of new users, desktop/skel/.config/mimeapps.list), and from ZENOS's own
+    Documents, Sheets and Slides entries.
 
 ## Choices, and the ones not taken
 
@@ -68,11 +83,10 @@ in Microsoft Office.
 
 ## Not built yet
 
-- The window's own toolbar, menus, sheet tabs and slide list, designed in Figma first and reviewed before anything
-  ships. The window today has Copy, Save and PDF only; editing is the engine's (keyboard and mouse in the page).
-- Sealed files through the vault (open into the tmpfs, seal again on saving), and the print path wired to the
-  window.
-- Opening Office files from the file manager and the old apps with this window.
+- Row and column headers (A, B, C ... and 1, 2, 3 ...) beside the cells of a spreadsheet: LOKDocView does not draw
+  them, and the window does not draw them yet.
+- The engine's own dialogs (cell format, paragraph, page setup, find and replace with options): LibreOfficeKit
+  hands them to the window as separate windows, and this window does not show them yet; the ribbon offers the
+  commands that need no dialog.
 - Fonts with the same widths as the fonts the files ask for (MS Mincho, MS Gothic, Yu Mincho, Calibri ...): the
   replacements decide line breaks and page breaks.
-- A comparison against Microsoft Office itself (needs Microsoft Office).
