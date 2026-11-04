@@ -1,0 +1,41 @@
+name: signal-wasm
+# Signal's libsignal (v0.105.1, the version ZENOS Messages uses on the PC) compiled to WebAssembly for phones'
+# browsers (messenger/wasm), checked against the PC's libsignal through the real relay, and in Chromium.
+on:
+  push:
+    paths: ["messenger/wasm/**", "tests/messenger_wasm*.js", "tools/sign_wasm_release.js", ".github/workflows/signal-wasm.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  wasm:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tools
+        run: |
+          sudo apt-get update && sudo apt-get install -y protobuf-compiler
+          rustup toolchain install stable --profile minimal --target wasm32-unknown-unknown
+          curl -sSfL https://github.com/rustwasm/wasm-pack/releases/download/v0.13.1/wasm-pack-v0.13.1-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /tmp
+          echo /tmp/wasm-pack-v0.13.1-x86_64-unknown-linux-musl >> "$GITHUB_PATH"
+      - name: Build for Node and for the browser
+        working-directory: messenger/wasm
+        run: |
+          wasm-pack build --release --target nodejs --out-dir pkg
+          wasm-pack build --release --target web --out-dir pkg-web
+          ls -la pkg pkg-web
+      - name: The browser build talks to the PC's libsignal through the relay
+        run: (cd messenger && npm ci) && node tests/messenger_wasm.js
+      - name: In Chromium, WebKit (Safari's engine) and Firefox (also the signed-release loader and the encrypted key store)
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.0
+          npx playwright install --with-deps chromium webkit firefox
+          for e in chromium webkit firefox; do ENGINE=$e node tests/messenger_wasm_browser.js; done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zenos-signal-wasm
+          path: messenger/wasm/pkg-web
