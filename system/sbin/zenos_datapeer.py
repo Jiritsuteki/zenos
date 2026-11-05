@@ -301,7 +301,7 @@ def main():
     if a.pub:
         print(p.pub_b64())
         return
-    if a.host not in ("127.0.0.1", "localhost", "::1") and not a.cert:
+    if a.host not in ("127.0.0.1", "::1", "localhost") and not a.cert:
         sys.exit("a peer reachable from other machines needs TLS (--cert, --key)")
     serve(p, a.host, a.port, a.cert, a.key)
 

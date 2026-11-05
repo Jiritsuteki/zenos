@@ -10,6 +10,7 @@ import ZenosFormal.Federation
 import ZenosFormal.Model
 import ZenosFormal.Approval
 import ZenosFormal.DataStore
+import ZenosFormal.Vuln
 
 /-!
 `zenos-decide`: reads one JSON request on stdin, writes one JSON answer on stdout, runs the proven decision
@@ -52,6 +53,8 @@ functions of `ZenosFormal.Decide` and nothing else. Any input it cannot read is 
   {"op":"share", "enrolled", "sig_ok", "fresh", "now", "last_seen", "silence", "person_verified", "purpose_ok",
    "level", "clearance", "grant_ok", "recent", "rate_max", "server_recent", "server_rate_max"}
       -> {"allow": bool, "reason": str|null}                          (a key peer of ZENOS Data)
+  {"op":"vuln", "listed", "fixed_installed", "mitigated", "kev", "score" (CVSS in tenths), "remote", "signatures",
+   "required"}  -> {"status": "not-affected"|"fixed"|"mitigated"|"affected", "priority", "may_mitigate"}
   {"op":"sysegress", "system", "listed", "loopback", "enforce"}       -> {"cut": bool}   (the network sentinel)
   {"op":"route", "allowed":[..], "frags":[{"to", "atoms":[{"record","role":"ident"|"attr"|"other"}]}]}
       -> {"allow": bool, "reason": str|null}                          (the conductor)
@@ -294,6 +297,14 @@ def answer (j : J) : Except String J := do
     return match decideInstall r with
       | .allow => .obj [("allow", .bool true), ("reason", .null)]
       | .refuse why => .obj [("allow", .bool false), ("reason", .str why)]
+  | "vuln" =>
+    let f : VulnFacts := { listed := ← getB j "listed", fixedInstalled := ← getB j "fixed_installed",
+                           mitigated := ← getB j "mitigated", kev := ← getB j "kev", score := ← getN j "score",
+                           remote := ← getB j "remote", signatures := ← getN j "signatures",
+                           required := ← getN j "required" }
+    let st := match vulnStatus f with
+      | .notAffected => "not-affected" | .fixed => "fixed" | .mitigated => "mitigated" | .affected => "affected"
+    return .obj [("status", .str st), ("priority", .num (vulnPriority f)), ("may_mitigate", .bool (mayMitigate f))]
   | "share" =>
     let r : ShareReq := { enrolled := ← getB j "enrolled", sigOk := ← getB j "sig_ok", fresh := ← getB j "fresh",
                           now := ← getN j "now", lastSeen := ← getN j "last_seen", silence := ← getN j "silence",

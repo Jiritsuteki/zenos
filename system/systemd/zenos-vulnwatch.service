@@ -1,0 +1,18 @@
+[Unit]
+Description=ZENOS vulnerability watch (CISA KEV, Debian tracker, NVD, JVN matched against this PC's parts)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I /usr/sbin/zenos_vulnwatch.py run
+Nice=10
+IOSchedulingClass=idle
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/zenos /var/log/zenos /run/zenos
+PrivateTmp=yes
+PrivateDevices=yes
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX

@@ -12,6 +12,18 @@ packaging/check-secrets.sh          # no private keys, API keys, call-server sec
 
 Read `docs/THREAT_MODEL.md` again: every claim in the README must still match a row there.
 
+## 1b. The software bill of materials
+
+After the packages and the image are built (steps 2 and 4), write ZENOS's SBOM and publish it with the release:
+
+```
+tools/sbom.py --version <VER> --out build/ --name zenos-<VER>-preview-amd64 \
+  --debs build/zenos_<VER>_amd64.deb build/zenos-grid_<VER>_amd64.deb --debian-packages build/iso/<image>.packages
+```
+
+It writes `.spdx.json` (SPDX 2.3) and `.cdx.json` (CycloneDX 1.6). Attach both to the release and put their SHA-256
+in the release notes.
+
 ## 2. Build the package
 
 ```

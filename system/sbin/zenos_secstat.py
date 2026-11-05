@@ -319,6 +319,17 @@ def main():
             if upd["reboot_required"]:
                 alert("reboot", "amber", "Restart to finish security fixes",
                       "A fix (for example to the kernel) takes effect only after a restart. Save your work and restart.")
+            try:                                          # outside vulnerability information (zenos-vulnwatch)
+                vs = json.load(open("/run/zenos/vuln.json")).get("summary") or {}
+            except Exception:
+                vs = {}
+            if vs.get("kev_affected"):
+                alert("vuln:kev", "red", "Exploited vulnerability on this PC",
+                      "%d part(s) affected by vulnerabilities known to be exploited (CISA KEV). Details: "
+                      "zenos_vulnwatch.py show." % int(vs["kev_affected"]))
+            elif vs.get("affected"):
+                alert("vuln", "amber", "Vulnerabilities waiting for a fix",
+                      "%d part(s) affected; none is known to be exploited yet." % int(vs["affected"]))
             ust = dict(upd)
             al = list(alerts)
         hist_in.append(0 if prev_in is None else max(0, blocked - prev_in)); prev_in = blocked
@@ -328,7 +339,7 @@ def main():
                  "inbound_blocked": blocked, "outbound_contained": max(0, tout - base_out) + contained_total,
                  "auth_failed": at, "h_in": list(hist_in), "h_auth": list(hist_auth),
                  "top_sources": [{"src": s, "n": n} for s, n in top], "recent": recent, "alerts": al, "updates": ust,
-                 "trust": trust_summary(trust)}
+                 "trust": trust_summary(trust), "vuln": vs}
         tmp = OUT + ".tmp"
         with open(tmp, "w") as f:
             json.dump(state, f)

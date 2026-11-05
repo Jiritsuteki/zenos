@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+**Vulnerability information from outside, and ZENOS's own SBOM**
+- `zenos-vulnwatch` (`zvuln.py`, timer every 6 hours): CISA KEV, the Debian security tracker, NVD and JVN (and
+  national CERTs' SPDX inventories) matched against the installed packages; each part affected, fixed, mitigated or
+  not affected, exploited ones first (`Vuln.lean`: `kev_first`, `severity_before_reach`). Only identifiers, names,
+  versions, scores and dates are kept from a source; text, including prompts written for AI agents, is dropped and
+  changes nothing (tested). Red in the System Monitor for an exploited vulnerability, counts in the PC's signed
+  audit status, changes in the ledger. Mitigations apply only with release officers' signatures
+  (`mitigation_needs_signatures`). The sources' hosts are added to the system accounts' allowed destinations.
+- `tools/sbom.py`: ZENOS's SBOM in SPDX 2.3 and CycloneDX 1.6 for each release (docs/RELEASING.md).
+- `tests/test_no_exposed_admin.py`: no service opens a management screen to other machines without TLS, no debug or
+  administration paths; the approval page now refuses a network address without TLS.
+- docs/NCO_ALIGNMENT.md: each measure of the National Cybersecurity Office's guidance of 5 Nov 2026 and what in
+  ZENOS answers it.
+
 ## 0.2.0 Developer Preview (2026-11-05)
 
 Still a preview for testing and evaluation; production use of sensitive work waits for an independent audit, see

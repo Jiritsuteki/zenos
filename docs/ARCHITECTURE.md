@@ -53,6 +53,8 @@ what is and is not protected today is in [THREAT_MODEL.md](THREAT_MODEL.md).
 | `zalarm` | alerts (amber notices, red siren and dispatch) |
 | `zsecnote` | periodic endpoint audit |
 | `zdecide` | runs the proven decision program and turns anything unexpected into a refusal |
+| `zvuln` | outside vulnerability information as data (CISA KEV, Debian tracker, NVD, JVN, national CERTs' SPDX), matched against the PC's packages |
+| `zdata` | ZENOS Data: a server program's records with no plaintext and no key at rest (docs/DATA_STORE.md) |
 | `zdistrust` (`.py`, `.js`) | certificates and keys ZENOS refuses (`distrust.json`, plus Mozilla's signed list learned by `zenos_trustwatch`) |
 
 Rules:
@@ -75,6 +77,8 @@ Rules:
 | `zenos-trustwatch` | `zenos_trustwatch.py` | inventories every trust store, learns Mozilla's signed distrust list, installs trust fixes |
 | `zenos-auditship` | `zenos_auditship.py` | ships the ledgers to the audit nodes |
 | `zenos-heartwatch` | `zenos_heartbeat.py` | dead-man's switch for the sensors |
+| `zenos-vulnwatch` (timer, 6 h) | `zenos_vulnwatch.py` | fetches vulnerability information, matches it against installed parts, records and shows what is affected; applies a mitigation only when officers signed it |
+| `zenos-signinledger` | `zenos_signinledger.py` | sign-ins, sign-outs, wrong passwords and screen locks into the ledger |
 | (on demand) | `zenos_siren.py` | full-screen red alert until acknowledged |
 
 ## From source to an installed package
@@ -108,6 +112,34 @@ NodeSource is the one their signed index names (`--apt-check`); each officer sig
 own key; the audit nodes accept only records that continue their chain and sign every answer; the PC accepts a file
 only on a majority of identical node answers and enough officer signatures (`decideInstall`); after installation,
 the files stay the ones in the record (`zenos-integrity`).
+
+## From a published vulnerability to a fix
+
+```mermaid
+flowchart LR
+  K[CISA KEV] --> F
+  D[Debian security tracker] --> F
+  V[NVD, JVN] --> F
+  C[National CERTs' SPDX<br/>Zero Wire, when a feed is confirmed] --> F
+  F[zenos-vulnwatch<br/>keeps identifiers, names,<br/>versions, scores only] --> M{match against<br/>installed packages}
+  M --> Z[zenos-decide vuln<br/>Vuln.lean]
+  Z -- not affected / fixed --> L[(ledger)]
+  Z -- affected: KEV first,<br/>then score, then reach --> A[System Monitor amber or red<br/>audit node sees the counts]
+  A --> U[security fix installs itself<br/>52zenos-auto-update]
+  A --> G[mitigation record<br/>signed by release officers]
+  G --> Z2{may_mitigate?<br/>enough signatures,<br/>part affected}
+  Z2 -- yes --> X[sysctl or module off<br/>recorded]
+  Z2 -- no --> R[refused, recorded]
+  U --> L
+  X --> L
+```
+
+What a source writes is never an instruction: ZENOS keeps from each source only fields that match strict patterns
+(CVE identifiers, package and product names, versions, scores, dates) and drops the rest, including the prompts some
+sources write for AI agents. The decision uses those facts alone; changing a source's text changes nothing
+(`tests/test_vulnwatch.py`). Each release also publishes ZENOS's own SBOM in SPDX and CycloneDX (`tools/sbom.py`),
+so an organization can match ZENOS against the same sources with its own tools. How this lines up with the
+National Cybersecurity Office's guidance of 5 November 2026: [NCO_ALIGNMENT.md](NCO_ALIGNMENT.md).
 
 ## Conventions
 

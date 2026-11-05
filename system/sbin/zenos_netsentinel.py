@@ -98,6 +98,11 @@ def system_names():
         names.add(urlparse(json.load(open("/etc/zenos/keysvc.json"))["url"]).hostname)
     except Exception:
         pass
+    try:                                    # the official vulnerability sources zenos-vulnwatch reads
+        import zvuln
+        names.update(zvuln.hosts())
+    except Exception:
+        pass
     return {n for n in names if n}
 
 

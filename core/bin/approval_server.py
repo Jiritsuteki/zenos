@@ -137,4 +137,15 @@ if __name__ == "__main__":
     # must be an explicit decision: ZENOS_APPROVAL_BIND=0.0.0.0. The OS firewall
     # (zenos-firewall) still drops inbound connections unless that is also changed.
     bind = os.environ.get("ZENOS_APPROVAL_BIND", "127.0.0.1")
-    ThreadingHTTPServer((bind, 8090), H).serve_forever()
+    cert, key = os.environ.get("ZENOS_APPROVAL_CERT"), os.environ.get("ZENOS_APPROVAL_KEY")
+    if bind not in ("127.0.0.1", "::1", "localhost") and not (cert and key):
+        # an approval page reachable from a network is an administration screen: never in plain HTTP
+        raise SystemExit("ZENOS_APPROVAL_BIND other than this machine needs TLS (ZENOS_APPROVAL_CERT, ZENOS_APPROVAL_KEY)")
+    srv = ThreadingHTTPServer((bind, 8090), H)
+    if cert and key:
+        import ssl
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ctx.minimum_version = ssl.TLSVersion.TLSv1_2
+        ctx.load_cert_chain(cert, key)
+        srv.socket = ctx.wrap_socket(srv.socket, server_side=True)
+    srv.serve_forever()

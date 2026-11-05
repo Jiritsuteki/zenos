@@ -56,7 +56,11 @@ def status():
         halted = False
     except Exception:
         halted = True                                   # unreadable stop file: reported as stopped, as keyd treats it
-    return {"t": int(time.time()), "kernel": os.uname().release, "kernel_newest": max(ks, key=_vkey) if ks else None,
+    try:                                                # counts only (zenos-vulnwatch): affected, KEV, fixed
+        vuln = {k: int(v) for k, v in (json.load(open("/run/zenos/vuln.json")).get("summary") or {}).items()}
+    except Exception:
+        vuln = None
+    return {"t": int(time.time()), "vuln": vuln, "kernel": os.uname().release, "kernel_newest": max(ks, key=_vkey) if ks else None,
             "reboot_required": os.path.exists("/run/reboot-required"), "services": dict(zip(WATCHED, r[:len(WATCHED)])),
             "halted": halted}
 

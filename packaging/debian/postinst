@@ -30,8 +30,8 @@ if [ "$1" = "configure" ]; then
         done
         systemctl try-restart zenos-auditship.service || true
     fi
-    systemctl enable zenos-restartwindow.timer zenos-integrity.timer zenos-supplywatch.service >/dev/null 2>&1 || true
-    [ -d /run/systemd/system ] && systemctl start zenos-restartwindow.timer zenos-integrity.timer 2>/dev/null || true
+    systemctl enable zenos-restartwindow.timer zenos-integrity.timer zenos-vulnwatch.timer zenos-supplywatch.service >/dev/null 2>&1 || true
+    [ -d /run/systemd/system ] && systemctl start zenos-restartwindow.timer zenos-integrity.timer zenos-vulnwatch.timer 2>/dev/null || true
     [ -d /run/systemd/system ] && systemctl restart zenos-supplywatch.service 2>/dev/null || true
     # per-user endpoint audit, for every user session
     systemctl --global enable zenos-secaudit.service zenos-livekit.service >/dev/null 2>&1 || true

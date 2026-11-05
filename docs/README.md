@@ -15,6 +15,8 @@ This folder contains the main documentation for ZENOS.
 - [Releasing ZENOS](RELEASING.md) — How to check, build, and publish a release.
 - [ZENOS security architecture](SECURITY_ARCHITECTURE.md) — The five security layers and the modules responsible for them.
 - [ZENOS Images · Library and Studio](STUDIO.md) — How the Images app handles music, pictures, and MP4 exports.
+- [ZENOS Data](DATA_STORE.md) — How a server program keeps its records with no plaintext and no key at rest.
+- [The National Cybersecurity Office's guidance and ZENOS](NCO_ALIGNMENT.md) — Each measure of the 5 November 2026 guidance and what in ZENOS answers it.
 - [ZENOS threat model](THREAT_MODEL.md) — What ZENOS aims to protect and which protections are available in the Developer Preview.
 
 ## At the top of the repository
