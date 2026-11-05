@@ -689,11 +689,12 @@ def handle(msg):
             r["status"] = "declined"
             r["declined_by"] = who
             write_json(rp, r)
-            log(event="decline", request=rid, approver=who)
+            log(event="decline", request=rid, approver=who, **zapprove.ledger_fields(facts))
             return {"ok": True, "message": "Declined. The PC stays stopped and a new request is sent."}
         r["approvals"].append({"approver": who, "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "sig": sig})
         write_json(rp, r)
-        log(event="approve", request=rid, approver=who, count=len(r["approvals"]), required=r["required"])
+        log(event="approve", request=rid, approver=who, count=len(r["approvals"]), required=r["required"],
+            **zapprove.ledger_fields(facts))
         left = 0 if verified(r)[0] else 1
         return {"ok": True, "message": f"Approved ({len(r['approvals'])}/{r['required']})." + (" The stop is released." if left <= 0 else "")}
 

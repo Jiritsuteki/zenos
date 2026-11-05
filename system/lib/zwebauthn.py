@@ -10,7 +10,7 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, ed25519
 
-FLAG_UP, FLAG_UV, FLAG_AT, FLAG_ED = 0x01, 0x04, 0x40, 0x80
+FLAG_UP, FLAG_UV, FLAG_BS, FLAG_AT, FLAG_ED = 0x01, 0x04, 0x10, 0x40, 0x80
 
 
 def b64u(b):
@@ -153,7 +153,7 @@ def register(attestation_object, client_data_json, challenge, origin, rp_id):
 def check_assertion(phone, authenticator_data, client_data_json, signature, challenge):
     """Facts about one passkey signature from a registered phone (never raises on bad input: facts are False)."""
     f = {"sig_ok": False, "challenge_ok": False, "origin_ok": False, "user_verified": False, "counter_ok": False,
-         "count": None}
+         "count": None, "synced": None}
     try:
         ad = parse_auth_data(authenticator_data)
         cd = client_data(client_data_json)
@@ -168,4 +168,5 @@ def check_assertion(phone, authenticator_data, client_data_json, signature, chal
     old, new = int(phone.get("count") or 0), ad["count"]
     f["counter_ok"] = (old == 0 and new == 0) or new > old       # a counter that does not move forward: a cloned key
     f["count"] = new
+    f["synced"] = bool(ad["flags"] & FLAG_BS)                     # kept in a synced store (iCloud Keychain and the like)
     return f

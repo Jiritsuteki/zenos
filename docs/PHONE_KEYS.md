@@ -23,6 +23,15 @@ the hardware key store) and uses only after face, fingerprint or PIN:
   gives the line it shows to the administrator. Once the passkey is enrolled, the old browser key no longer signs
   for that officer.
 
+## What the ledger keeps
+
+Every approval and decline goes into the ledger with the officer's name, the request (which PC, which file, who
+asked), the time, and for a passkey: the passkey's ID (`credential`), whether the phone was near the PC (`near`),
+whether the person was verified on the phone, whether it was an exception, and whether the passkey is synced.
+A passkey has no phone serial number, and a synced passkey (an iPhone's, in iCloud Keychain) has the same ID on all
+of the officer's Apple devices, so the ledger shows whose key approved and at which PC, not which of their devices
+was used. Who signed in to a PC and who opened which file are in the same ledger under the users' own accounts.
+
 ## The phone must be near the PC
 
 The passkey standard lets a phone sign in on a PC: the PC's browser shows a QR code, the phone reads it, and the two

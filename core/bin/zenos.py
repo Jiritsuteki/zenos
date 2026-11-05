@@ -465,7 +465,7 @@ def signed_answer(rid, approver, op, sig_b64, code=""):
         r["status"], r["declined_by"] = "declined", approver
         r["decline_sig"] = sig_b64
         p.write_text(json.dumps(r, ensure_ascii=False, indent=1))
-        audit("decline", request=r["id"], approver=approver, signed=True)
+        audit("decline", request=r["id"], approver=approver, signed=True, **zapprove.ledger_fields(facts))
         what = {"release": "the emergency release", "plan": "the pre-filed operation"}.get(r.get("kind"), f"\"{r.get('name')}\"")
         notify("ZENOS · Request declined", f"Your request for {what} (L{r['level']}) was declined.")
         return True, "Declined."
@@ -474,14 +474,16 @@ def signed_answer(rid, approver, op, sig_b64, code=""):
         return False, "The match code does not match the requester's screen. Nothing was approved."
     if any(a["approver"] == approver for a in r["approvals"]):
         return False, "You have already approved this request. Another officer must approve."
-    return _apply_approval(p, r, approver, sig_b64)
+    return _apply_approval(p, r, approver, sig_b64, facts)
 
 
-def _apply_approval(p, r, approver, sig_b64):
+def _apply_approval(p, r, approver, sig_b64, facts=None):
     """record one verified approval; with enough of them, the request takes effect (grant, plan or release)"""
     rid = r["id"]
     r["approvals"].append({"approver": approver, "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "sig": sig_b64})
-    audit("approve", request=rid, approver=approver, count=len(r["approvals"]), required=r["required"])
+    import zapprove
+    audit("approve", request=rid, approver=approver, count=len(r["approvals"]), required=r["required"],
+          **zapprove.ledger_fields(facts or {}))
     msg = f"Approved by {ROSTER.get(approver, approver)} ({len(r['approvals'])}/{r['required']})."
     if len(r["approvals"]) >= r["required"] and r.get("kind") == "release":
         r["status"] = "approved"

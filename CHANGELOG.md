@@ -13,6 +13,8 @@
 - Tested on a physical iPhone (5 Nov 2026): passkey made, an approval signed and verified, and the phone-near check
   passed with an iPad in the PC's place. Found: a PC without Bluetooth cannot show nearness; iPhone passkeys are
   synced through iCloud Keychain and keep their counter at 0. Not yet tested on Android.
+- The ledger line of each approval and decline now names the passkey (its ID), whether the phone was near the PC,
+  whether the person was verified, whether it was an exception, and whether the passkey is synced.
 
 **AI models**
 - AI models in the release ledger: a model kept on the PC (weights, tokenizer, settings, adapters) is loaded only

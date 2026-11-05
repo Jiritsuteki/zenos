@@ -26,11 +26,11 @@ class Phone:
         return {"cred_id": b64u(self.cred), "public_key": b64u(spki), "alg": -7, "rp_id": RP, "origin": ORIGIN,
                 "count": 0, "transports": ["hybrid", "internal"]}
 
-    def approve(self, message, near=True, uv=True, origin=ORIGIN, count=None, exception=None):
+    def approve(self, message, near=True, uv=True, origin=ORIGIN, count=None, exception=None, synced=False):
         if count is None:
             self.count += 1
             count = self.count
-        flags = 0x01 | (0x04 if uv else 0)
+        flags = 0x01 | (0x04 if uv else 0) | (0x18 if synced else 0)
         ad = hashlib.sha256(RP.encode()).digest() + bytes([flags]) + struct.pack(">I", count)
         cdj = json.dumps({"type": "webauthn.get", "challenge": b64u(message), "origin": origin,
                           "crossOrigin": False}).encode()
@@ -125,6 +125,23 @@ class PasskeyApproval(unittest.TestCase):
         sig = self.phone.approve(self.digest)
         self.assertTrue(self.check(sig)[0])
         self.assertTrue(self.check(sig, state=False)[0])          # the guard re-checks stored approvals without counters
+
+    def test_the_ledger_line_names_the_key_and_whether_the_phone_was_near(self):
+        ok, _, facts = self.check(self.phone.approve(self.digest, near=True, synced=True))
+        self.assertTrue(ok)
+        self.assertEqual(zapprove.ledger_fields(facts), {"key": "passkey", "credential": b64u(self.phone.cred),
+                         "near": True, "user_verified": True, "synced": True, "exception": False})
+        ok, _, facts = self.check(self.phone.approve(self.digest, near=False, exception="remote"),
+                                  pol={"near_from_level": 3, "exceptions": True})
+        f = zapprove.ledger_fields(facts)
+        self.assertEqual((f["near"], f["exception"], f["synced"]), (False, True, False))
+        self.assertEqual(zapprove.ledger_fields({"key": "ed25519"}), {"key": "ed25519"})
+        self.assertEqual(zapprove.ledger_fields({}), {})
+
+    def test_a_synced_passkey_with_its_counter_at_zero_approves(self):
+        """iCloud Keychain passkeys keep the counter at 0 (seen on a physical iPhone, 5 Nov 2026)"""
+        for _ in range(3):
+            self.assertTrue(self.check(self.phone.approve(self.digest, count=0, synced=True))[0])
 
 
 if __name__ == "__main__":

@@ -113,7 +113,7 @@ def check(pub_dir, name, sig, message, level=0, state=None, pol=None):
     f = zwebauthn.check_assertion(phone, ad, cdj, s, message)
     near = a.get("attachment") == "cross-platform"
     exc = a.get("exception") == "remote"
-    facts = {"key": "passkey", **{k2: v for k2, v in f.items() if k2 != "count"}, "near": near,
+    facts = {"key": "passkey", "credential": phone["cred_id"], **{k2: v for k2, v in f.items() if k2 != "count"}, "near": near,
              "near_required": near_required, "exception_allowed": pol["exceptions"], "exception_used": exc}
     try:
         ans = zdecide.ask({"op": "passkey_approval", "sig_ok": f["sig_ok"], "challenge_ok": f["challenge_ok"],
@@ -135,6 +135,18 @@ def check(pub_dir, name, sig, message, level=0, state=None, pol=None):
             pass
     facts["exception"] = bool(near_required and not near and exc)
     return True, None, facts
+
+
+def ledger_fields(facts):
+    """what the ledger keeps about one approval's key: which key (the passkey's ID; there is no phone serial number,
+    and a synced passkey has the same ID on all of the officer's devices), whether the phone was near the PC, whether
+    it was an exception, and whether the passkey is synced"""
+    out = {"key": facts.get("key")}
+    if facts.get("key") == "passkey":
+        out.update(credential=facts.get("credential"), near=bool(facts.get("near")),
+                   user_verified=bool(facts.get("user_verified")), synced=facts.get("synced"),
+                   exception=bool(facts.get("exception")))
+    return {k: v for k, v in out.items() if v is not None}
 
 
 def enroll_passkey(pub_dir, name, reg):
