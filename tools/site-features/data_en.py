@@ -44,7 +44,7 @@ P["approval"] = dict(
          ["Open", "The key agent checks every signature against keys the administrator enrolled, then opens that one file.", ["The requester's own approval never counts", "No officer counts twice"]]],
     provenTitle="Who counts is mathematics",
     proven=["Opening above clearance needs at least one enrolled officer other than the user, whose signature verified", "The requester's own approval never counts, and no officer counts twice", "A signature that counts was made for exactly that request", "An approval can never be read as a decline, or the reverse"],
-    trusted=["Ed25519 signatures cannot be forged, and SHA-256 has no collisions", "The officer's key is kept by the browser, not yet on a FIDO2 key", "An officer who loses the device must be enrolled again"],
+    trusted=["Ed25519 signatures cannot be forged, and SHA-256 has no collisions", "The officer's key is kept by the browser, or (in the source, not released) as a passkey in the phone's secure chip, tested on an iPhone; from a set level up, the phone must be near the PC", "An officer who loses the device must be enrolled again"],
     tryit=[["Enroll two officers", "Each makes an approval key in ZENOS Messages; the administrator enrolls it."], ["Open a Red · L4 file", "From an account cleared below L4. The request reaches both phones."], ["Read the code, approve", "Each officer matches the code on the screen and approves. The file opens."]],
     links=[["Download the preview", REL], ["Read the proofs", PROOFS], ["Read the source", GH + "system/sbin/zenos_guardd.py"], ["Threat model", THREAT]])
 P["leak-stop"] = dict(
@@ -101,7 +101,7 @@ P["ledger"] = dict(
     name="Tamper-evident ledger", tags=["Working today", "Proved in Lean 4"],
     card="Every action joins a hash chain copied to audit nodes run by different organizations. A rewritten past is caught.",
     h1="A record nobody can quietly rewrite, not even the PC's own administrator.",
-    lead="Every open, release and key issue joins a hash chain. Every 30 seconds it is sent to audit nodes outside the PC, run by different organizations. They refuse a rewritten past and compare their copies with each other.",
+    lead="Every open, release, key issue and approval joins a hash chain, and so do sign-ins to the PC. Every 30 seconds it is sent to audit nodes outside the PC, run by different organizations. They refuse a rewritten past and compare their copies with each other.",
     stats=[["30 s", "between shipments to the audit nodes"], ["About 100 to 1", "ordinary edits are anchored as one Merkle root, so the record stays small"], ["Majority", "of audit nodes must hold the same history for it to count"]],
     howTitle="Record, ship, compare",
     how=[["Record", "Two tiers: every edit in a fine-grained chain on the PC, and the critical events plus a periodic anchor on the consortium.", ["Rebuilding the local chain cannot match anchors already sent"]],
@@ -110,7 +110,7 @@ P["ledger"] = dict(
     extra=dict(eyebrow="Not a cryptocurrency", text="No coins, no mining and no fees. The consortium is a fixed set of organizations that each keep a copy, so nobody, including the PC's administrator, can change the past alone."),
     provenTitle="What the check guarantees",
     proven=["The check accepts exactly the chains whose links and hashes hold", "An audit node's copy stays intact and only grows", "Two histories that pass the check and end at the same hash are the same history"],
-    trusted=["A record can still be changed in the seconds before it is shipped", "A PC kept offline ships nothing, though it is reported as silent", "The consortium assumes most of its members are honest", "The PC's audit key is a root-owned file, not yet in a TPM"],
+    trusted=["A record can still be changed in the seconds before it is shipped", "A PC kept offline ships nothing, though it is reported as silent", "The consortium assumes most of its members are honest", "The PC's audit key is a root-owned file, not yet in a TPM", "Sign-ins are read from the system journal (in the source, not released); while root stops that service, nothing is recorded"],
     tryit=[["Run an audit node", "On a second machine: zenos_auditnode.py, then enroll the PC."], ["Use the PC", "Open and close sealed files. Batches arrive every 30 seconds."], ["Try to rewrite", "Edit the PC's ledger. The node refuses the next batch and raises an alert."]],
     links=[["Download the preview", REL], ["Read the proofs", PROOFS], ["Read the source", GH + "system/sbin/zenos_auditnode.py"], ["Threat model", THREAT]])
 P["proven-decisions"] = dict(
@@ -156,7 +156,7 @@ P["phone-sign-in"] = dict(
          ["Fill", "The entry's key travels encrypted to a one-time key, and the password is filled into the same tab and page.", ["Every request is answered at most once"]]],
     provenTitle="Release is mathematics",
     proven=["A password is released only to the page it was saved for, over verified TLS, in time, after the registered phone signed this very request with the person verified", "Every request is answered at most once; an answer cannot be replayed, and a wrong code cannot be retried", "However many requests a program sends, only a fixed number of prompts reach the phone in any window"],
-    trusted=["The passkey signature, the phone's PRF, ECDH and HKDF", "Tested with software and virtual passkeys, not yet on a physical phone", "A PC already taken over while you approve"],
+    trusted=["The passkey signature, the phone's PRF, ECDH and HKDF", "Tested with software and virtual passkeys and on a physical iPhone, not yet on Android", "A PC already taken over while you approve"],
     tryit=[["Register your phone", "The administrator gives a one-time enrolment code; you register in ZENOS Messages."], ["Save a password", "Sign in to a site in the ZENOS browser and save it."], ["Sign in again", "Approve on your phone with the matching code. The page is filled."]],
     links=[["Download the preview", REL], ["Read the proofs", PROOFS], ["Read the source", GH + "system/sbin/zenos_credd.py"]])
 P["ai"] = dict(

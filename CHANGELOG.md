@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.2.0 Developer Preview (2026-11-05)
+
+Still a preview for testing and evaluation; production use of sensitive work waits for an independent audit, see
+[docs/THREAT_MODEL.md](docs/THREAT_MODEL.md). This release brings what was in the source since 0.1.2: the off-PC key
+service (keys of newly sealed files no longer kept on the PC), the release ledger for packages and AI models,
+ZENOS Office on the LibreOffice engine, approvals with a passkey on the officer's phone, sign-ins in the ledger,
+messages across organizations, and the conductor for work with several AI models.
+
 **Sign-ins in the ledger**
 - A new root service, `zenos-signinledger`, writes sign-ins to the PC into the ledger shipped to the audit nodes:
   sign-in (who, how: login screen, text console or ssh, and the other machine for a remote session), sign-out with
