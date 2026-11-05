@@ -30,6 +30,8 @@ def feeds(desc="Out-of-bounds write in the TLS handshake."):
         "curl": {"CVE-2026-4001": {"description": desc, "scope": "remote",
                                    "releases": {"trixie": {"status": "open"}}}},
         "notinstalled": {"CVE-2026-5001": {"releases": {"trixie": {"status": "open"}}}},
+        "tar": {"CVE-2005-2541": {"description": desc, "releases": {"trixie": {"status": "open", "urgency": "unimportant"}}}},
+        "nodejs": {"CVE-2026-7001": {"description": desc, "scope": "remote", "releases": {"trixie": {"status": "open"}}}},
         "../../etc": {"CVE-2026-6001": {"releases": {"trixie": {"status": "open"}}}}}
     nvd = {"vulnerabilities": [{"cve": {"id": "CVE-2026-4001", "descriptions": [{"value": desc}],
                                         "metrics": {"cvssMetricV31": [{"cvssData": {"baseScore": 9.8, "attackVector": "NETWORK"}}]}}},
@@ -48,7 +50,8 @@ def feeds(desc="Out-of-bounds write in the TLS handshake."):
 
 
 INV = {"openssl": ("3.5.4-1~deb13u1", ["libssl3t64", "openssl"]), "bash": ("5.2.37-2+b5", ["bash"]),
-       "zlib": ("1:1.3.dfsg+really1.3.1-1+b1", ["zlib1g"]), "curl": ("8.14.1-2", ["curl", "libcurl4t64"])}
+       "zlib": ("1:1.3.dfsg+really1.3.1-1+b1", ["zlib1g"]), "curl": ("8.14.1-2", ["curl", "libcurl4t64"]),
+       "tar": ("1.35+dfsg-3.1", ["tar"]), "nodejs": ("24.22.2-1nodesource1", ["nodejs"])}
 
 
 class Vuln(unittest.TestCase):
@@ -95,6 +98,9 @@ class Vuln(unittest.TestCase):
         self.assertEqual(s["summary"]["fixed"], 2)                 # openssl CVE-2026-1002 and bash
         self.assertEqual(s["summary"]["not_affected"], 1)
         self.assertEqual(s["summary"]["kev_affected"], 1)
+        self.assertEqual(s["summary"]["minor"], 1)                  # Debian: "unimportant", not counted as affected
+        # NodeSource's nodejs is not the package Debian's entry is about
+        self.assertNotIn("nodejs", {f["package"] for f in s["findings"]})
 
     def test_installed_older_than_the_fix_is_affected(self):
         inv = dict(INV, bash=("5.2.36-1", ["bash"]))

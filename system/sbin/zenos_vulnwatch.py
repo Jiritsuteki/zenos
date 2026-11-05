@@ -219,11 +219,11 @@ def run(c=None, get=zvuln.fetch, inv=None, decide=None, keys=None, sleep_nvd=Tru
         old = {}
     scores = dict(old.get("scores") or {}, **scores)
     first = zvuln.match(debian, kev, scores, inv, mitigated_cves(), offered_signatures(keys), decide=decide)
-    want = sorted({f["cve"] for f in first if f["status"] in ("affected", "mitigated")})
+    want = sorted({f["cve"] for f in first if f["status"] in ("affected", "mitigated") and not f.get("minor")})
     if sleep_nvd:
         scores = scores_for(want, c, get, scores)
     findings = zvuln.match(debian, kev, scores, inv, mitigated_cves(), offered_signatures(keys), decide=decide)
-    hot = [f for f in findings if f["status"] in ("affected", "mitigated")]
+    hot = [f for f in findings if f["status"] in ("affected", "mitigated") and not f.get("minor")]
     before = {(f["cve"], f["package"]): f["status"] for f in old.get("findings") or []}
     for f in hot:
         if before.get((f["cve"], f["package"])) != f["status"]:

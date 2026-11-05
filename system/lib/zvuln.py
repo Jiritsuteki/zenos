@@ -38,6 +38,10 @@ NAME = re.compile(r"^[a-z0-9][a-z0-9.+_-]{0,99}$")
 VERSION = re.compile(r"^[A-Za-z0-9.+~:_-]{1,80}$")
 PRODUCT = re.compile(r"^[A-Za-z0-9 ._+/()-]{1,80}$")
 RELEASE = "trixie"
+# Debian's security team marks some open issues as not worth a fix in a stable release ("unimportant": a theoretical
+# issue, a tool's documented behaviour) or past support ("end-of-life"). They stay listed, as "minor", and are not
+# counted as affected unless they are known to be exploited.
+MINOR = {"unimportant", "end-of-life"}
 
 
 def conf():
@@ -126,8 +130,10 @@ def parse_debian(data, release=RELEASE):
             else:
                 continue                                        # "undetermined": nothing to act on yet
             scope = info.get("scope")
+            urg = str(r.get("urgency") or "")
             out.setdefault(p, {})[c] = {"status": status, "fixed": None if fixed == "0" else fixed,
-                                        "remote": True if scope == "remote" else (False if scope == "local" else None)}
+                                        "remote": True if scope == "remote" else (False if scope == "local" else None),
+                                        "minor": urg in MINOR}
     return out
 
 
@@ -243,6 +249,8 @@ def match(debian, kev, scores, inv, mitigations=None, signers=None, required=2, 
         if src not in inv:
             continue
         ver, bins = inv[src]
+        if not debian_build(ver):
+            continue                    # the same name, built elsewhere (NodeSource's nodejs): Debian's entry is not about it
         for c, d in cves.items():
             if d["status"] == "not-affected":
                 continue
@@ -257,15 +265,23 @@ def match(debian, kev, scores, inv, mitigations=None, signers=None, required=2, 
                         "fix_available": bool(d["fixed"]) and not fixed_installed, "kev": c in kev,
                         "score": facts["score"], "remote": facts["remote"], "status": r["status"],
                         "priority": int(r["priority"]), "may_mitigate": bool(r["may_mitigate"]),
+                        "minor": bool(d.get("minor")) and c not in kev,
                         "binaries": sorted(bins)[:20]})
     out.sort(key=lambda f: (-f["priority"], f["cve"], f["package"]))
     return out
 
 
+def debian_build(version):
+    """a version Debian's own archive builds (other builders mark theirs: NodeSource's "nodesource1", ZENOS's own)"""
+    return not any(x in version for x in ("nodesource", "zenos"))
+
+
 def summary(findings):
-    s = {"affected": 0, "fixed": 0, "mitigated": 0, "kev_affected": 0}
+    s = {"affected": 0, "fixed": 0, "mitigated": 0, "kev_affected": 0, "minor": 0}
     for f in findings:
-        if f["status"] in s:
+        if f["status"] == "affected" and f.get("minor"):
+            s["minor"] += 1
+        elif f["status"] in s:
             s[f["status"]] += 1
         if f["status"] == "affected" and f["kev"]:
             s["kev_affected"] += 1
