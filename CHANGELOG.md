@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+**Sign-ins in the ledger**
+- A new root service, `zenos-signinledger`, writes sign-ins to the PC into the ledger shipped to the audit nodes:
+  sign-in (who, how: login screen, text console or ssh, and the other machine for a remote session), sign-out with
+  the session's length, wrong passwords (login screen, lock screen, sudo, su, ssh) and screen locks and unlocks.
+  It reads systemd-logind's and PAM's lines in the system journal and keeps its place, so a restart skips nothing.
+
 **Approvals with a passkey in the phone**
 - An officer's approval key can be a passkey kept in the phone's secure chip (iPhone: Secure Enclave; Android: the
   hardware key store). It signs the request's digest itself; the PC checks it against the administrator-enrolled

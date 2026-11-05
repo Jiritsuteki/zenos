@@ -30,8 +30,8 @@ asked), the time, and for a passkey: the passkey's ID (`credential`), whether th
 whether the person was verified on the phone, whether it was an exception, and whether the passkey is synced.
 A passkey has no phone serial number, and a synced passkey (an iPhone's, in iCloud Keychain) has the same ID on all
 of the officer's Apple devices, so the ledger shows whose key approved and at which PC, not which of their devices
-was used. Who opened which sealed file is in the same ledger under the user's own account; sign-ins to the
-PC itself are not written to it yet.
+was used. Who opened which sealed file is in the same ledger under the user's own account, and so are sign-ins
+to the PC: sign-in, sign-out, wrong passwords and screen locks (`zenos-signinledger`, see docs/THREAT_MODEL.md).
 
 ## The phone must be near the PC
 
