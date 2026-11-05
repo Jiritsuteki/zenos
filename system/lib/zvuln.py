@@ -9,7 +9,9 @@ Sources (only these official places; their hosts are added to the system account
   spdx      SPDX inventories published by national CERTs (now NCSC-NL's PHP list)   product names per CVE
   zerowire  Cloudflare Zero Wire                                        CVE identifiers only; off until a
                                                                         machine-readable feed is confirmed
-  osv       OSV (Google)                                                off by default
+  osv       OSV, as bulk downloads (the whole npm and Debian lists)     the Node.js packages ZENOS ships
+            The lists are downloaded whole, never queried: OSV's query service would learn which packages and
+            versions this PC runs; a download tells it only that someone fetched the list.
 Settings: /etc/zenos/vuln.json {"sources": {"kev": true, ...}, "urls": {...}, "every": 21600}
 
 Data only. From every source ZENOS keeps identifiers (CVE-yyyy-n), package and product names, versions, scores
@@ -28,9 +30,10 @@ URLS = {
     "jvn": "https://jvndb.jvn.jp/myjvn?method=getVulnOverviewList&feed=hnd&rangeDatePublished=m&rangeDateFirstPublished=m",
     "spdx": "https://api.github.com/repos/NCSC-NL/php2shell/contents/software/spdx",
     "zerowire": None,
-    "osv": "https://api.osv.dev/v1/query",
+    "osv": "https://osv-vulnerabilities.storage.googleapis.com/{ecosystem}/all.zip",
 }
-DEFAULT_ON = {"kev": True, "debian": True, "nvd": True, "jvn": True, "spdx": True, "zerowire": False, "osv": False}
+DEFAULT_ON = {"kev": True, "debian": True, "nvd": True, "jvn": True, "spdx": True, "zerowire": False, "osv": True}
+NPM_INVENTORY = Path("/usr/share/zenos/npm-inventory.json")
 
 CVE = re.compile(r"^CVE-\d{4}-\d{4,7}$")
 CVE_IN = re.compile(r"CVE-\d{4}-\d{4,7}")
@@ -61,10 +64,23 @@ def hosts(c=None):
     """the hosts the enabled sources live on (for the network sentinel's list of allowed destinations)"""
     from urllib.parse import urlparse
     c = c or conf()
-    out = {urlparse(u).hostname for k, u in c["urls"].items() if c["on"].get(k) and u}
+    out = {urlparse(u.replace("{ecosystem}", "x")).hostname for k, u in c["urls"].items() if c["on"].get(k) and u}
     if c["on"].get("spdx"):
         out.add("raw.githubusercontent.com")
     return {h for h in out if h}
+
+
+def fetch_to(url, path, timeout=120, limit=600 * 1024 * 1024):
+    """a large download straight to a file (OSV's lists), never whole in memory"""
+    req = urllib.request.Request(url, headers={"User-Agent": "zenos-vulnwatch"})
+    n = 0
+    with urllib.request.urlopen(req, timeout=timeout) as r, open(path, "wb") as f:
+        for b in iter(lambda: r.read(1 << 20), b""):
+            n += len(b)
+            if n > limit:
+                raise ValueError("download too large")
+            f.write(b)
+    return path
 
 
 def fetch(url, timeout=60, limit=200 * 1024 * 1024):
@@ -212,6 +228,110 @@ def parse_feed(data):
                        if e.tag.split("}")[-1] in ("title", "link"))
         for c in CVE_IN.findall(txt):
             out[c] = {"listed_by": "zerowire"}
+    return out
+
+
+def _semver(v):
+    """a comparable key for npm versions (1.2.3, 1.2.3-rc.1); None when the version is not one"""
+    m = re.match(r"^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$", str(v or ""))
+    if not m:
+        return None
+    pre = m.group(4)
+    pk = (1,) if pre is None else (0,) + tuple((0, int(x), "") if x.isdigit() else (1, 0, x) for x in pre.split("."))
+    return (int(m.group(1)), int(m.group(2)), int(m.group(3))) + pk
+
+
+def parse_osv_zip(path, wanted):
+    """{(package, version): [{"cve", "fixed", "open"}]} for the npm packages in `wanted` ({name: {versions}}), from
+    OSV's npm list. Only package names, version ranges and CVE aliases are read; malicious-package entries (MAL-)
+    are matched too, since a package known to be malware is the worst case."""
+    import zipfile
+    out = {}
+    with zipfile.ZipFile(path) as z:
+        for info in z.infolist():
+            if not info.filename.endswith(".json") or info.file_size > 4 * 1024 * 1024:
+                continue
+            try:
+                v = json.loads(z.read(info))
+            except ValueError:
+                continue
+            ids = [x for x in [v.get("id")] + list(v.get("aliases") or []) if isinstance(x, str)]
+            cves = [c for c in (_cve(x) for x in ids) if c]
+            mal = any(str(x).startswith("MAL-") for x in ids)
+            if not cves and not mal:
+                continue
+            key = cves[0] if cves else str(v.get("id"))[:40]
+            for a in v.get("affected") or []:
+                pkg = (a.get("package") or {})
+                name = str(pkg.get("name") or "")
+                if pkg.get("ecosystem") != "npm" or name not in wanted:
+                    continue
+                for ver in wanted[name]:
+                    hit, fixed = _in_ranges(ver, a)
+                    if hit:
+                        out.setdefault((name, ver), []).append({"cve": key, "fixed": fixed, "malicious": mal})
+    return out
+
+
+def _in_ranges(ver, a):
+    """(affected?, a fixed version) for one npm version against one OSV "affected" entry"""
+    if ver in (a.get("versions") or []):
+        return True, None
+    k = _semver(ver)
+    if k is None:
+        return False, None
+    for r in a.get("ranges") or []:
+        if r.get("type") != "SEMVER":
+            continue
+        intro, fixed, last = None, None, None
+        for e in r.get("events") or []:
+            if "introduced" in e:
+                intro = (0,) if e["introduced"] == "0" else _semver(e["introduced"])
+            if "fixed" in e:
+                fixed = e["fixed"]
+            if "last_affected" in e:
+                last = _semver(e["last_affected"])
+        if intro is None:
+            continue
+        fk = _semver(fixed) if fixed else None
+        if k >= intro and (fk is None or k < fk) and (last is None or k <= last):
+            return True, fixed if fk else None
+    return False, None
+
+
+def npm_inventory(path=None):
+    """{name: {versions}} of the Node.js packages ZENOS ships (written at build time from the lock files)"""
+    try:
+        d = json.loads(Path(path or NPM_INVENTORY).read_text())
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for c in d.get("components") or []:
+        n, v = str(c.get("name", "")), str(c.get("version", ""))
+        if n and VERSION.match(v):
+            out.setdefault(n, set()).add(v)
+    return out
+
+
+def match_npm(hits, kev, scores, mitigations=None, signers=None, required=2, decide=None):
+    """findings for the shipped Node.js packages, from parse_osv_zip's result"""
+    import zdecide
+    decide = decide or zdecide.ask
+    out = []
+    for (name, ver), vulns in hits.items():
+        for h in vulns:
+            c = h["cve"]
+            sc = scores.get(c) or {}
+            facts = {"op": "vuln", "listed": True, "fixed_installed": False, "mitigated": c in (mitigations or {}),
+                     "kev": c in kev, "score": int(sc.get("score") or (100 if h["malicious"] else 0)),
+                     "remote": bool(sc.get("remote")), "signatures": int((signers or {}).get(c, 0)),
+                     "required": int(required)}
+            r = decide(facts)
+            out.append({"cve": c, "package": "npm:" + name, "installed": ver, "fixed": h["fixed"],
+                        "fix_available": bool(h["fixed"]), "kev": c in kev, "score": facts["score"],
+                        "remote": facts["remote"], "status": r["status"], "priority": int(r["priority"]),
+                        "may_mitigate": bool(r["may_mitigate"]),
+                        "minor": not (c in kev or h["fixed"] or h["malicious"]), "binaries": []})
     return out
 
 

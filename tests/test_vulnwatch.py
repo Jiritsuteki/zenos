@@ -196,11 +196,56 @@ class Vuln(unittest.TestCase):
 
     def test_sources_and_hosts(self):
         c = zvuln.conf()
-        self.assertFalse(c["on"]["osv"])
+        self.assertTrue(c["on"]["osv"])
         self.assertFalse(c["on"]["zerowire"])                     # no machine-readable feed confirmed yet
         h = zvuln.hosts(c)
-        self.assertTrue({"www.cisa.gov", "security-tracker.debian.org", "services.nvd.nist.gov", "jvndb.jvn.jp"} <= h)
-        self.assertNotIn("api.osv.dev", h)
+        self.assertTrue({"www.cisa.gov", "security-tracker.debian.org", "services.nvd.nist.gov", "jvndb.jvn.jp",
+                         "osv-vulnerabilities.storage.googleapis.com"} <= h)
+        self.assertNotIn("api.osv.dev", h)                         # OSV's query service is never used
+
+    def osv_zip(self):
+        import zipfile
+        z = self.tmp / "npm.zip"
+        with zipfile.ZipFile(z, "w") as f:
+            f.writestr("GHSA-aaaa.json", json.dumps({"id": "GHSA-aaaa", "aliases": ["CVE-2026-8001"], "details": INJECT,
+                "affected": [{"package": {"ecosystem": "npm", "name": "ws"},
+                              "ranges": [{"type": "SEMVER", "events": [{"introduced": "8.0.0"}, {"fixed": "8.18.1"}]}]}]}))
+            f.writestr("MAL-1.json", json.dumps({"id": "MAL-2026-1", "summary": INJECT,
+                "affected": [{"package": {"ecosystem": "npm", "name": "evil-pkg"}, "versions": ["1.0.0"]}]}))
+            f.writestr("GHSA-bbbb.json", json.dumps({"id": "GHSA-bbbb", "aliases": ["CVE-2026-8002"],
+                "affected": [{"package": {"ecosystem": "npm", "name": "ws"},
+                              "ranges": [{"type": "SEMVER", "events": [{"introduced": "0"}, {"fixed": "7.5.10"}]}]}]}))
+        return z
+
+    def test_osv_list_is_downloaded_and_matched_never_queried(self):
+        import zenos_vulnwatch as W
+        z = self.osv_zip()
+        asked = []
+        def get_file(url, path):
+            asked.append(url)
+            Path(path).write_bytes(z.read_bytes())
+            return path
+        old = W.OSV_CACHE
+        W.OSV_CACHE = self.tmp / "osv-npm.zip"
+        try:
+            npm = {"ws": {"8.17.0"}, "evil-pkg": {"1.0.0"}, "left-pad": {"1.3.0"}}
+            s = W.run(self.c | {"on": dict(self.c["on"], osv=True)}, self.getter(feeds()), INV, keys=self.keys,
+                      sleep_nvd=False, get_file=get_file, npm=npm)
+        finally:
+            W.OSV_CACHE = old
+        self.assertEqual(asked, ["https://osv-vulnerabilities.storage.googleapis.com/npm/all.zip"])
+        got = {(f["cve"], f["package"]): (f["status"], f["fixed"]) for f in s["findings"]}
+        self.assertEqual(got[("CVE-2026-8001", "npm:ws")], ("affected", "8.18.1"))
+        self.assertIn(("MAL-2026-1", "npm:evil-pkg"), got)               # a known malicious package
+        self.assertNotIn(("CVE-2026-8002", "npm:ws"), got)               # fixed before 8.17.0
+        self.assertNotIn("evil.example", Path(W.STATE).read_text())
+
+    def test_npm_versions_compare_as_semver(self):
+        a = {"ranges": [{"type": "SEMVER", "events": [{"introduced": "1.2.0"}, {"fixed": "1.10.0"}]}]}
+        self.assertEqual(zvuln._in_ranges("1.9.0", a), (True, "1.10.0"))
+        self.assertEqual(zvuln._in_ranges("1.10.0", a), (False, None))
+        self.assertEqual(zvuln._in_ranges("1.10.0-rc.1", a), (True, "1.10.0"))
+        self.assertEqual(zvuln._in_ranges("1.1.9", a), (False, None))
 
     def test_the_monitor_file_has_no_text(self):
         self.run_once(desc=INJECT)

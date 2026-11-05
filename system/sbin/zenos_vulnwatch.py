@@ -33,6 +33,7 @@ RUN = Path(os.environ.get("ZENOS_VULN_RUN", "/run/zenos/vuln.json"))
 STATE = Path(os.environ.get("ZENOS_VULN_STATE", "/var/lib/zenos/vuln-state.json"))
 MITIGATIONS = Path(os.environ.get("ZENOS_MITIGATIONS", "/etc/zenos/mitigations"))
 APPLIED = Path(os.environ.get("ZENOS_MITIGATIONS_APPLIED", "/var/lib/zenos/mitigations-applied.json"))
+OSV_CACHE = Path(os.environ.get("ZENOS_OSV_CACHE", "/var/lib/zenos/osv-npm.zip"))
 LEDGER = os.environ.get("ZENOS_VULN_LEDGER", "/var/log/zenos/access-ledger.jsonl")
 SYSCTL_DIR = Path(os.environ.get("ZENOS_SYSCTL_DIR", "/etc/sysctl.d"))
 MODPROBE_DIR = Path(os.environ.get("ZENOS_MODPROBE_DIR", "/etc/modprobe.d"))
@@ -207,9 +208,27 @@ def scores_for(cves, c, get=zvuln.fetch, have=None, limit=40):
     return out
 
 
-def run(c=None, get=zvuln.fetch, inv=None, decide=None, keys=None, sleep_nvd=True):
+def osv_npm(c, get_file, npm, errors):
+    """OSV's whole npm list, downloaded (never queried), matched against the Node.js packages ZENOS ships"""
+    if not (c["on"].get("osv") and npm):
+        return {}
+    try:
+        fresh = OSV_CACHE.exists() and time.time() - OSV_CACHE.stat().st_mtime < c["every"]
+        if not fresh:
+            OSV_CACHE.parent.mkdir(parents=True, exist_ok=True)
+            tmp = OSV_CACHE.with_name(OSV_CACHE.name + ".part")
+            get_file(c["urls"]["osv"].format(ecosystem="npm"), tmp)
+            os.replace(tmp, OSV_CACHE)
+        return zvuln.parse_osv_zip(OSV_CACHE, npm)
+    except Exception as e:
+        errors["osv"] = type(e).__name__
+        return {}
+
+
+def run(c=None, get=zvuln.fetch, inv=None, decide=None, keys=None, sleep_nvd=True, get_file=zvuln.fetch_to, npm=None):
     c = c or zvuln.conf()
     kev, debian, scores, extra, errors = gather(c, get)
+    npm_hits = osv_npm(c, get_file, zvuln.npm_inventory() if npm is None else npm, errors)
     for name, err in errors.items():
         record("vuln-source-error", source=name, error=err)
     inv = zvuln.installed() if inv is None else inv
@@ -218,11 +237,14 @@ def run(c=None, get=zvuln.fetch, inv=None, decide=None, keys=None, sleep_nvd=Tru
     except (OSError, ValueError):
         old = {}
     scores = dict(old.get("scores") or {}, **scores)
-    first = zvuln.match(debian, kev, scores, inv, mitigated_cves(), offered_signatures(keys), decide=decide)
+    first = zvuln.match(debian, kev, scores, inv, mitigated_cves(), offered_signatures(keys), decide=decide) + \
+        zvuln.match_npm(npm_hits, kev, scores, mitigated_cves(), offered_signatures(keys), decide=decide)
     want = sorted({f["cve"] for f in first if f["status"] in ("affected", "mitigated") and not f.get("minor")})
     if sleep_nvd:
         scores = scores_for(want, c, get, scores)
-    findings = zvuln.match(debian, kev, scores, inv, mitigated_cves(), offered_signatures(keys), decide=decide)
+    findings = zvuln.match(debian, kev, scores, inv, mitigated_cves(), offered_signatures(keys), decide=decide) + \
+        zvuln.match_npm(npm_hits, kev, scores, mitigated_cves(), offered_signatures(keys), decide=decide)
+    findings.sort(key=lambda f: (-f["priority"], f["cve"], f["package"]))
     hot = [f for f in findings if f["status"] in ("affected", "mitigated") and not f.get("minor")]
     before = {(f["cve"], f["package"]): f["status"] for f in old.get("findings") or []}
     for f in hot:

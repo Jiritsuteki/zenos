@@ -10,6 +10,8 @@
   changes nothing (tested). Red in the System Monitor for an exploited vulnerability, counts in the PC's signed
   audit status, changes in the ledger. Mitigations apply only with release officers' signatures
   (`mitigation_needs_signatures`). The sources' hosts are added to the system accounts' allowed destinations.
+  The Node.js packages ZENOS ships are matched against OSV's npm list, downloaded whole and never queried, so
+  OSV does not learn which packages and versions the PC runs (`npm-inventory.json`, written at build time).
 - `tools/sbom.py`: ZENOS's SBOM in SPDX 2.3 and CycloneDX 1.6 for each release (docs/RELEASING.md).
 - `tests/test_no_exposed_admin.py`: no service opens a management screen to other machines without TLS, no debug or
   administration paths; the approval page now refuses a network address without TLS.

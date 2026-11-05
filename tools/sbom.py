@@ -154,11 +154,18 @@ def cyclonedx(b):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--version", required=True)
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--out", default=".")
     ap.add_argument("--debs", nargs="*", default=[])
     ap.add_argument("--debian-packages")
     ap.add_argument("--name")
+    ap.add_argument("--npm-inventory", help="write only the shipped Node.js packages (for zenos-vulnwatch) to this file")
     a = ap.parse_args()
+    if a.npm_inventory:
+        comps = [{"name": c["name"], "version": c["version"], "used_by": c["used_by"]}
+                 for c in build(a.version, []).get("components") if c["type"] == "npm"]
+        Path(a.npm_inventory).write_text(json.dumps({"version": a.version, "components": comps}, indent=0) + "\n")
+        print(a.npm_inventory, len(comps), "packages")
+        return
     b = build(a.version, a.debs, a.debian_packages, a.name)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)

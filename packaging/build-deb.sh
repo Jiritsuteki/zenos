@@ -73,6 +73,9 @@ install -m 644 "$SRC/system/modprobe.d/zenos-blacklist.conf" "$P/usr/lib/modprob
 mkdir -p "$P/etc/default/grub.d"
 install -m 644 "$SRC/system/grub.d/zenos-hardening.cfg" "$P/etc/default/grub.d/zenos-hardening.cfg"
 
+echo "== the Node.js packages shipped, for zenos-vulnwatch to match against OSV"
+python3 "$SRC/tools/sbom.py" --version "$VER" --npm-inventory "$Z/npm-inventory.json" >/dev/null
+
 echo "== decision program (formal/: Lean 4; the build checks every proof)"
 LAKE="${LAKE:-$(command -v lake || echo /opt/lean/lean-4.34.1-linux/bin/lake)}"
 [ -x "$LAKE" ] || { echo "Lean 4 (lake) is needed to build zenos-decide: docs/FORMAL_VERIFICATION.md" >&2; exit 1; }

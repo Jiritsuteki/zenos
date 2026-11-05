@@ -120,6 +120,7 @@ flowchart LR
   K[CISA KEV] --> F
   D[Debian security tracker] --> F
   V[NVD, JVN] --> F
+  O[OSV npm list<br/>downloaded whole, never queried] --> F
   C[National CERTs' SPDX<br/>Zero Wire, when a feed is confirmed] --> F
   F[zenos-vulnwatch<br/>keeps identifiers, names,<br/>versions, scores only] --> M{match against<br/>installed packages}
   M --> Z[zenos-decide vuln<br/>Vuln.lean]
