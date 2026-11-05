@@ -656,6 +656,14 @@ async function carryAnswer(from, m) {
   await send(from, "", Math.min(Number(m.level) || 1, PEOPLE[ACC].level), { id: zid(), kind: "zrel-res", ev: { id: a.id, op, ok: !!out.ok, message: String(out.message || "").slice(0, 200) } })
     .catch((err) => audit("msg-zrel-reply-failed", { to: from, error: String(err).slice(0, 80) }));
 }
+// an approval signature: an Ed25519 signature (base64, 64 bytes) or a passkey signature (JSON, zapprove.py)
+function sigShape(s) {
+  s = String(s || "");
+  if (/^[A-Za-z0-9+/]{86}==$/.test(s)) return true;
+  if (s.length > 4096) return false;
+  try { const a = JSON.parse(s); return a && a.passkey === 1 && ["credential_id", "authenticator_data", "client_data_json", "signature"].every((k) => /^[A-Za-z0-9_-]{1,2048}$/.test(String(a[k] || ""))); }
+  catch { return false; }
+}
 const readBody = async (req) => { let b = ""; for await (const c of req) b += c; return b ? JSON.parse(b) : {}; };
 
 function json(res, code, o) { res.writeHead(code, { "Content-Type": "application/json" }); res.end(JSON.stringify(o)); }
@@ -746,6 +754,29 @@ async function handle(req, res, remote) {
       if (act === "invite-sms") return json(res, 200, await rq("POST", "/invite-sms", { by: ACC, phone: b.phone }));
       return json(res, 404, { error: "unknown action" });
     }
+    if (u.pathname === "/api/zrel/here") {
+      // an officer standing at this PC approves on its screen with their own phone: the phone reads the QR code the
+      // browser shows, the passkey standard checks over Bluetooth that the phone is near, and the passkey (enrolled by
+      // the administrator for that officer) signs the request. The passkey is what proves the officer here.
+      if (remote) return json(res, 403, { error: "This is done on the PC's own screen." });
+      const pk = (n) => readJ(path.join(APPROVERS, path.basename(n) + ".passkey.json"));
+      if (req.method === "GET") {
+        let names = []; try { names = fs.readdirSync(APPROVERS).filter((f) => f.endsWith(".passkey.json")).map((f) => f.slice(0, -13)); } catch {}
+        const r = readJ(reqFile(u.searchParams.get("id")) || "/nonexistent");
+        if (!r || r.status !== "pending") return json(res, 404, { error: "No such request." });
+        const core = {}; for (const k of CORE_KEYS) if (k in r) core[k] = r[k];
+        return json(res, 200, { core, officers: names.filter((n) => n !== r.requester).map((n) => ({ name: n, cred_id: pk(n).cred_id, rp_id: pk(n).rp_id })) });
+      }
+      const b = await readBody(req);
+      if (!["approve", "decline"].includes(b.op) || !sigShape(b.sig) || !pk(String(b.approver || ""))) return json(res, 400, { error: "The signature is missing or malformed." });
+      if (b.op === "approve" && !/^\d{4}$/.test(String(b.code || ""))) return json(res, 200, { error: "Enter the 4-digit match code shown on this screen." });
+      const p = reqFile(b.id);
+      const out = !p ? { ok: false, message: "Unknown request." }
+        : p.startsWith(GSYS) ? await guardd({ op: b.op, request: String(b.id), approver: path.basename(String(b.approver)), sig: String(b.sig), code: String(b.code || "") })
+        : await signedAnswer([path.basename(p, ".json"), path.basename(String(b.approver)), b.op, String(b.sig), String(b.code || "")]);
+      audit("msg-zrel-here", { request: String(b.id).slice(0, 40), approver: path.basename(String(b.approver)), op: b.op, ok: !!out.ok });
+      return json(res, 200, out.ok ? { ok: true, message: out.message } : { error: out.message });
+    }
     if (u.pathname === "/api/myrequests") {
       // this PC user's own requests, newest first; the match code is shown here so the user can read it to an officer
       if (remote) return json(res, 403, { error: "Open My requests on your ZENOS PC." });
@@ -769,7 +800,7 @@ async function handle(req, res, remote) {
       const z = [...hist].reverse().find((m) => m.kind === "zrel" && m.dir === "in" && m.ev && m.ev.core && m.ev.core.id === b.id);
       if (!z) return json(res, 404, { error: "No such request." });
       if (remote && !official(req) && z.level > 2) return json(res, 200, { error: "Answer this on a government-issued device." });
-      if (!["approve", "decline"].includes(b.op) || !/^[A-Za-z0-9+/]{86}==$/.test(String(b.sig || ""))) return json(res, 400, { error: "The signature is missing or malformed." });
+      if (!["approve", "decline"].includes(b.op) || !sigShape(b.sig)) return json(res, 400, { error: "The signature is missing or malformed." });
       if (b.op === "approve" && !/^\d{4}$/.test(String(b.code || ""))) return json(res, 200, { error: "Enter the 4-digit match code shown on the stopped PC." });
       try {
         await send(z.from, "", z.level, { id: zid(), kind: "zrel-sig", ev: { id: b.id, op: b.op, code: b.op === "approve" ? String(b.code) : "", sig: b.sig } });

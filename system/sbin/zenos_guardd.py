@@ -32,6 +32,7 @@ except Exception:
     zledger = None
 import zformat as Z                    # file format, levels and the request digest, shared with the desktop side
 import zdecide                         # the proven decisions (formal/): answers, release, officers a release needs
+import zapprove                        # an officer's signature: a browser key, or a passkey in the phone's secure chip
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
 SYSD = Path("/var/lib/zenos")
@@ -279,9 +280,8 @@ def ensure_lock():
 
 # ---------------- requests and approvals ----------------
 def roster():
-    if PUB.is_dir():
-        return sorted(p.stem for p in PUB.glob("*.pub"))
-    return []
+    return zapprove.roster(PUB)
+
 
 
 def pubkey(name):
@@ -309,11 +309,7 @@ def with_sig_ok(r):
     digest = Z.request_digest(r)
     out = []
     for a in r.get("approvals", []):
-        try:
-            pubkey(a["approver"]).verify(base64.b64decode(a["sig"]), digest)
-            ok = True
-        except Exception:
-            ok = False
+        ok = zapprove.check(PUB, a.get("approver", ""), a.get("sig", ""), digest, r.get("level", 0))[0]
         out.append({"approver": a.get("approver", ""), "sig_ok": ok})
     return dict(r, approvals=out)
 
@@ -338,11 +334,8 @@ def plan_allows(rule, level, n=1):
                 continue
             ok = set()
             for a in g["approvals"]:
-                try:
-                    pubkey(a["approver"]).verify(base64.b64decode(a["sig"]), digest)
+                if zapprove.check(PUB, a.get("approver", ""), a.get("sig", ""), digest, core.get("level", 0))[0]:
                     ok.add(a["approver"])
-                except Exception:
-                    pass
             if len(ok) >= Z.REQUIRED[core["level"]]:
                 g["used"] += n
                 p.write_text(json.dumps(g, ensure_ascii=False, indent=1))
@@ -670,12 +663,15 @@ def handle(msg):
         if op not in ("approve", "decline"):
             return {"ok": False, "message": "Unknown operation."}
         digest = Z.request_digest(r)
-        try:
-            sig = base64.b64decode(msg.get("sig", ""))
-            pubkey(who).verify(sig, digest if op == "approve" else b"decline:" + digest)
-            sig_ok = True
-        except Exception:
-            sig_ok = False
+        sig = str(msg.get("sig", ""))
+        sig_ok, why, facts = zapprove.check(PUB, who, sig, digest if op == "approve" else b"decline:" + digest,
+                                            r.get("level", 0), state=Path(REQ).parent / "approver-counters.json")
+        if not sig_ok and why == "phone-not-near":
+            log(event="approve-refused", request=rid, approver=who, reason="phone-not-near")
+            return {"ok": False, "message": f"An L{r.get('level')} request must be approved on the PC's screen, with your "
+                                            "phone near it (scan the QR code the PC shows). Nothing was recorded."}
+        if sig_ok and facts.get("exception"):
+            log(event="approval-exception", request=rid, approver=who, level=r.get("level"), kind="remote")
         code_ok = str(msg.get("code", "")).strip() == r["code"]
         result = zdecide.approve(with_sig_ok(r), roster(), who, op, sig_ok, code_ok)
         if result.startswith("refused:"):
@@ -695,7 +691,7 @@ def handle(msg):
             write_json(rp, r)
             log(event="decline", request=rid, approver=who)
             return {"ok": True, "message": "Declined. The PC stays stopped and a new request is sent."}
-        r["approvals"].append({"approver": who, "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "sig": base64.b64encode(sig).decode()})
+        r["approvals"].append({"approver": who, "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "sig": sig})
         write_json(rp, r)
         log(event="approve", request=rid, approver=who, count=len(r["approvals"]), required=r["required"])
         left = 0 if verified(r)[0] else 1
@@ -770,6 +766,15 @@ def enroll(name, key_b64):
 
 
 def main():
+    if len(sys.argv) == 4 and sys.argv[1] == "--enroll-passkey":
+        # the officer's passkey, as ZENOS Messages → Settings → Approval key shows it after "Use a passkey"
+        try:
+            fp = zapprove.enroll_passkey(PUB, sys.argv[2], json.loads(base64.b64decode(sys.argv[3]).decode()))
+        except (ValueError, zapprove.Refused) as e:
+            sys.exit(f"That is not a passkey registration ({e}). Copy the whole line from the officer's Settings → Approval key.")
+        log(event="officer-enrolled", officer=sys.argv[2], fingerprint=fp, key="passkey")
+        print(f"enrolled {sys.argv[2]} (passkey) · fingerprint {' '.join(fp[i:i + 4] for i in range(0, 16, 4))}")
+        sys.exit(0)
     if len(sys.argv) == 4 and sys.argv[1] == "--enroll":
         return enroll(sys.argv[2], sys.argv[3])
     if len(sys.argv) > 1 and sys.argv[1] == "--enroll-demo":

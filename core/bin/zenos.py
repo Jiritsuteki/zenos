@@ -310,11 +310,18 @@ def verified_approvers(core, digest_b64, approvals):
     if base64.b64decode(digest_b64) != digest:
         return set()
     ok = set()
+    import zapprove
     for a in approvals:
+        name = os.path.basename(str(a.get("approver", "")))
+        if zapprove.enrolled(APPROVER_PUB, name):
+            # an administrator-enrolled key: a browser key or a passkey in the phone's secure chip
+            if zapprove.check(APPROVER_PUB, name, a.get("sig", ""), digest, core.get("level", 0))[0]:
+                ok.add(name)
+            continue
         try:
-            pk = Ed25519PublicKey.from_public_bytes(approver_pub(a["approver"]).read_bytes())
+            pk = Ed25519PublicKey.from_public_bytes(approver_pub(name).read_bytes())
             pk.verify(base64.b64decode(a["sig"]), digest)
-            ok.add(a["approver"])
+            ok.add(name)
         except Exception:
             pass
     return ok
@@ -439,16 +446,21 @@ def signed_answer(rid, approver, op, sig_b64, code=""):
     if r["status"] != "pending":
         return False, "This request is already decided."
     approver = os.path.basename(approver)
-    if not (APPROVER_PUB / f"{approver}.pub").exists():
+    import zapprove
+    if not zapprove.enrolled(APPROVER_PUB, approver):
         audit("approve-refused", request=r["id"], approver=approver, reason="not-enrolled")
         return False, "This officer is not enrolled on this PC."
     digest = request_digest(r)
-    try:
-        Ed25519PublicKey.from_public_bytes((APPROVER_PUB / f"{approver}.pub").read_bytes()).verify(
-            base64.b64decode(sig_b64), digest if op == "approve" else b"decline:" + digest)
-    except Exception:
-        audit("approve-refused", request=r["id"], approver=approver, reason="signature")
+    ok, why, facts = zapprove.check(APPROVER_PUB, approver, sig_b64, digest if op == "approve" else b"decline:" + digest,
+                                    r.get("level", 0), state=Z / "approver-counters.json")
+    if not ok:
+        audit("approve-refused", request=r["id"], approver=approver, reason=why)
+        if why == "phone-not-near":
+            return False, (f"An L{r.get('level')} request must be approved on this PC's screen, with your phone near it "
+                           "(scan the QR code it shows). Nothing was recorded.")
         return False, "The signature does not verify. Nothing was recorded."
+    if facts.get("exception"):
+        audit("approval-exception", request=r["id"], approver=approver, level=r.get("level"), kind="remote")
     if op == "decline":
         r["status"], r["declined_by"] = "declined", approver
         r["decline_sig"] = sig_b64

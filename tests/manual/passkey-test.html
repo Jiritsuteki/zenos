@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ZENOS passkey test</title><meta name="robots" content="noindex">
+<style>
+:root{--bg:#0B0D12;--card:#151821;--line:#262B38;--t:#E8EAF0;--mute:#9AA1B2;--acc:#5B8CFF;--ok:#4ADE80;--ng:#FCA5A5}
+body{margin:0;background:var(--bg);color:var(--t);font:15px/1.55 Inter,system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:640px;margin:0 auto;padding:24px 16px calc(32px + env(safe-area-inset-bottom))}
+h1{font-size:22px;margin:0 0 4px}p{margin:6px 0}.mute{color:var(--mute);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.card h2{font-size:16px;margin:0 0 6px}
+button{border:0;border-radius:10px;padding:12px 16px;font:600 15px inherit;font-family:inherit;background:var(--acc);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.sub{background:#262B38;color:var(--t)}
+pre{white-space:pre-wrap;word-break:break-all;background:#0F1218;border-radius:10px;padding:12px;font-size:12px;color:var(--mute);margin:10px 0 0}
+.ok{color:var(--ok)}.ng{color:var(--ng)}
+</style></head><body><main>
+<h1>ZENOS passkey test</h1>
+<p class="mute">A test of signing ZENOS approvals with a passkey kept in the phone's secure chip (iPhone: Secure Enclave; Android: the phone's hardware key store). Nothing is sent anywhere: the keys stay on the phone, and the results are shown on this page only.</p>
+<p class="mute">電話の安全なチップに入るパスキーで ZENOS の承認に署名できるかの試験です。どこにも送信しません。結果はこの画面にだけ出ます。</p>
+
+<div class="card"><h2>1. Make a test passkey / 試験用のパスキーを作る</h2>
+<p class="mute">On the phone: Face ID or fingerprint. On a PC: the browser offers "use a phone"; scan the QR code with the phone.</p>
+<button id="reg">Make a passkey</button></div>
+
+<div class="card"><h2>2. Approve a sample request / 見本の承認に署名する</h2>
+<p class="mute">The signature is bound to the request: which PC, which file, who, when. It is checked on this page.</p>
+<button id="sign">Approve with this device</button></div>
+
+<div class="card"><h2>3. From a PC, with the phone nearby / PC から、近くの電話で</h2>
+<p class="mute">Open this page on a PC. The PC shows a QR code; the phone reads it and the two check over Bluetooth that they are near each other. From far away it does not go through.</p>
+<button id="near" class="sub">Approve with a phone near this PC</button></div>
+
+<div class="card"><h2>Results / 結果</h2><div id="sum" class="mute">Nothing yet.</div><pre id="out"></pre>
+<button id="copy" class="sub">Copy the results</button></div>
+</main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id),enc=new TextEncoder();
+const b64u=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const unb64u=s=>Uint8Array.from(atob(String(s).replace(/-/g,"+").replace(/_/g,"/")+"===".slice((String(s).length+3)%4)),c=>c.charCodeAt(0));
+const sha=async b=>new Uint8Array(await crypto.subtle.digest("SHA-256",b));
+const pyj=v=>v===null||v===undefined?"null":Array.isArray(v)?"["+v.map(pyj).join(", ")+"]":typeof v==="object"?"{"+Object.keys(v).sort().map(k=>JSON.stringify(k)+": "+pyj(v[k])).join(", ")+"}":JSON.stringify(v);
+const store={get(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch{return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const log=[];
+function show(step,ok,facts){log.push({step,ok,...facts,t:new Date().toISOString()});
+  $("sum").innerHTML=log.map(x=>`<div class="${x.ok?"ok":"ng"}">${x.ok?"✓":"✗"} ${x.step}${x.error?": "+x.error:""}</div>`).join("");
+  $("out").textContent=JSON.stringify({device:device(),results:log},null,1);}
+function device(){const u=navigator.userAgent;return {ua:u,platform:(navigator.userAgentData&&navigator.userAgentData.platform)||"",
+  webauthn:!!window.PublicKeyCredential,origin:location.origin};}
+
+// ES256: WebAuthn gives DER; WebCrypto wants r||s (32+32 bytes)
+function der2raw(d){let i=2;if(d[1]&0x80)i+=d[1]&0x7f;const rl=d[i+1],r=d.slice(i+2,i+2+rl);i=i+2+rl;const sl=d[i+1],s=d.slice(i+2,i+2+sl);
+  const p=x=>{x=x[0]===0?x.slice(1):x;const o=new Uint8Array(32);o.set(x,32-x.length);return o;};const out=new Uint8Array(64);out.set(p(r));out.set(p(s),32);return out;}
+
+$("reg").onclick=async()=>{
+  try{
+    if(!window.PublicKeyCredential)throw new Error("This browser has no passkeys (WebAuthn).");
+    const uid=crypto.getRandomValues(new Uint8Array(16));
+    const c=await navigator.credentials.create({publicKey:{rp:{id:location.hostname,name:"ZENOS test"},
+      user:{id:uid,name:"zenos-test-"+b64u(uid).slice(0,6),displayName:"ZENOS approval test"},
+      challenge:crypto.getRandomValues(new Uint8Array(32)),pubKeyCredParams:[{type:"public-key",alg:-8},{type:"public-key",alg:-7}],
+      authenticatorSelection:{residentKey:"required",userVerification:"required"},attestation:"none",timeout:120000,
+      extensions:{prf:{}}}});
+    const r=c.response,ext=c.getClientExtensionResults?c.getClientExtensionResults():{};
+    const spki=r.getPublicKey?r.getPublicKey():null,alg=r.getPublicKeyAlgorithm?r.getPublicKeyAlgorithm():null;
+    if(!spki)throw new Error("The browser did not give the public key.");
+    const tr=r.getTransports?r.getTransports():[];
+    store.set("zenos-pk",{id:b64u(c.rawId),spki:b64u(spki),alg,transports:tr});
+    show("passkey made",true,{alg:alg===-8?"EdDSA (Ed25519)":alg===-7?"ES256 (P-256)":String(alg),transports:tr,
+      attachment:c.authenticatorAttachment||"",prf_enabled:!!(ext.prf&&ext.prf.enabled),
+      synced:r.getAuthenticatorData?!!(new Uint8Array(r.getAuthenticatorData())[32]&0x10):null});
+  }catch(e){show("passkey made",false,{error:String(e.message||e)});}
+};
+
+async function approve(near){
+  const step=near?"approved from a PC with the phone nearby":"approved on this device";
+  try{
+    const k=store.get("zenos-pk");
+    // the request the signature is bound to (the same digest ZENOS's guard checks: SHA-256 of the canonical JSON)
+    const core={id:"test-"+Date.now(),kind:"access",requester:"tanaka",file:"/home/tanaka/Security/L3/budget.xlsx",
+      file_hash:"0".repeat(64),level:3,reason:"passkey test",created:new Date().toISOString(),scope:{pc:"desk-0423"}};
+    const challenge=await sha(enc.encode(pyj(core)));
+    const salt=await sha(enc.encode("zenos-test-prf"));
+    const opts={challenge,rpId:location.hostname,userVerification:"required",timeout:120000,extensions:{prf:{eval:{first:salt}}}};
+    if(near){opts.hints=["hybrid"];}else if(k){opts.allowCredentials=[{type:"public-key",id:unb64u(k.id)}];}
+    const c=await navigator.credentials.get({publicKey:opts});
+    const r=c.response,ad=new Uint8Array(r.authenticatorData),cdj=new Uint8Array(r.clientDataJSON);
+    const cd=JSON.parse(new TextDecoder().decode(cdj));
+    const facts={attachment:c.authenticatorAttachment||"",flags_up:!!(ad[32]&1),flags_uv:!!(ad[32]&4),
+      challenge_ok:cd.challenge===b64u(challenge),type_ok:cd.type==="webauthn.get",origin_ok:cd.origin===location.origin,
+      cross_origin:!!cd.crossOrigin};
+    const ext=c.getClientExtensionResults?c.getClientExtensionResults():{};
+    facts.prf=!!(ext.prf&&ext.prf.results&&ext.prf.results.first);
+    const same=k&&b64u(c.rawId)===k.id;
+    facts.same_passkey=!!same;
+    if(same){
+      const data=new Uint8Array([...ad,...(await sha(cdj))]);
+      let ok=false;
+      if(k.alg===-7){const pub=await crypto.subtle.importKey("spki",unb64u(k.spki),{name:"ECDSA",namedCurve:"P-256"},false,["verify"]);
+        ok=await crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},pub,der2raw(new Uint8Array(r.signature)),data);}
+      else if(k.alg===-8){const pub=await crypto.subtle.importKey("spki",unb64u(k.spki),{name:"Ed25519"},false,["verify"]);
+        ok=await crypto.subtle.verify({name:"Ed25519"},pub,r.signature,data);}
+      facts.signature_ok=ok;
+    }else{facts.signature_ok=null;facts.note="a passkey made on another device: its public key is not on this page, so the signature is not checked here";}
+    const pass=facts.flags_up&&facts.flags_uv&&facts.challenge_ok&&facts.type_ok&&facts.origin_ok&&facts.signature_ok!==false&&(!near||facts.attachment==="cross-platform");
+    show(step,pass,facts);
+  }catch(e){show(step,false,{error:String(e.message||e)});}
+}
+$("sign").onclick=()=>approve(false);
+$("near").onclick=()=>approve(true);
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText($("out").textContent);$("copy").textContent="Copied";}catch{}};
+</script></body></html>

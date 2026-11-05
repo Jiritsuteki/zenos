@@ -104,6 +104,8 @@ for that request only (X25519, HKDF, AES-256-GCM); the answer is signed with the
 | `one_node_not_enough` | With two or more audit nodes configured, one node vouching never lets a package in. |
 | `one_key_not_enough` | When two or more officers must sign, one release key never lets a package in. |
 | `revoked_refused` | An agreed revocation keeps a package out. |
+| `approval_sound` | An officer's passkey approval counts only when its signature verifies with the enrolled passkey, it was made for this request and ZENOS's page, the person was verified on the phone, the counter did not go back, and (when required) the phone was near the PC or an allowed exception was used (`Approval.lean`). |
+| `far_refused` | When nearness is required and exceptions are off, a phone that was not near the PC never approves. |
 | `model_sound` | An AI model kept on the PC is loaded only when its record is a model record, every file in its folder is in the record with the same SHA-256 and every listed file is there, the data is within the record's level, and the ledger holds the record as for a package (`Model.lean`). |
 | `changed_file_refused` | A model folder with any file added, changed or missing is never loaded. |
 | `model_one_key_not_enough`, `model_one_node_not_enough` | One officer's key, or one audit node, never lets a model in. |

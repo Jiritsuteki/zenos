@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+**Approvals with a passkey in the phone**
+- An officer's approval key can be a passkey kept in the phone's secure chip (iPhone: Secure Enclave; Android: the
+  hardware key store). It signs the request's digest itself; the PC checks it against the administrator-enrolled
+  passkey (`zapprove.py`, `zenos_guardd.py --enroll-passkey`) and the proven decision counts it (zenos-decide
+  "passkey_approval", `Approval.lean`). From a set level up (`/etc/zenos/approval.json`), an approval counts only
+  when made on the stopped PC's screen with the officer's phone near it (the passkey standard's QR code and
+  Bluetooth check): "An officer is here" in My requests. Exceptions, when allowed, are written to the ledger.
+  docs/PHONE_KEYS.md, including a proposal for a lost phone. Not yet tested on physical phones.
+
 **AI models**
 - AI models in the release ledger: a model kept on the PC (weights, tokenizer, settings, adapters) is loaded only
   when every file is the released one, byte for byte, its record is signed by two or more release officers and held

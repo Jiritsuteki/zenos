@@ -1105,10 +1105,39 @@ async function akey(make){
 const b64e=u=>btoa(String.fromCharCode(...new Uint8Array(u)));
 async function akeyInfo(kp){const raw=await crypto.subtle.exportKey("raw",kp.publicKey);const h=new Uint8Array(await crypto.subtle.digest("SHA-256",raw));
   const fp=[...h.slice(0,8)].map(x=>x.toString(16).padStart(2,"0")).join("").toUpperCase();return {pub:b64e(raw),fp:fp.match(/.{4}/g).join(" ")};}
-async function zsign(core,op){
-  const kp=await akey(false);if(!kp)throw new Error("This device has no approval key yet. Make one in Settings → Approval key, and have it enrolled.");
+// The approval key in the phone's secure chip (iPhone: Secure Enclave; Android: the hardware key store): a passkey.
+// It signs the request's digest itself (the WebAuthn challenge). Made on a PC, it is made with the phone that reads
+// the PC's QR code, and an approval on a PC's screen is made the same way: the passkey standard checks over
+// Bluetooth that the phone is near that PC (reported as "cross-platform").
+const pkb64u=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const pkun=s=>Uint8Array.from(atob(String(s).replace(/-/g,"+").replace(/_/g,"/")+"===".slice((String(s).length+3)%4)),c=>c.charCodeAt(0));
+async function pkGet(){const db=await kdb();return new Promise(ok=>{const q=db.transaction("k").objectStore("k").get("passkey:"+me.id);q.onsuccess=()=>ok(q.result||null);q.onerror=()=>ok(null);});}
+async function pkPut(v){const db=await kdb();return new Promise((ok,ng)=>{const tx=db.transaction("k","readwrite");tx.objectStore("k").put(v,"passkey:"+me.id);tx.oncomplete=ok;tx.onerror=()=>ng(tx.error);});}
+async function pkMake(){
+  if(!window.PublicKeyCredential)throw new Error("This browser has no passkeys.");
+  const uid=crypto.getRandomValues(new Uint8Array(16));
+  const c=await navigator.credentials.create({publicKey:{rp:{id:location.hostname,name:"ZENOS approvals"},
+    user:{id:uid,name:"zenos-"+me.id,displayName:"ZENOS approval key · "+me.id},challenge:crypto.getRandomValues(new Uint8Array(32)),
+    pubKeyCredParams:[{type:"public-key",alg:-7},{type:"public-key",alg:-8}],attestation:"none",timeout:120000,
+    authenticatorSelection:{residentKey:"required",userVerification:"required"},hints:me.remote?["client-device"]:["hybrid"]}});
+  const r=c.response,spki=r.getPublicKey&&r.getPublicKey();if(!spki)throw new Error("This browser did not give the passkey's public key.");
+  const reg={cred_id:pkb64u(c.rawId),public_key:pkb64u(spki),alg:r.getPublicKeyAlgorithm(),rp_id:location.hostname,origin:location.origin,
+    count:0,transports:r.getTransports?r.getTransports():[]};
+  await pkPut(reg);return reg;
+}
+async function zsign(core,op,level){
   const d=new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pyj(core))));
   const data=op==="decline"?new Uint8Array([...new TextEncoder().encode("decline:"),...d]):d;
+  const pk=await pkGet();
+  if(pk){
+    const near=!me.remote;      // on a PC's screen: the phone reads the PC's QR code
+    const c=await navigator.credentials.get({publicKey:{challenge:data,rpId:pk.rp_id,timeout:120000,userVerification:"required",
+      allowCredentials:[{type:"public-key",id:pkun(pk.cred_id)}],hints:near?["hybrid"]:[]}});
+    const r=c.response;
+    return JSON.stringify({passkey:1,credential_id:pkb64u(c.rawId),authenticator_data:pkb64u(r.authenticatorData),
+      client_data_json:pkb64u(r.clientDataJSON),signature:pkb64u(r.signature),attachment:c.authenticatorAttachment||""});
+  }
+  const kp=await akey(false);if(!kp)throw new Error("This device has no approval key yet. Make one in Settings → Approval key, and have it enrolled.");
   return b64e(await crypto.subtle.sign({name:"Ed25519"},kp.privateKey,data));
 }
 const zrelGone=new Set();let zrelSig="";
@@ -1164,7 +1193,7 @@ async function zrelUI(force){
    <div class="zf">${esc(fp)}</div>`;
   const answer=async op=>{const code=op==="approve"?($("zcode").value||"").trim():"";
     if(op==="approve"&&!/^\d{4}$/.test(code)){$("zcode").focus();return;}
-    let r;try{r=await post("zrel/answer",{id,op,code,sig:await zsign(c,op)});}catch(e){r={error:e.message};}
+    let r;try{r=await post("zrel/answer",{id,op,code,sig:await zsign(c,op,c.level)});}catch(e){r={error:e.message};}
     if(r.error){const m=el.querySelector(".zm")||document.createElement("div");m.className="zm ng";m.textContent=r.error;if(!m.parentNode)el.insertBefore(m,el.querySelector(".zn")||el.querySelector(".zb"));return;}
     await pull();zrelUI(true);};
   if($("zyes"))$("zyes").onclick=()=>answer("approve");
@@ -1174,14 +1203,25 @@ async function zrelUI(force){
 }
 async function fillAkey(){
   const box=$("akbox");if(!box)return;
-  try{const kp=await akey(false);
-    if(!kp){box.innerHTML=`<p>This device has no approval key yet.</p><div class="rowb" style="margin-top:8px"><button class="send" id="akmake">Make an approval key</button></div><div class="kv" id="akmsg"></div>`;
+  try{const pk=await pkGet();
+    if(pk){const line=`sudo zenos_guardd.py --enroll-passkey ${me.id} ${btoa(JSON.stringify(pk))}`;
+      const h=new Uint8Array(await crypto.subtle.digest("SHA-256",pkun(pk.public_key)));const fp=[...h.slice(0,8)].map(x=>x.toString(16).padStart(2,"0")).join("").toUpperCase().match(/.{4}/g).join(" ");
+      box.innerHTML=`<div class="kv">Passkey in the phone's secure chip · fingerprint <b>${esc(fp)}</b></div>
+        <div style="background:var(--bg);border-radius:8px;padding:10px 12px;margin:8px 0;font:500 12px ui-monospace,monospace;color:#93C5FD;word-break:break-all" id="akline">${esc(line)}</div>
+        <p style="color:var(--t-mute);font-size:12px">Give this line to the PC administrator. Once it is enrolled, this passkey replaces your old approval key.</p>
+        <div class="rowb" style="margin-top:8px"><button class="send" id="akcopy">Copy</button></div><div class="kv" id="akmsg"></div>`;
+      $("akcopy").onclick=async()=>{try{await navigator.clipboard.writeText(line);$("akmsg").textContent="Copied.";}catch(e){$("akmsg").textContent="Select the line and copy it.";}};
+      return;}
+    const pkBtn=`<div class="btn2" id="akpk">${me.remote?"Use a passkey on this phone":"Use a passkey on my phone (scan a QR code)"}</div>`;
+    setTimeout(()=>{const b=$("akpk");if(b)b.onclick=async()=>{try{await pkMake();fillAkey();}catch(e){$("akmsg").innerHTML=`<span class="ng">${esc(String(e.message||e))}</span>`;}};},0);
+    const kp=await akey(false);
+    if(!kp){box.innerHTML=`<p>This device has no approval key yet.</p><div class="rowb" style="margin-top:8px"><button class="send" id="akmake">Make an approval key</button>${pkBtn}</div><div class="kv" id="akmsg"></div>`;
       $("akmake").onclick=async()=>{try{await akey(true);fillAkey();}catch(e){$("akmsg").innerHTML=`<span class="ng">${esc(e.message)}</span>`;}};return;}
     const k=await akeyInfo(kp),line=`sudo zenos_guardd.py --enroll ${me.id} ${k.pub}`;
     box.innerHTML=`<div class="kv">Fingerprint <b>${esc(k.fp)}</b></div>
       <div style="background:var(--bg);border-radius:8px;padding:10px 12px;margin:8px 0;font:500 12px ui-monospace,monospace;color:#93C5FD;word-break:break-all" id="akline">${esc(line)}</div>
       <p style="color:var(--t-mute);font-size:12px">Give this line to the PC administrator. Until it is enrolled, your signatures are refused.</p>
-      <div class="rowb" style="margin-top:8px"><button class="send" id="akcopy">Copy</button><div class="btn2" id="aknew">Make a new key</div></div><div class="kv" id="akmsg"></div>`;
+      <div class="rowb" style="margin-top:8px"><button class="send" id="akcopy">Copy</button><div class="btn2" id="aknew">Make a new key</div>${pkBtn}</div><div class="kv" id="akmsg"></div>`;
     $("akcopy").onclick=async()=>{try{await navigator.clipboard.writeText(line);$("akmsg").textContent="Copied.";}catch(e){const r=document.createRange();r.selectNodeContents($("akline"));getSelection().removeAllRanges();getSelection().addRange(r);$("akmsg").textContent="Selected — copy it with Ctrl+C.";}};
     $("aknew").onclick=async()=>{if($("aknew").dataset.sure!=="1"){$("aknew").dataset.sure="1";$("aknew").textContent="Press again: the old key stops working";return;}
       try{await akey("new");fillAkey();}catch(e){$("akmsg").innerHTML=`<span class="ng">${esc(e.message)}</span>`;}};
@@ -1199,9 +1239,29 @@ async function renderRequests(){
     const who=r.status==="declined"&&r.declined_by?` · declined by ${esc(split(P(r.declined_by).name).name)}`:r.approvals.length?` · approved by ${r.approvals.map(a=>esc(split(P(a).name).name)).join(", ")}`:"";
     return `<div class="zrq"><div class="zl"><div class="z1"><span class="lv" style="background:${lc}33;color:${lc}">L${r.level}</span><b>${esc(r.name||what[r.kind]||"")}</b></div>
       <div class="z2">${esc(what[r.kind]||"Request")} · ${esc(String(r.created||"").replace("T"," ").slice(5,16))}${r.reason?` · "${esc(r.reason)}"`:""}${who}</div></div>
-      ${r.code?`<div class="zc"><small>Match code</small><b>${esc(r.code)}</b></div>`:""}<span class="zs" style="background:${col}29;color:${col}">${esc(lab(r))}</span></div>`;}).join("")
+      ${r.code?`<div class="zc"><small>Match code</small><b>${esc(r.code)}</b></div>`:""}<span class="zs" style="background:${col}29;color:${col}">${esc(lab(r))}</span>
+      ${r.status==="pending"?`<button class="btn2 zhere" data-id="${esc(r.id)}" data-code="${esc(r.code||"")}" style="white-space:nowrap">An officer is here</button>`:""}</div>`;}).join("")
     :`<p class="empty">No requests. When you open a file above your clearance, ZENOS asks whether to send a request; it shows up here.</p>`;
-  L.innerHTML=`<p style="color:var(--t-sub);font-size:13px;margin:0 0 12px">Tell your officers the match code by phone or in person; they enter it on their own device.</p>`+html;
+  L.innerHTML=`<p style="color:var(--t-sub);font-size:13px;margin:0 0 12px">Tell your officers the match code by phone or in person; they enter it on their own device. An officer standing at this PC can approve on this screen with their phone.</p><div id="zheremsg"></div>`+html;
+  L.querySelectorAll(".zhere").forEach(b=>b.onclick=()=>approveHere(b.dataset.id,b.dataset.code));
+}
+// an officer at this PC: their phone reads the QR code the browser shows (the passkey standard checks over Bluetooth
+// that the phone is near this PC), and their passkey signs the request
+async function approveHere(id,code){
+  const m=$("zheremsg"),say=(c,s)=>{m.innerHTML=`<p class="${c}" style="font-size:13px">${esc(s)}</p>`;};
+  try{const o=await api("zrel/here?id="+encodeURIComponent(id));if(o.error)return say("ng",o.error);
+    if(!o.officers.length)return say("ng","No officer has a passkey enrolled on this PC yet.");
+    const name=o.officers.length===1?o.officers[0].name:prompt("Which officer is here? ("+o.officers.map(x=>x.name).join(", ")+")","");
+    const off=o.officers.find(x=>x.name===name);if(!off)return say("ng","Not an officer enrolled on this PC.");
+    const d=new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pyj(o.core))));
+    say("","Scan the QR code with "+off.name+"'s phone, then confirm with face or fingerprint.");
+    const c=await navigator.credentials.get({publicKey:{challenge:d,rpId:off.rp_id,timeout:120000,userVerification:"required",
+      allowCredentials:[{type:"public-key",id:pkun(off.cred_id)}],hints:["hybrid"]}});
+    const r=c.response,sig=JSON.stringify({passkey:1,credential_id:pkb64u(c.rawId),authenticator_data:pkb64u(r.authenticatorData),
+      client_data_json:pkb64u(r.clientDataJSON),signature:pkb64u(r.signature),attachment:c.authenticatorAttachment||""});
+    const a=await post("zrel/here",{id,approver:off.name,op:"approve",code,sig});
+    say(a.error?"ng":"ok",a.error||a.message||"Approved.");renderRequests();
+  }catch(e){say("ng",String(e.message||e));}
 }
 (()=>{const s=document.createElement("style");s.textContent=`.zrq{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;background:var(--side);border:1px solid var(--line);margin-bottom:10px}
 .zrq .zl{flex:1;min-width:0}.zrq .z1{display:flex;align-items:center;gap:8px}.zrq .z1 b{font-size:15px;font-weight:600;color:var(--t-head);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

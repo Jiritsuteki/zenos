@@ -8,6 +8,7 @@ import ZenosFormal.Supply
 import ZenosFormal.Orchestrator
 import ZenosFormal.Federation
 import ZenosFormal.Model
+import ZenosFormal.Approval
 
 /-!
 `zenos-decide`: reads one JSON request on stdin, writes one JSON answer on stdout, runs the proven decision
@@ -45,6 +46,8 @@ functions of `ZenosFormal.Decide` and nothing else. Any input it cannot read is 
       -> {"allow": bool, "reason": str|null}                          (an AI model kept on the PC, before loading)
   {"op":"model_api", the fields of "install" for the pinned identity, "kind_ok", "same_model", "denied", "level",
    "max_level"}                                                       -> {"allow": bool, "reason": str|null}
+  {"op":"passkey_approval", "sig_ok", "challenge_ok", "origin_ok", "user_verified", "counter_ok", "near",
+   "near_required", "exception_allowed", "exception_used"}           -> {"ok": bool, "reason": str|null}
   {"op":"sysegress", "system", "listed", "loopback", "enforce"}       -> {"cut": bool}   (the network sentinel)
   {"op":"route", "allowed":[..], "frags":[{"to", "atoms":[{"record","role":"ident"|"attr"|"other"}]}]}
       -> {"allow": bool, "reason": str|null}                          (the conductor)
@@ -287,6 +290,21 @@ def answer (j : J) : Except String J := do
     return match decideInstall r with
       | .allow => .obj [("allow", .bool true), ("reason", .null)]
       | .refuse why => .obj [("allow", .bool false), ("reason", .str why)]
+  | "passkey_approval" =>
+    let sigOk ← getB j "sig_ok"
+    let challengeOk ← getB j "challenge_ok"
+    let originOk ← getB j "origin_ok"
+    let userVerified ← getB j "user_verified"
+    let counterOk ← getB j "counter_ok"
+    let near ← getB j "near"
+    let nearRequired ← getB j "near_required"
+    let exceptionAllowed ← getB j "exception_allowed"
+    let exceptionUsed ← getB j "exception_used"
+    let a : PasskeyApproval := { sigOk, challengeOk, originOk, userVerified, counterOk, near, nearRequired,
+                                 exceptionAllowed, exceptionUsed }
+    return match decidePasskeyApproval a with
+      | none => .obj [("ok", .bool true), ("reason", .null)]
+      | some why => .obj [("ok", .bool false), ("reason", .str why)]
   | "model" =>
     return installJ (decideModel { ledger := ← installReq j, kindOk := ← getB j "kind_ok", filesOk := ← getB j "files_ok",
                                    level := ← getN j "level", maxLevel := ← getN j "max_level" })
