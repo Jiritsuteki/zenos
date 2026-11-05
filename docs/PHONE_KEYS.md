@@ -66,6 +66,11 @@ officers' approval have to cover.
 | iPhone (Face ID) | iOS; the browser reports "iPhone OS 18_7" | Safari 26.6 | Yes: ES256 (P-256), user verified, PRF on, synced (iCloud Keychain) | Yes: signature verified in the page, bound to the request, user verified | Yes, with an iPad (Safari 26.5) in the PC's place: QR read by the iPhone, Face ID, "cross-platform" reported |
 | Android | | | (waiting) | (waiting) | (waiting) |
 
+Android has not been tested: the project has no Android phone. If you have one, open the test page on it, run the
+three steps (the third from a PC or tablet with Bluetooth), press "Copy the result" and paste the text into an
+issue. The page sends nothing by itself; the result shows only the browser, the passkey's type and the checks, not
+who you are.
+
 Tested 5 November 2026 at https://passkey-test.zenos-site.pages.dev (a preview address, not zenos-os.org). One
 approval attempt on the iPhone ended with the browser's "not allowed" error and went through when pressed again;
 the browser gives that error for a cancelled or timed-out prompt as well, and which it was is not known.
