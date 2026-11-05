@@ -75,12 +75,25 @@ def manifest(folder, name, version, publisher, source, licence, max_level, rings
             "rings": {str(k): int(v) for k, v in (rings or {"0": 0}).items()}, "created": int(time.time())}
 
 
+DEFAULT_API = {"anthropic": "https://api.anthropic.com", "openai": "https://api.openai.com"}
+
+
 def api_identity(conf):
-    """who a call goes to: provider kind, address, model name and version (the version defaults to the model's name,
-    which providers that version their models in the name already carry)"""
-    host = (urlparse(conf.get("url") or conf.get("base_url") or "").hostname or {"anthropic": "api.anthropic.com",
-                                                                "openai": "api.openai.com"}.get(conf.get("kind"), "")).lower()
-    return {"provider": str(conf.get("kind", "")), "host": host, "model": str(conf.get("model", "")),
+    """who a call goes to: provider kind, the whole address (scheme, host, port and path, not the host alone, so the
+    same name on another port, over plain HTTP or under another path is another identity), model name and version
+    (the version defaults to the model's name, which providers that version their models in the name already carry).
+    An address with a user name, a query or a fragment has no identity: it is refused."""
+    url = conf.get("url") or conf.get("base_url") or DEFAULT_API.get(conf.get("kind"), "")
+    try:
+        u = urlparse(str(url))
+        port = u.port or {"https": 443, "http": 80}.get(u.scheme, 0)
+        bad = u.username is not None or u.password is not None or u.query or u.fragment or not u.hostname
+    except ValueError:
+        u, port, bad = None, 0, True
+    endpoint = "" if bad else "%s://%s:%d%s" % (u.scheme.lower(), u.hostname.lower().rstrip("."), port,
+                                                 (u.path or "/").rstrip("/") or "/")
+    return {"provider": str(conf.get("kind", "")), "host": "" if bad else u.hostname.lower().rstrip("."),
+            "endpoint": endpoint, "model": str(conf.get("model", "")),
             "version": str(conf.get("version") or conf.get("model", ""))}
 
 
@@ -155,7 +168,8 @@ def check_api(conf, level, c=None, get=zsupply.fetch, now=None):
     for f in _ledger(sha, lambda m: m.get("kind") == KIND_API, {"name": ident["model"], "version": ident["version"]},
                      c, get, now):
         m = (f.get("_record") or {}).get("manifest") or {}
-        same = all(m.get(k) == ident[k] for k in ("provider", "host", "model", "version"))
+        same = bool(ident["endpoint"]) and ident["endpoint"].startswith("https://") and \
+            all(m.get(k) == ident[k] for k in ("provider", "host", "endpoint", "model", "version"))
         f = dict(f, kind_ok=m.get("kind") == KIND_API, same_model=same, denied=denied, level=max(0, int(level)),
                  max_level=max(0, int(m.get("max_level", 0) or 0)))
         ok, why = zdecide.model_api(f)

@@ -34,7 +34,8 @@ Each key peer decides on its own facts, with the proven decision (zenos-decide "
 - the server is enrolled with this peer, signed this request, the request is recent and not seen before;
 - the audit node heard from the server recently (a server that stopped shipping its ledger gets nothing);
 - the person is signed in: a token of the organization's sign-in service, whose public key the peer enrolled and
-  checks itself. The server cannot vouch for a person on its own;
+  checks itself. The token names the server it was made for (`aud`) and lives at most an hour (`token_max`), so a
+  token one server holds does not open another server's records. The server cannot vouch for a person on its own;
 - the purpose is registered for this server and this table (`casework` yes, `marketing` no);
 - the person's clearance, as this peer holds it, covers the record's level, or a grant on the peer names the record;
 - not too many shares for this person, and for this server, within the minute.

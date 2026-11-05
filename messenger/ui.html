@@ -439,7 +439,8 @@ let me=null,view="home",cur=null,threadRoot=null,all=[],chans=[],people={},loc={
 const $=id=>document.getElementById(id);
 const api=(p,o)=>fetch("/api/"+p,o).then(r=>r.json());
 const post=(p,b)=>api(p,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});
-const esc=s=>(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc=s=>String(s??"").replace(/[&<>"'`]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","`":"&#96;"}[c]));
+const lvN=x=>{const n=Math.floor(Number(x));return n>=1&&n<=5?n:1;};   // a level shown in the page is always a number 1..5
 const split=n=>{const [a,...b]=(n||"").split(" · ");return {name:a,role:b.join(" · ")};};
 const P=id=>{const p=people[id]||{name:id,level:""};return {id,...p,...split(p.name)};};
 const kind=m=>m.kind||"msg";
@@ -478,9 +479,9 @@ const convName=m=>m.ch?"#"+m.ch:split(P(m.peer).name).name;
 
 function msgHtml(m,opts={}){
   const u=who(m),p=P(u);
-  const lv=`<span class="lv" style="background:${LC[m.level]}33;color:${LC[m.level]}">L${m.level}</span>`;
+  const lv=`<span class="lv" style="background:${LC[lvN(m.level)]}33;color:${LC[lvN(m.level)]}">L${lvN(m.level)}</span>`;
   const rs=m.id?reactsFor(m.id):[];
-  const likeS=(rs.find(([e])=>e==="👍")||[0,new Set()])[1];const chips=rs.filter(([e])=>e!=="👍").map(([e,s])=>`<span class="chip ${s.has(me.id)?"mine":""}" data-react="${esc(e)}" data-id="${esc(m.id)}" title="${esc([...s].map(x=>split(P(x).name).name).join(", "))}"><span class="e">${e}</span>${s.size}</span>`).join("");
+  const likeS=(rs.find(([e])=>e==="👍")||[0,new Set()])[1];const chips=rs.filter(([e])=>e!=="👍").map(([e,s])=>`<span class="chip ${s.has(me.id)?"mine":""}" data-react="${esc(e)}" data-id="${esc(m.id)}" title="${esc([...s].map(x=>split(P(x).name).name).join(", "))}"><span class="e">${esc(e)}</span>${s.size}</span>`).join("");
   const reps=opts.replies||[];
   const repl=reps.length?`<span class="chip rep" data-open="${esc(m.id)}">💬 ${reps.length} ${reps.length>1?"replies":"reply"} · last ${hm(reps[reps.length-1].t)}</span>`:"";
   const row=chips?`<div class="chips">${chips}</div>`:"";
@@ -493,7 +494,7 @@ function msgHtml(m,opts={}){
 const fsize=n=>n<1024?n+" B":n<1048576?(n/1024).toFixed(0)+" KB":(n/1048576).toFixed(1)+" MB";
 function attHtml(a){
   if(a.error)return `<div class="atterr">⚠ Attachment "${esc(a.name)}" could not be opened: ${esc(a.error)}</div>`;
-  const src="/api/att/"+a.sha256;
+  const src="/api/att/"+encodeURIComponent(String(a.sha256||""));
   if(/^image\/(png|jpeg|gif|webp)$/.test(a.mime))return `<img class="attimg" src="${src}" alt="${esc(a.name)}" data-lb="${src}" loading="lazy">`;
   return `<a class="attf" href="${src}?dl" download="${esc(a.name)}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span><b>${esc(a.name)}</b><small>${esc(fsize(a.size))} · 🔒 end-to-end encrypted</small></span></a>`;
 }
@@ -676,7 +677,7 @@ function render(force){
     const outs=(ids||[]).filter(isExt);
     const strip=evStrip(k);
     const ban=outs.length?`<div class="extban">⚠ This conversation includes ${outs.length===1?"someone":outs.length+" people"} outside your organisation: ${outs.map(i=>"<b>"+esc(split(P(i).name).name)+"</b> ("+esc((people[i]||{}).org)+")").join(", ")}. Do not share anything above L1.</div>`:"";
-    setLog(strip+ban+(roots.length?withDays(roots).flatMap(m=>m.id&&m.id===threadRoot&&kind(m)==="msg"?[m,{kind:"thr",root:m}]:[m]).map(m=>kind(m)==="thr"?threadInline(m.root,by[m.root.id]||[]):kind(m)==="day"?`<div class="dayd"><span>${m.text}</span></div>`:kind(m)==="log"?`<div class="sysm"><span>${IC.shield} ${esc(m.text)} · ${dayt(m.t)}</span></div>`:msgHtml(m,{replies:by[m.id]})).join(""):`<p class="empty">No messages yet. Say hello — it is end-to-end encrypted.</p>`),true);
+    setLog(strip+ban+(roots.length?withDays(roots).flatMap(m=>m.id&&m.id===threadRoot&&kind(m)==="msg"?[m,{kind:"thr",root:m}]:[m]).map(m=>kind(m)==="thr"?threadInline(m.root,by[m.root.id]||[]):kind(m)==="day"?`<div class="dayd"><span>${esc(m.text)}</span></div>`:kind(m)==="log"?`<div class="sysm"><span>${IC.shield} ${esc(m.text)} · ${dayt(m.t)}</span></div>`:msgHtml(m,{replies:by[m.id]})).join(""):`<p class="empty">No messages yet. Say hello — it is end-to-end encrypted.</p>`),true);
     markRead();
     if(threadRoot){const root=findMsg(threadRoot);if(root){$("twhere").textContent=convName(root);
       const html=[root,...(by[threadRoot]||[])].map((m,i)=>msgHtml(m,{inThread:true})+(i===0&&(by[threadRoot]||[]).length?`<div class="secth">${by[threadRoot].length} ${by[threadRoot].length>1?"replies":"reply"}</div>`:"")).join("");
@@ -691,7 +692,7 @@ function render(force){
     setLog(AP+(A.length?"":""),false);if(AP&&!A.length){bindApprovals($("log"));return;}
     setLog(AP+(A.length?A.map(a=>{const u=split(P(who(a.m)).name).name;
       if(a.type==="invite"){const e=events()[a.m.id];return e?card(a.m,`<div class="ev"><span class="ic">${IC.cal}</span><span><b>${esc(u)}</b> invited you · ${dayt(a.t)}</span></div>`+evBody(e),false):"";}
-      if(a.type==="react")return a.target?card(a.target,`<div class="ev"><span class="ic">${a.m.emoji}</span><span><b>${esc(u)}</b> reacted to your message · ${dayt(a.t)}</span></div>`+msgHtml(a.target,{static:1,day:1}),!!a.target.thread):"";
+      if(a.type==="react")return a.target?card(a.target,`<div class="ev"><span class="ic">${esc(a.m.emoji)}</span><span><b>${esc(u)}</b> reacted to your message · ${dayt(a.t)}</span></div>`+msgHtml(a.target,{static:1,day:1}),!!a.target.thread):"";
       return card(a.m,`<div class="ev"><span class="ic">${a.type==="mention"?"@":IC.reply}</span><span><b>${esc(u)}</b> ${a.type==="mention"?"mentioned you":"replied in a thread you are in"}</span></div>`+msgHtml(a.m,{static:1,day:1}),!!a.m.thread);}).join(""):`<p class="empty">Nothing yet. When someone @mentions you or reacts to your message, it shows up here.</p>`));bindApprovals($("log"));
     if(A.length&&loc.read["activity"]!==A[0].t){loc.read["activity"]=A[0].t;saveLoc();}return;}
   if(view==="drafts"){header("✎","Drafts & sent","Unsent drafts stay on this device only");
@@ -931,21 +932,21 @@ $("cqx").onclick=()=>{cq="";$("cqin").value="";$("csb").style.display="none";$("
 $("cqin").oninput=()=>{cq=$("cqin").value.trim();render(true);};
 
 /* ---------- members & invitations ---------- */
-function logText(l,c){const n=id=>split(P(id).name).name;const ex=l.external?" — outside the organisation":"";
-  if(l.act==="created")return `${n(l.by)} created #${c.id} (L${c.level})`;
+function logText(l,c){const n=id=>esc(split(P(id).name).name);const ex=l.external?" — outside the organisation":"";
+  if(l.act==="created")return `${n(l.by)} created #${esc(c.id)} (L${lvN(c.level)})`;
   if(l.act==="requested")return `${n(l.by)} asked to add ${n(l.target)}${ex}. A second cleared person must approve first`;
   if(l.act==="added")return `${n(l.by)} added ${n(l.target)}${ex}${l.approvedBy?" (approved by "+n(l.approvedBy)+")":""}`;
   if(l.act==="denied")return `${n(l.by)} declined adding ${n(l.target)}`;
   if(l.act==="removed")return `${n(l.by)} removed ${n(l.target)}`;
-  return `${n(l.by)} ${l.act} ${l.target?n(l.target):""}`;}
+  return `${n(l.by)} ${esc(l.act)} ${l.target?n(l.target):""}`;}
 const mm=$("mmodal");mm.onclick=e=>{if(e.target===mm)closeMM();};
 function closeMM(){mm.style.display="none";}
 async function refreshChans(){chans=await api("channels").catch(()=>chans)||[];lastSig="";}
 function openMembers(chId){
   const c=chans.find(x=>x.id===chId);if(!c)return;
   const pend=(c.pending||[]);const log=(c.log||[]).slice(-8).reverse();
-  $("mmbox").innerHTML=`<h3># ${esc(c.id)} <span class="lv" style="background:${LC[c.level]}33;color:${LC[c.level]}">L${c.level}</span><span class="x" id="mmx">✕</span></h3>
-   <div class="lg">Only people cleared for L${c.level} can join. People outside your organisation can only join L1 channels.${c.level>=3?" At L3 and above, a second cleared member must approve every addition.":""}</div>
+  $("mmbox").innerHTML=`<h3># ${esc(c.id)} <span class="lv" style="background:${LC[lvN(c.level)]}33;color:${LC[lvN(c.level)]}">L${lvN(c.level)}</span><span class="x" id="mmx">✕</span></h3>
+   <div class="lg">Only people cleared for L${lvN(c.level)} can join. People outside your organisation can only join L1 channels.${c.level>=3?" At L3 and above, a second cleared member must approve every addition.":""}</div>
    <div><div class="secth">Add people — phone number or username</div>
      <div class="rowb" style="margin-top:6px"><input id="inv" placeholder="090 1234 5678 or sato.04" autocomplete="off"><button class="send" id="invchk">Check</button></div>
      <div id="invres" class="chk"></div></div>
@@ -966,7 +967,7 @@ function openMembers(chId){
     people[r.id]=Object.assign(people[r.id]||{},{name:r.name,level:r.level,username:r.username,org:r.org,phoneVerified:r.phoneVerified});
     const ext=isExt(r.id),clr=(r.level||1)>=c.level,extOK=!ext||c.level<2,ok=clr&&extOK&&!c.members.includes(r.id);
     const lines=[
-      `${clr?'<span class="ok">✓</span>':'<span class="ng">✕</span>'} Clearance L${r.level} ${clr?"covers":"does not cover"} this L${c.level} channel`,
+      `${clr?'<span class="ok">✓</span>':'<span class="ng">✕</span>'} Clearance L${lvN(r.level)} ${clr?"covers":"does not cover"} this L${lvN(c.level)} channel`,
       `${!ext?'<span class="ok">✓</span> Inside your organisation':(extOK?'<span class="warn">!</span> Outside your organisation ('+esc(r.org)+') — everyone will see an EXTERNAL warning':'<span class="ng">✕</span> Outside your organisation ('+esc(r.org)+') — not allowed above L1')}`,
       `${r.phoneVerified?'<span class="ok">✓</span> Phone number verified by SMS':'<span class="warn">!</span> Phone number not verified yet'}`];
     $("invres").innerHTML=`<div class="ml" style="border-top:0">${av(r.id)}<div class="nm"><b style="color:var(--t-strong)">${esc(r.name)}</b>${extTag(r.id)}<small>${esc(r.username||"")} · ${esc(r.org||"")}</small></div></div>${lines.join("<br>")}
@@ -1067,7 +1068,7 @@ async function renderSettings(){
     $("qrbox").innerHTML=`<div class="qr"><img src="${r.qr}" alt="Link QR"></div><div class="kv" style="margin-top:6px;word-break:break-all;color:var(--t-mute)">${esc(r.url)}</div>`;
     let left=r.expires;clearInterval(window._lt);window._lt=setInterval(()=>{left--;$("linkmsg").textContent=left>0?`Expires in ${Math.floor(left/60)}:${String(left%60).padStart(2,"0")}`:"Expired — press again.";if(left<=0){clearInterval(window._lt);$("qrbox").innerHTML="";}},1000);};
   if($("rlist")){const R=await api("relays");
-    $("rlist").innerHTML=R.relays.map(r=>`<div class="dev"><b>${esc(r.name)} <span style="color:var(--t-mute);font-weight:400">${esc(r.url)}</span></b><span>up to L${r.maxLevel}</span>${r.id===R.current?'<span class="ok">● in use</span>':`<span class="btn2" data-rs="${esc(r.id)}">Use this</span>`}</div>`).join("");
+    $("rlist").innerHTML=R.relays.map(r=>`<div class="dev"><b>${esc(r.name)} <span style="color:var(--t-mute);font-weight:400">${esc(r.url)}</span></b><span>up to L${lvN(r.maxLevel)}</span>${r.id===R.current?'<span class="ok">● in use</span>':`<span class="btn2" data-rs="${esc(r.id)}">Use this</span>`}</div>`).join("");
     $("rlist").querySelectorAll("[data-rs]").forEach(b=>b.onclick=async()=>{$("rmsg").textContent="Switching and registering keys on the new relay…";const r=await post("relays/select",{id:b.dataset.rs});if(r.error){$("rmsg").innerHTML=`<span class="ng">${esc(r.error)}</span>`;return;}me=await api("me");location.reload();});
     $("radd").onclick=async()=>{const r=await post("relays/add",{name:$("rname").value.trim(),url:$("rurl").value.trim(),maxLevel:+$("rmax").value});$("rmsg").innerHTML=r.error?`<span class="ng">${esc(r.error)}</span>`:'<span class="ok">Added. Press "Use this" to switch.</span>';if(!r.error)renderSettings();};}
   if($("devs")){const ds=await api("devices");$("devs").innerHTML=(ds.length?ds.map(d=>`<div class="dev"><b title="${esc(d.name)}">${esc(devName(d.name))}</b>${d.official?`<span class="ok">✓ Government-issued · ${esc(d.official.tag)}</span>`:`<span class="warn">Personal device · L1–L2 only</span><input data-tg="${esc(d.id)}" placeholder="Asset tag" style="width:110px;font-size:13px;letter-spacing:0"><span class="btn2" data-of="${esc(d.id)}">Register</span>`}<span>${d.push?IC.bell+" on":"notifications off"} ${esc(dayt(d.lastSeen))}</span><span class="btn2" data-rv="${esc(d.id)}">Unlink</span></div>`).join(""):"No phone linked yet.")+`<p style="margin-top:8px">A linked phone sees and sends L3 and above only after you register it here as a government-issued device, using the asset tag on its back. Personal phones stay at L1–L2.</p><div id="ofmsg" class="kv"></div>`;
@@ -1161,8 +1162,8 @@ async function zrelUI(force){
     const done=new Set(all.filter(x=>x.kind==="zrel-st"&&x.ev).map(x=>x.ev.id));
     const lk=all.filter(m=>m.kind==="zrel"&&m.locked&&m.ev&&m.ev.lockedId&&!done.has(m.ev.lockedId)&&!zrelGone.has(m.ev.lockedId)).pop();
     if(lk){const s2="locked|"+lk.ev.lockedId;if(s2===zrelSig&&!force)return;zrelSig=s2;el.style.display="block";
-      el.innerHTML=`<div class="zh"><i></i><b>Request waiting</b><span class="lv" style="background:${LC[lk.level]}33;color:${LC[lk.level]}">L${lk.level}</span></div>
-        <div class="zr">${esc(split(P(lk.from||lk.peer).name).name)} needs an officer's answer. This phone is a personal device, so it cannot show or sign L${lk.level}. Answer it on a government-issued device.</div>
+      el.innerHTML=`<div class="zh"><i></i><b>Request waiting</b><span class="lv" style="background:${LC[lvN(lk.level)]}33;color:${LC[lvN(lk.level)]}">L${lvN(lk.level)}</span></div>
+        <div class="zr">${esc(split(P(lk.from||lk.peer).name).name)} needs an officer's answer. This phone is a personal device, so it cannot show or sign L${lvN(lk.level)}. Answer it on a government-issued device.</div>
         <div class="zb"><button id="zclose">Close</button></div>`;
       $("zclose").onclick=()=>{zrelGone.add(lk.ev.lockedId);zrelUI(true);};return;}
     el.style.display="none";el.innerHTML="";zrelSig="";return;}
@@ -1183,7 +1184,7 @@ async function zrelUI(force){
   const rows=kd==="access"?`<span>Requester</span><b>${esc(c.requester||"")} (${esc(desk)})</b><span>File</span><b>${esc(p.ev.name||String(c.file||"").split("/").pop())}</b><span>Asked at</span><b>${when(c.created)}</b>`
     :kd==="plan"?`<span>Requester</span><b>${esc(c.requester||"")} (${esc(desk)})</b><span>Operation</span><b>${esc(sc.rule||"")}</b><span>Limit</span><b>up to ${esc(String(sc.max_files||""))} file(s) for ${esc(String(sc.minutes||""))} min</b>`
     :`<span>Requester</span><b>${esc(c.requester||"")} (${esc(desk)})</b><span>Stopped at</span><b>${when(p.ev.stopped||c.created)}</b><span>Rule</span><b>${esc(sc.rule||"")}</b><span>Files</span><b>${esc(files.slice(0,2).join(", "))}${files.length>2?", +"+(files.length-2):""}${files.length?"":"—"}</b>`;
-  el.innerHTML=`<div class="zh"><i style="${kd==="release"?"":"background:var(--acc)"}"></i><b>${head}${more}</b><span class="lv" style="background:${LC[c.level]}33;color:${LC[c.level]}">L${c.level}</span></div>
+  el.innerHTML=`<div class="zh"><i style="${kd==="release"?"":"background:var(--acc)"}"></i><b>${head}${more}</b><span class="lv" style="background:${LC[lvN(c.level)]}33;color:${LC[lvN(c.level)]}">L${lvN(c.level)}</span></div>
    <div class="zr">${intro}</div>
    <div class="zkv">${rows}<span>Approvals</span><b>${esc(String(p.ev.required||""))} needed</b></div>
    ${waiting?'<div class="zm">Sent. Waiting for the PC to confirm…</div>':res?`<div class="zm ${res.ev.ok?"ok":"ng"}">${esc(res.ev.message)}</div>`:""}
@@ -1235,9 +1236,9 @@ async function renderRequests(){
   if(R.error){L.innerHTML=`<p class="empty">${esc(R.error)}</p>`;return;}
   const ST={pending:["#F5B342",r=>`Waiting · ${r.approvals.length} of ${r.required}`],approved:["#4ADE80",r=>r.kind==="access"?"Approved":"Approved"],declined:["#FCA5A5",()=>"Declined"]};
   const what={access:"Access request",plan:"Pre-filed operation",release:"Emergency release"};
-  const html=R.length?R.map(r=>{const [col,lab]=ST[r.status]||["#9AA0AB",()=>r.status];const lc=LC[r.level]||"#9AA0AB";
+  const html=R.length?R.map(r=>{const [col,lab]=ST[r.status]||["#9AA0AB",()=>r.status];const lc=LC[lvN(r.level)];
     const who=r.status==="declined"&&r.declined_by?` · declined by ${esc(split(P(r.declined_by).name).name)}`:r.approvals.length?` · approved by ${r.approvals.map(a=>esc(split(P(a).name).name)).join(", ")}`:"";
-    return `<div class="zrq"><div class="zl"><div class="z1"><span class="lv" style="background:${lc}33;color:${lc}">L${r.level}</span><b>${esc(r.name||what[r.kind]||"")}</b></div>
+    return `<div class="zrq"><div class="zl"><div class="z1"><span class="lv" style="background:${lc}33;color:${lc}">L${lvN(r.level)}</span><b>${esc(r.name||what[r.kind]||"")}</b></div>
       <div class="z2">${esc(what[r.kind]||"Request")} · ${esc(String(r.created||"").replace("T"," ").slice(5,16))}${r.reason?` · "${esc(r.reason)}"`:""}${who}</div></div>
       ${r.code?`<div class="zc"><small>Match code</small><b>${esc(r.code)}</b></div>`:""}<span class="zs" style="background:${col}29;color:${col}">${esc(lab(r))}</span>
       ${r.status==="pending"?`<button class="btn2 zhere" data-id="${esc(r.id)}" data-code="${esc(r.code||"")}" style="white-space:nowrap">An officer is here</button>`:""}</div>`;}).join("")
@@ -1354,7 +1355,7 @@ async function renderCallServers(){
   const c=await api("callservers").catch(()=>null);if(!c||c.error||!c.servers)return;
   const box=document.createElement("div");box.className="box";box.id="cs-box";
   box.innerHTML=`<h3>Call server</h3><div class="kv" style="color:var(--t-sub)">Video and voice calls are end-to-end encrypted. The call server only forwards encrypted frames and sees pseudonyms, not names. Each server has a ceiling: calls above it are refused.</div>
-  ${c.servers.map(v=>`<label class="kv" style="display:flex;gap:10px;align-items:center;cursor:pointer"><input type="radio" name="cs" value="${esc(v.id)}" ${v.id===c.selected?"checked":""}><span><b>${esc(v.name)}</b> — up to L${v.maxLevel}${v.url?` · <span style="color:var(--t-mute)">${esc(v.url)}</span>`:""}</span></label>`).join("")}
+  ${c.servers.map(v=>`<label class="kv" style="display:flex;gap:10px;align-items:center;cursor:pointer"><input type="radio" name="cs" value="${esc(v.id)}" ${v.id===c.selected?"checked":""}><span><b>${esc(v.name)}</b> — up to L${lvN(v.maxLevel)}${v.url?` · <span style="color:var(--t-mute)">${esc(v.url)}</span>`:""}</span></label>`).join("")}
   <details style="margin-top:8px"><summary style="cursor:pointer;color:#93C5FD">Add a call server (LiveKit Cloud, or your organisation's own)</summary>
   <div style="display:grid;gap:8px;margin-top:8px;max-width:520px">
    <input id="cs-name" placeholder="Name (e.g. LiveKit Cloud)"><input id="cs-url" placeholder="wss://your-project.livekit.cloud">
@@ -1395,7 +1396,7 @@ async function drawShare(sh){const cv=$("cvcanvas");const sha=sh.att.sha256,mine
   const page=mine||follow?sh.page:localPage;if(mine||follow)localPage=sh.page;
   $("cvwho").textContent=`${whoName(sh)==="You"?"You are":whoName(sh)+" is"} presenting · ${sh.att.name}`;
   const key=sha+":"+page;if(key===shownKey)return;shownKey=key;
-  if((sh.att.mime||"").startsWith("image/")){$("cvpage").textContent="";cv.innerHTML=`<img src="/api/att/${sha}" alt="">`;return;}
+  if((sh.att.mime||"").startsWith("image/")){$("cvpage").textContent="";cv.innerHTML=`<img src="/api/att/${encodeURIComponent(sha)}" alt="">`;return;}
   if(sh.att.mime==="application/pdf"){try{const lib=await pdfLib();if(pdfSha!==sha){const buf=await fetch("/api/att/"+sha).then(r=>r.arrayBuffer());pdfDoc=await lib.getDocument({data:buf,isEvalSupported:false}).promise;pdfSha=sha;}
     const n=Math.min(Math.max(1,page),pdfDoc.numPages);$("cvpage").textContent=`Page ${n} / ${pdfDoc.numPages}`;const pg=await pdfDoc.getPage(n);
     const box=cv.getBoundingClientRect();const v0=pg.getViewport({scale:1});const sc=Math.min((box.width-16)/v0.width,(box.height-16)/v0.height)*(window.devicePixelRatio||1);

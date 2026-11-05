@@ -12,7 +12,7 @@ const pw = require("playwright"), ENGINE = process.env.ENGINE || "chromium";   /
 const MSG = path.join(__dirname, "..", "messenger"), PKG = path.join(MSG, "wasm", "pkg-web"), WEB = path.join(MSG, "wasm", "web");
 const SIGN = path.join(__dirname, "..", "tools", "sign_wasm_release.js"), { execFileSync } = require("child_process");
 const HOME = fs.mkdtempSync(path.join(os.tmpdir(), "zwasmb-")), PORT = 20100 + Math.floor(Math.random() * 300), R = `http://127.0.0.1:${PORT}`;
-const relay = spawn(process.execPath, [path.join(MSG, "relay.js")], { env: { ...process.env, HOME, ZENOS_RELAY_PORT: String(PORT) }, stdio: "ignore" });
+const relay = spawn(process.execPath, [path.join(MSG, "relay.js")], { env: { ...process.env, HOME, ZENOS_RELAY_DIRECTORY: path.join(__dirname, "fixtures", "msg-directory.json"), ZENOS_RELAY_PORT: String(PORT) }, stdio: "ignore" });
 const types = { ".js": "text/javascript", ".wasm": "application/wasm", ".html": "text/html", ".json": "application/json", ".sig": "application/json" };
 // releases: two officers' keys, a third key nobody pinned; good (v2, two signatures), one (one signature), bad (a
 // file changed after signing), old (v1, two signatures)

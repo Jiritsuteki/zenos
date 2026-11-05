@@ -165,6 +165,7 @@ function federation(ctx) {
     if (req.method === "POST" && parts[0] === "fed" && parts[1] === "send") {
       const b = await ctx.body(req);
       if (!ctx.authed(req, b.by)) return send(res, 403, { error: "unsigned" }), true;
+      if (!(Number(b.level) >= 1) || Number(b.level) > ctx.levelOf(b.by)) return send(res, 403, { error: "Not allowed: the level is above the sender's clearance" }), true;
       const d = outbound(b.to_org, "message", b.level);
       if (!d.allow) { ctx.audit("fed-refused", { to_org: b.to_org, reason: d.reason }); return send(res, 403, { error: "Not allowed: " + d.reason }), true; }
       const r = await relayRequest(me, d.entry.url, "POST", "/fed/deliver", { mbx: b.mbx, uak: b.uak || null, body: b.body, level: Number(b.level) || 0 });
@@ -206,6 +207,7 @@ function federation(ctx) {
     if (req.method === "GET" && parts[0] === "fed" && parts[1] === "blob" && parts.length === 4) {
       const by = u.searchParams.get("by"), level = Number(u.searchParams.get("level")) || 0;
       if (!ctx.authed(req, by)) return send(res, 403, { error: "unsigned" }), true;
+      if (!(level >= 1) || level > ctx.levelOf(by)) return send(res, 403, { error: "Not allowed: the level is above the reader's clearance" }), true;
       const d = outbound(parts[2], "message", level);
       if (!d.allow) return send(res, 403, { error: "Not allowed: " + d.reason }), true;
       if (!/^[0-9a-f]{32}$/.test(parts[3])) return send(res, 400, { error: "blob id" }), true;
@@ -246,13 +248,15 @@ function federation(ctx) {
       return send(res, 200, Object.entries(alerts).filter(([, a]) => Date.parse(a.received) > since && Date.parse(a.expires) > Date.now())
         .map(([k, a]) => { const { answers, ...rest } = a; return { key: k, ...rest }; })), true;
     }
-    // an answer card: one answer per device token (only its hash is kept), no account
+    // an answer card: one answer per account registered here, signed by its device; only a hash of the alert and the
+    // account is kept next to the answer, so the counts cannot be stuffed by anyone who can reach the relay
     if (req.method === "POST" && parts[0] === "alerts" && parts[3] === "answer") {
       const k = decodeURIComponent(parts[1]) + "/" + decodeURIComponent(parts[2]); const a = alerts[k];
       const b = await ctx.body(req);
+      if (!ctx.authed(req, b.by)) return send(res, 403, { error: "This answer is not signed by a device registered here." }), true;
       if (!a) return send(res, 404, { error: "unknown alert" }), true;
-      if (!["safe", "help"].includes(b.status) || !/^[0-9a-f]{32,64}$/.test(b.token || "")) return send(res, 400, { error: "status safe|help and a device token" }), true;
-      a.answers[sha("zenos-answer|" + k + "|" + b.token)] = b.status; saveAlerts();
+      if (!["safe", "help"].includes(b.status)) return send(res, 400, { error: "status safe|help" }), true;
+      a.answers[sha("zenos-answer|" + k + "|" + b.by)] = b.status; saveAlerts();
       return send(res, 200, { ok: true }), true;
     }
     const counts = (a) => { const v = Object.values(a.answers || {}); return { safe: v.filter((x) => x === "safe").length, help: v.filter((x) => x === "help").length }; };

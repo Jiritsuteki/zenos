@@ -18,7 +18,7 @@ Release     the officers' signatures arrive over /run/zenos/guardd.sock and are 
             operation is cancelled, not resumed) and everything else is thawed.
 Pre-filed operations approved in advance are honoured: the event is recorded instead of stopping the PC.
 """
-import base64, ctypes, ctypes.util, hashlib, json, os, pwd, select, signal, socket, struct, subprocess, sys
+import base64, stat, ctypes, ctypes.util, hashlib, json, os, pwd, select, signal, socket, struct, subprocess, sys
 import threading, time
 from collections import deque
 from pathlib import Path
@@ -129,8 +129,11 @@ def level_of(p):
     p = Path(p)
     try:
         if p.suffix == ".zen":
-            with open(p, "rb") as f:
-                head = f.read(4096)
+            fd = os.open(p, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)   # a pipe named *.zen must not stop the guard
+            try:
+                head = os.read(fd, 4096) if stat.S_ISREG(os.fstat(fd).st_mode) else b""
+            finally:
+                os.close(fd)
             if head.startswith(Z.MAGIC):
                 return int(json.loads(head[len(Z.MAGIC):].split(b"\n", 1)[0])["level"])
     except Exception:
@@ -199,11 +202,50 @@ def user_procs():
     return out
 
 
-def exempt(comm, cmd):
-    if comm in DISPLAY_SERVERS:
+EXEMPT_SCRIPTS = ("msg/relay.js", "msg/client.js", "approval_server.py", "zenos_lock.py")
+INTERPRETERS = ("node", "nodejs", "python3")
+
+
+def trusted(path):
+    """a file only root can change: it and every folder above it owned by root and not writable by anyone else"""
+    try:
+        p = os.path.realpath(path)
+        while True:
+            st = os.lstat(p)
+            if st.st_uid != 0 or st.st_mode & 0o022:
+                return False
+            if p == "/":
+                return True
+            p = os.path.dirname(p)
+    except OSError:
+        return False
+
+
+def exempt(pid, comm):
+    """Only the display path and ZENOS's own carriers of the release request keep running. The process name and its
+    command line are the user's to choose, so they decide nothing alone: the program the kernel runs must be one only
+    root can change, and for a script, the script file too (the messenger carries the request to the officers; the
+    approval page is how they answer; the lock screen shows the stop)."""
+    try:
+        exe = os.readlink(f"/proc/{pid}/exe")
+        argv = Path(f"/proc/{pid}/cmdline").read_bytes().split(b"\0")
+    except OSError:
+        return False
+    if exe.endswith(" (deleted)") or not trusted(exe):
+        return False
+    base = os.path.basename(exe)
+    if comm in DISPLAY_SERVERS and base in DISPLAY_SERVERS:
         return True
-    # the messenger carries the release request to the officers; the approval page is how they answer
-    return any(x in cmd for x in ("/msg/relay.js", "/msg/client.js", "approval_server.py", "zenos_lock.py"))
+    if not (base in INTERPRETERS or base.startswith("python3.")):
+        return False
+    script = next((a.decode(errors="ignore") for a in argv[1:] if a and not a.startswith(b"-")), "")
+    if not script.startswith("/"):
+        try:
+            script = os.path.join(os.readlink(f"/proc/{pid}/cwd"), script)
+        except OSError:
+            return False
+    real = os.path.realpath(script)
+    return any(real.endswith("/" + x) for x in EXEMPT_SCRIPTS) and trusted(real)
 
 
 def holders(paths):
@@ -227,7 +269,7 @@ def freeze_all():
     """stop every non-exempt process of the user; returns the pids stopped now"""
     stopped = []
     for pid, comm, cmd in user_procs():
-        if exempt(comm, cmd):
+        if exempt(pid, comm):
             continue
         try:
             st = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0]
@@ -319,27 +361,58 @@ def verified(r):
     return zdecide.release(True, with_sig_ok(r), roster())
 
 
+PLAN_USE = SYSD / "plan-use.json"      # how much of each plan is used, kept by the guard (the plan file is the user's)
+PLAN_WAIT = 24 * 3600                   # the longest a plan may wait for its approvals after it was filed
+
+
+def read_user_json(p, limit=1 << 20):
+    """a JSON file in the user's folder, read as root: never through a link, never a pipe or device, size-capped"""
+    fd = os.open(str(p), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        st = os.fstat(fd)
+        if not stat.S_ISREG(st.st_mode) or st.st_size > limit:
+            raise ValueError("not a regular file within bounds")
+        return json.loads(os.read(fd, limit + 1))
+    finally:
+        os.close(fd)
+
+
 def plan_allows(rule, level, n=1):
-    """a pre-filed operation approved by enough officers (signatures checked with the installed public keys)"""
+    """a pre-filed operation approved by enough officers (signatures checked with the installed public keys). What
+    the officers did not sign is not taken from the user's file: the count used is kept here, and the plan ends at
+    the earliest of its own "expires", the minutes the officers approved counted from when the guard first saw it,
+    and a day after the request was filed."""
+    from datetime import datetime
     pdir = DATA / "plans"
+    try:
+        use = json.loads(PLAN_USE.read_text())
+    except Exception:
+        use = {}
     for p in sorted(pdir.glob("*.json")) if pdir.is_dir() else []:
         try:
-            g = json.loads(p.read_text())
+            g = read_user_json(p)
             core, sc = g.get("core", {}), g.get("core", {}).get("scope", {})
-            if (sc.get("rule") != rule or core.get("requester") != USER or level > core.get("level", 0)
-                    or time.time() > g["expires"] or g["used"] + n > sc.get("max_files", 0)):
-                continue
             digest = hashlib.sha256(json.dumps(core, sort_keys=True, ensure_ascii=False).encode()).digest()
             if base64.b64decode(g["digest"]) != digest:
+                continue
+            key = base64.b64encode(digest).decode()
+            u = use.get(key) or {"used": 0, "first": time.time()}
+            minutes = float(sc.get("minutes", 0))
+            created = datetime.strptime(str(core["created"]), "%Y-%m-%dT%H:%M:%S%z").timestamp()
+            ends = min(float(g["expires"]), u["first"] + minutes * 60, created + PLAN_WAIT + minutes * 60)
+            if (sc.get("rule") != rule or core.get("requester") != USER or level > core.get("level", 0)
+                    or time.time() > ends or u["used"] + n > sc.get("max_files", 0)):
+                use.setdefault(key, u)
                 continue
             ok = set()
             for a in g["approvals"]:
                 if zapprove.check(PUB, a.get("approver", ""), a.get("sig", ""), digest, core.get("level", 0))[0]:
                     ok.add(a["approver"])
             if len(ok) >= Z.REQUIRED[core["level"]]:
-                g["used"] += n
-                p.write_text(json.dumps(g, ensure_ascii=False, indent=1))
-                log(event="anomaly-permitted", rule=rule, level=level, plan=g["request"], used=g["used"])
+                u["used"] += n
+                use[key] = u
+                write_json(PLAN_USE, use, 0o600)
+                log(event="anomaly-permitted", rule=rule, level=level, plan=g.get("request"), used=u["used"])
                 return True
         except Exception:
             continue
@@ -355,13 +428,32 @@ def quarantine(paths, hid):
     for p in paths:
         p = Path(p)
         try:
-            if p.exists() and p.parent == USB:
-                os.replace(p, q / p.name)
-                moved.append(p.name)
+            st = os.lstat(p)
         except OSError:
-            try:
-                import shutil
-                shutil.move(str(p), q / p.name)
+            continue
+        if p.parent != USB or not stat.S_ISREG(st.st_mode):     # a link or a pipe is not followed as root
+            continue
+        try:
+            os.replace(p, q / p.name)
+            moved.append(p.name)
+        except OSError:                                         # another file system (the drive): copy without
+            try:                                                # following a link, then remove the original
+                src = os.open(p, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                try:
+                    if not stat.S_ISREG(os.fstat(src).st_mode):
+                        continue
+                    dst = os.open(q / p.name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+                    try:
+                        while True:
+                            b = os.read(src, 1 << 20)
+                            if not b:
+                                break
+                            os.write(dst, b)
+                    finally:
+                        os.close(dst)
+                finally:
+                    os.close(src)
+                os.unlink(p)
                 moved.append(p.name)
             except Exception:
                 pass

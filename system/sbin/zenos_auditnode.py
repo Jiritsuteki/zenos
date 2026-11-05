@@ -134,7 +134,8 @@ class Node:
             machine, chain, frm, recs = str(b["machine"]), str(b["chain"]), int(b["from"]), list(b["records"])
         except Exception:
             return 400, {"ok": False, "error": "malformed batch"}
-        if not (NAME.match(machine) and NAME.match(chain)) or frm < 0 or len(recs) > MAX_BATCH:
+        if (not (NAME.match(machine) and NAME.match(chain)) or frm < 0 or len(recs) > MAX_BATCH
+                or not all(isinstance(r, dict) for r in recs)):                  # every record an object, checked first
             return 400, {"ok": False, "error": "malformed batch"}
         pk = self.dir / "machines" / f"{machine}.pub"
         if not pk.exists():

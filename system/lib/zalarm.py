@@ -56,6 +56,32 @@ def _recipients():
         return []
 
 
+def _msg_key():
+    """The messenger's local key (it answers only callers that show it). The file sits in the desk user's folder, so it
+    is opened without following a link and used only if that user owns it: a planted link to a root file gives nothing."""
+    import stat
+    try:
+        fd = os.open(os.path.join(Z, "msg", "store", "zenos", "local.key"), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except OSError:
+        return ""
+    try:
+        st = os.fstat(fd)
+        if not stat.S_ISREG(st.st_mode) or st.st_uid != _desk_uid() or st.st_size > 128:
+            return ""
+        k = os.read(fd, 128).decode("ascii", "replace").strip()
+        return k if k and all(c.isalnum() or c in "-_" for c in k) else ""
+    finally:
+        os.close(fd)
+
+
+def _desk_uid():
+    import pwd
+    try:
+        return pwd.getpwnam(zconf.user()).pw_uid
+    except Exception:
+        return os.getuid()
+
+
 def dispatch(title, text, reasons):
     """Fan the alert out to every pre-registered senior's device (PoC: per-recipient outbox + ledger)."""
     sent = []
@@ -70,11 +96,12 @@ def dispatch(title, text, reasons):
             sent.append(r["id"])
         except Exception:
             pass
+    key = _msg_key()
     try:
         import urllib.request as _u
         req = _u.Request("http://127.0.0.1:8096/api/channel-send",
                          data=__import__("json").dumps({"ch": "alerts", "text": "RED ALERT: " + text, "level": 4}).encode(),
-                         headers={"Content-Type": "application/json"})
+                         headers={"Content-Type": "application/json", "X-Zenos-Local": key})
         _u.urlopen(req, timeout=4)              # post into #alerts -> fans out to seniors' PWAs
     except Exception:
         pass
@@ -82,7 +109,7 @@ def dispatch(title, text, reasons):
         import urllib.request as _u
         req = _u.Request("http://127.0.0.1:8096/api/push/alert",
                          data=__import__("json").dumps({"title": "ZENOS RED ALERT: " + str(title)[:60], "body": str(text)[:300]}).encode(),
-                         headers={"Content-Type": "application/json"})
+                         headers={"Content-Type": "application/json", "X-Zenos-Local": key})
         r = __import__("json").loads(_u.urlopen(req, timeout=8).read() or b"{}")
         if r.get("sent"):
             sent.append("owner-phone-push")

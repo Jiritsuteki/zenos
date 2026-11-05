@@ -156,6 +156,13 @@ class AuditStatus(unittest.TestCase):
         self.assertNotIn("status_sig", b)
         self.assertEqual(self.node.accept(b)[0], 200)
 
+    def test_a_record_that_is_not_an_object_is_refused(self):
+        self.assertEqual(self.send(self.st())[0], 200)
+        for bad in ([1], ["x"], [None], [[1]]):
+            b = {"machine": "pc-1", "chain": "guard", "from": 0, "records": bad}
+            ship.sign(self.key, b)
+            self.assertEqual(self.node.accept(b)[0], 400, bad)                 # an answer, not a crash
+
     def test_silence_in_seconds(self):
         self.send(self.st())
         seen = os.path.join(self.d.name, "node", "machines", "pc-1.seen")
@@ -163,6 +170,40 @@ class AuditStatus(unittest.TestCase):
             f.write(str(time.time() - 120))
         self.node.check_silence(90)
         self.assertIn("machine-silent", self.alerts())
+
+
+
+class OpenHolders(unittest.TestCase):
+    """the network stays cut while the process that received L4+ plaintext, or anything it started, is alive; the
+    user's own flag file cannot lift it"""
+    def test_holders_and_their_children(self):
+        import subprocess, importlib
+        with tempfile.TemporaryDirectory() as d:
+            os.environ["HOME"] = d
+            import zenos_netsentinel as ns
+            importlib.reload(ns)
+            path = os.path.join(d, "holders.json")
+            parent = subprocess.Popen([sys.executable, "-c",
+                                       "import subprocess,sys,time;subprocess.Popen(['sleep','30']);time.sleep(1.5)"])
+            time.sleep(0.5)
+            start = open("/proc/%d/stat" % parent.pid).read().rsplit(")", 1)[1].split()[19]
+            with open(path, "w") as f:
+                json.dump([{"pid": parent.pid, "start": start, "level": 4}], f)
+            self.assertTrue(ns.holders_alive(path))                      # the holder and its child are recorded
+            kids = [h for h in json.load(open(path)) if h["pid"] != parent.pid]
+            self.assertTrue(kids)
+            parent.wait()
+            self.assertTrue(ns.holders_alive(path))                      # the holder exited, its child still holds
+            for k in kids:
+                os.kill(k["pid"], 9)
+            time.sleep(0.3)
+            self.assertFalse(ns.holders_alive(path))
+            with open(path, "w") as f:
+                json.dump([{"pid": os.getpid(), "start": "0", "level": 4}], f)   # a reused pid is not the holder
+            self.assertFalse(ns.holders_alive(path))
+            with open(path, "w") as f:
+                json.dump([{"pid": os.getpid(), "start": open("/proc/self/stat").read().rsplit(")", 1)[1].split()[19], "level": 3}], f)
+            self.assertFalse(ns.holders_alive(path))                    # L3 does not cut the network
 
 
 if __name__ == "__main__":

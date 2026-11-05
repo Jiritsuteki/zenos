@@ -159,11 +159,12 @@ def request_digest(core):
     return hashlib.sha256(canon(core)).digest()
 
 
-def idp_token(idp_key, person, ttl=3600, now=None):
-    """a sign-in proof made by the organization's sign-in service: who, until when. The key peers enrol the sign-in
-    service's public key and check this themselves; the server cannot make one."""
+def idp_token(idp_key, person, ttl=3600, now=None, aud=None):
+    """a sign-in proof made by the organization's sign-in service: who, for which server (aud), until when. The key
+    peers enrol the sign-in service's public key and check this themselves; the server cannot make one, and a token
+    made for one server is refused when another server shows it."""
     now = int(now if now is not None else time.time())
-    body = {"person": person, "iat": now, "exp": now + int(ttl)}
+    body = {"person": person, "aud": aud, "iat": now, "exp": now + int(ttl)}
     return {"body": body, "sig": b64(idp_key.sign(canon(body)))}
 
 
@@ -237,7 +238,7 @@ class Store:
     def fetch(self, rid):
         """the encrypted record from the first storage peer that has it (a changed copy fails to decrypt later and
         the next copy is tried)"""
-        body = {"server": self.server, "id": rid, "t": int(time.time())}
+        body = {"server": self.server, "id": rid, "t": int(time.time()), "nonce": secrets.token_hex(16)}
         body["sig"] = b64(self.key.sign(canon(body)))
         for s in self.stores:
             try:

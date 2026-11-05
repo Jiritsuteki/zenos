@@ -3,7 +3,8 @@
 dpkg reads them later, maybe minutes later in a long upgrade, from a folder another program could write to. This
 wrapper copies every package file into a root-only folder, checks the copy against the release ledger (the SHA-256
 of exactly what dpkg will read: allowed by the pre-install check moments ago, or decided again here), and gives dpkg
-the copies. Anything else is passed to /usr/bin/dpkg unchanged. With /etc/zenos/supply.json absent or "off" it only
+the copies. Every file argument counts as a package, whatever its name; -R (a whole folder) is refused. Anything
+else is passed to /usr/bin/dpkg unchanged. With /etc/zenos/supply.json absent or "off" it only
 passes everything through.
 """
 import os, shutil, subprocess, sys, tempfile
@@ -21,8 +22,16 @@ def main(argv):
         c = zsupply.conf()
     except Exception:
         c = {"mode": "enforce", "broken": True}
-    debs = [i for i, a in enumerate(argv) if a.endswith(".deb") and os.path.isfile(a)]
-    if c.get("mode", "off") == "off" or not debs:
+    if c.get("mode", "off") == "off":
+        os.execv(DPKG, [DPKG] + argv)
+    # dpkg installs any file it is given, whatever its name, and every package in a folder with -R: so every file
+    # argument is a package to check (not only *.deb), and a folder install is refused while the check is on
+    if any(a in ("-R", "--recursive") or (a.startswith("-") and not a.startswith("--") and "R" in a[1:] and
+                                           all(ch.isalpha() for ch in a[1:])) for a in argv):
+        print("ZENOS: installing every package in a folder (-R) is not allowed; give the package files.", file=sys.stderr)
+        return 2
+    debs = [i for i, a in enumerate(argv) if not a.startswith("-") and os.path.isfile(a)]
+    if not debs:
         os.execv(DPKG, [DPKG] + argv)
     import zenos_pkgcheck as P
     os.makedirs(STAGE, mode=0o700, exist_ok=True)

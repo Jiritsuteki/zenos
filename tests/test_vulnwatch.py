@@ -194,6 +194,14 @@ class Vuln(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.W.apply("openssl-tls-off", s["findings"], keys=self.keys, required=2, run=False)
 
+    def test_a_line_break_in_the_cve_list_is_refused(self):
+        """the CVE list becomes the first line of a file under /etc: even signed, a line break in it is refused"""
+        s = self.run_once()
+        self.mitigation(["ito", "kato"], cves=("CVE-2026-1001\nkernel.panic = 1",))
+        with self.assertRaises(ValueError):
+            self.W.apply("openssl-tls-off", s["findings"], keys=self.keys, required=2, run=False)
+        self.assertFalse((self.W.SYSCTL_DIR).exists())
+
     def test_sources_and_hosts(self):
         c = zvuln.conf()
         self.assertTrue(c["on"]["osv"])

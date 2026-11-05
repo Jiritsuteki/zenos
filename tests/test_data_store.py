@@ -57,7 +57,7 @@ class DataStore(unittest.TestCase):
             self.write_conf(p, self.conf)
         self.db = zdata.Store("cases", self.server_key, [direct(p, f"k{i}") for i, p in enumerate(self.keys)], 2,
                               [direct(p, f"s{i}") for i, p in enumerate(self.stores)])
-        self.tanaka = zdata.idp_token(self.idp, "tanaka")
+        self.tanaka = zdata.idp_token(self.idp, "tanaka", aud="cases")
 
     def write_conf(self, p, c):
         (p.dir / "conf.json").write_text(json.dumps(c))
@@ -83,12 +83,29 @@ class DataStore(unittest.TestCase):
         self.assertEqual(set(rec), {"v", "id", "table", "level", "nonce", "ct", "k", "shares"})
         self.assertEqual(set(rec["shares"][0]), {"peer", "x", "sealed"})       # a share only sealed to its peer
 
+    def test_a_sign_in_token_counts_only_for_its_server_and_for_a_short_time(self):
+        rid = self.db.put("cases", {"x": 1}, 3)
+        other = zdata.idp_token(self.idp, "tanaka", aud="payroll")             # made for another server
+        with self.assertRaises(zdata.Refused):
+            self.db.get(rid, "tanaka", other, "casework")
+        long = zdata.idp_token(self.idp, "tanaka", ttl=7 * 86400, aud="cases")   # a week: too long to be a sign-in
+        with self.assertRaises(zdata.Refused):
+            self.db.get(rid, "tanaka", long, "casework")
+        self.assertEqual(self.db.get(rid, "tanaka", self.tanaka, "casework"), {"x": 1})
+
+    def test_a_storage_read_cannot_be_replayed(self):
+        rid = self.db.put("cases", {"x": 1}, 3)
+        body = {"server": "cases", "id": rid, "t": int(time.time()), "nonce": "ab" * 16}
+        body["sig"] = zdata.b64(self.server_key.sign(zdata.canon(body)))
+        self.assertEqual(self.stores[0].get(dict(body))[0], 200)
+        self.assertEqual(self.stores[0].get(dict(body))[0], 403)                # the same signed request again
+
     def test_above_the_clearance_no_peer_releases(self):
         rid = self.db.put("cases", {"x": 1}, 4)
         with self.assertRaises(zdata.Refused) as e:
             self.db.get(rid, "tanaka", self.tanaka, "casework")
         self.assertIn("level", str(e.exception))
-        self.assertEqual(self.db.get(rid, "sato", zdata.idp_token(self.idp, "sato"), "casework"), {"x": 1})
+        self.assertEqual(self.db.get(rid, "sato", zdata.idp_token(self.idp, "sato", aud="cases"), "casework"), {"x": 1})
 
     def test_a_grant_on_the_peers_opens_one_record(self):
         rid = self.db.put("cases", {"x": 2}, 5)
@@ -99,11 +116,11 @@ class DataStore(unittest.TestCase):
 
     def test_the_server_cannot_vouch_for_a_person_itself(self):
         rid = self.db.put("cases", {"x": 3}, 1)
-        forged = zdata.idp_token(self.server_key, "sato")                 # signed by the server, not the sign-in service
+        forged = zdata.idp_token(self.server_key, "sato", aud="cases")                 # signed by the server, not the sign-in service
         with self.assertRaises(zdata.Refused) as e:
             self.db.get(rid, "sato", forged, "casework")
         self.assertIn("person-not-verified", str(e.exception))
-        expired = zdata.idp_token(self.idp, "tanaka", ttl=-10)
+        expired = zdata.idp_token(self.idp, "tanaka", ttl=-10, aud="cases")
         with self.assertRaises(zdata.Refused):
             self.db.get(rid, "tanaka", expired, "casework")
         with self.assertRaises(zdata.Refused):                            # a token for someone else

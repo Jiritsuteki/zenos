@@ -102,9 +102,34 @@ function audit(event, kw) {
   const rec = { t: stamp(), user: "relay", event, ...kw };
   fs.appendFileSync(AUDIT, JSON.stringify(rec) + "\n");
 }
+// a request body: at most 1 MiB, and JSON; anything else is refused with 413/400 (never an uncaught error that stops the relay)
+const MAX_BODY = 1 << 20;
 function body(req) {
-  return new Promise((res) => { let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => { req.raw = b; res(b ? JSON.parse(b) : {}); }); });
+  return new Promise((res, rej) => {
+    let b = "", n = 0, over = false;
+    req.on("data", (c) => { if (over) return; n += c.length; if (n > MAX_BODY) { over = true; b = ""; return; } b += c; });
+    req.on("end", () => {
+      if (over) return rej(Object.assign(new Error("The request is too large."), { status: 413 }));
+      req.raw = b;
+      try { const o = b ? JSON.parse(b) : {}; if (!o || typeof o !== "object" || Array.isArray(o)) throw new Error("not an object"); res(o); }
+      catch { rej(Object.assign(new Error("The request is not valid JSON."), { status: 400 })); }
+    });
+    req.on("error", rej);
+  });
 }
+// ---------- who an account is: name, organization and clearance come from the relay's directory, never from the account
+// The directory (directory.json next to the relay's data, or ZENOS_RELAY_DIRECTORY) is kept by the relay's administrator;
+// an account it does not list is L1 with no organization, whatever its bundle claims.
+const DIRF = process.env.ZENOS_RELAY_DIRECTORY || path.join(DIR, "directory.json");
+const directory = () => { const d = load(DIRF, {}); return d && typeof d === "object" ? d : {}; };
+function vetted(acc, nb) {
+  const d = directory()[acc];
+  nb.level = d ? Math.max(1, Math.min(5, Math.floor(Number(d.level)) || 1)) : 1;
+  nb.org = d ? String(d.org || "").slice(0, 120) : "";
+  nb.name = String((d && d.name) || nb.name || acc).slice(0, 120);
+  return nb;
+}
+for (const k of Object.keys(bundles)) vetted(k, bundles[k]);
 // ---------- device binding: an account belongs to the identity key it first registered with ----------
 // Requests made for an account carry "X-Zenos-Auth: <account> <ms> <sig>", the identity key's signature over
 // "<METHOD> <path> <ms> <sha256(body)>". Requests older than five minutes, or seen before, are refused.
@@ -170,7 +195,8 @@ function blobFor(id) {
   let level = 5; try { level = Number(fs.readFileSync(p + ".level", "utf8")) || 5; } catch {}
   return { data: fs.readFileSync(p), level };
 }
-const fed = require("./federation").federation({ DIR, audit, send, body, isAdmin, authed, deliverSealed, bundleFor, blobFor, trust: ca.trustPub });
+const fed = require("./federation").federation({ DIR, audit, send, body, isAdmin, authed, deliverSealed, bundleFor, blobFor, trust: ca.trustPub,
+  levelOf: (a) => (bundles[a] || {}).level || 1 });
 
 // ---------- calls (WebRTC via self-hosted LiveKit SFU). The relay only decides WHO may enter a room;
 // media is end-to-end encrypted with a key that travels inside libsignal messages, never through here.
@@ -291,6 +317,16 @@ http.createServer(async (req, res) => {
       audit("msg-enroll-issued", { account });
       return send(res, 200, { account, code, expires: new Date(enrolls[account].exp).toISOString() });
     }
+    if (req.method === "POST" && parts[0] === "directory") {     // administrator: an account's name, organization and clearance
+      const { account, level, org, name } = await body(req);
+      if (!isAdmin(req)) { audit("msg-auth-refused", { what: "directory" }); return send(res, 403, { error: "The directory is kept on the relay's own host." }); }
+      if (!/^[a-z0-9_.-]{2,40}$/.test(account || "")) return send(res, 400, { error: "bad account name" });
+      const d = directory(); d[account] = { level: Math.max(1, Math.min(5, Math.floor(Number(level)) || 1)), org: String(org || "").slice(0, 120), name: String(name || account).slice(0, 120) };
+      fs.writeFileSync(DIRF, JSON.stringify(d), { mode: 0o600 });
+      if (bundles[account]) { vetted(account, bundles[account]); save(); }
+      audit("msg-directory-set", { account, level: d[account].level });
+      return send(res, 200, { ok: true, ...d[account] });
+    }
     if (req.method === "POST" && parts[0] === "keys") {          // publish a public key bundle
       const nb = await body(req);
       if (nb.username && !UNAME.test(nb.username)) return send(res, 400, { error: "bad username" });
@@ -309,7 +345,7 @@ http.createServer(async (req, res) => {
         else { audit("msg-keys-refused", { account: parts[1], reason: "bound" });
                return send(res, 409, { error: "This account is registered on another device. Verify with the account's number to move it here." }); }
       }
-      bundles[parts[1]] = nb;
+      bundles[parts[1]] = vetted(parts[1], nb);
       save();
       audit("msg-keys-published", { account: parts[1] });
       return send(res, 200, { ok: true });
@@ -368,6 +404,10 @@ http.createServer(async (req, res) => {
       const e = await body(req);
       if (!bundles[e.to]) return send(res, 404, { error: "unknown account" });
       if (!authed(req, e.from)) return refuse(res, e.from, "send");
+      const lv = Number(e.level) || 1;
+      if (lv > (bundles[e.from].level || 1) || lv > (bundles[e.to].level || 1)) { audit("msg-refused", { from: e.from, to: e.to, level: lv, reason: "clearance" });
+        return send(res, 403, { error: `L${lv} is above the clearance the directory gives the sender or the recipient.` }); }
+      if (typeof e.body !== "string" || e.body.length > MAX_BODY) return send(res, 400, { error: "bad envelope" });
       sweep();
       (queue[e.to] = queue[e.to] || []).push({ from: e.from, type: e.type, body: e.body, level: e.level, t: stamp() });
       save();
@@ -449,7 +489,12 @@ http.createServer(async (req, res) => {
       const prev = channels[c.id] || {};
       if (prev.id && c.by && !prev.members.includes(c.by)) return send(res, 403, { error: "Only members can change a channel." });
       if (!prev.id && c.by && !/^[a-z0-9][a-z0-9-]{1,40}$/.test(c.id)) return send(res, 400, { error: "Use lowercase letters, numbers and dashes." });
-      channels[c.id] = { id: c.id, name: c.name, members: (!c.by && c.members) ? c.members : (prev.members || c.members || []), level: (prev.id && c.by) ? Math.max(prev.level || 1, c.level || 1) : (c.level || prev.level || 1), kind: c.kind || "channel",
+      if (typeof c.id !== "string" || !c.id || c.id.length > 64) return send(res, 400, { error: "bad channel id" });
+      const want = Math.max(1, Math.min(5, Math.floor(Number(c.level)) || 1));
+      if (c.by && want > ((bundles[c.by] || {}).level || 1)) return send(res, 403, { error: `Your clearance is L${(bundles[c.by] || {}).level || 1}; a channel cannot be above it.` });
+      // a member creates a channel with only themselves in it; everyone else comes in through invite (clearance,
+      // organization and the second approver are checked there). Only the administrator seeds a member list.
+      channels[c.id] = { id: c.id, name: String(c.name || c.id).slice(0, 80), members: (!c.by && Array.isArray(c.members)) ? c.members.map(String) : (prev.members || [c.by]), level: (prev.id && c.by) ? Math.max(prev.level || 1, want) : (prev.id ? (Number(c.level) ? want : prev.level || 1) : want), kind: (!c.by && c.kind) ? String(c.kind).slice(0, 20) : (prev.kind || "channel"),
                          owner: prev.owner || c.by || null, log: prev.log || (c.by ? [{ t: stamp(), by: c.by, act: "created" }] : []), pending: prev.pending || [] };
       save();
       audit("msg-channel-upsert", { channel: c.id, members: (c.members || []).length });
@@ -462,6 +507,6 @@ http.createServer(async (req, res) => {
     }
     send(res, 404, { error: "not found" });
   } catch (err) {
-    send(res, 500, { error: String(err) });
+    if (!res.headersSent) send(res, err.status || 500, { error: err.status ? err.message : "The relay could not handle this request." });
   }
 }).listen(Number(process.env.ZENOS_RELAY_PORT) || 8095, "127.0.0.1", () => console.log("relay on " + (Number(process.env.ZENOS_RELAY_PORT) || 8095)));

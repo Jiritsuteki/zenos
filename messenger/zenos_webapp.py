@@ -73,6 +73,7 @@ except Exception: pass
 win.set_default_size(w, h)
 win.add(view)
 win.connect("destroy", Gtk.main_quit)
-view.load_uri(url)
+start = os.environ.pop("ZENOS_WEBAPP_START", "")      # the first page may carry a key; it is not kept in the environment
+view.load_uri(start if start and same_app(start) else url)
 win.show_all()
 Gtk.main()

@@ -390,8 +390,20 @@ async function receive() {
     }
   }
 }
+// what another device may send: known kinds, a level 1..5, a short emoji without markup, text as a string. Anything
+// else is dropped here, before it reaches the history or the window.
+const IN_KINDS = new Set(["msg", "react", "event", "rsvp", "evupd", "call", "callkey", "callsig", "share", "room", "system", "zrel", "zrel-sig", "zrel-res", "zrel-st"]);
+function wellFormed(m) {
+  if (!m || typeof m !== "object" || !IN_KINDS.has(m.kind || "msg")) return false;
+  const lv = Number(m.level); if (!Number.isInteger(lv) || lv < 1 || lv > 5) return false;
+  if (m.text != null && typeof m.text !== "string") return false;
+  if (m.emoji != null && !(typeof m.emoji === "string" && m.emoji.length <= 16 && !/[<>&"'`\\]/.test(m.emoji))) return false;
+  for (const k of ["ch", "thread", "id", "target", "t", "status"]) if (m[k] != null && typeof m[k] !== "string") return false;
+  return true;
+}
 async function ingest(fromAcc, m) {
   const e = { from: fromAcc };
+  if (!wellFormed(m)) { audit("msg-dropped", { from: fromAcc, reason: "malformed" }); return; }
   {
     try {
       if (m.level > PEOPLE[ACC].level) { audit("msg-dropped", { from: e.from, level: m.level }); return; }
@@ -669,10 +681,31 @@ const readBody = async (req) => { let b = ""; for await (const c of req) b += c;
 function json(res, code, o) { res.writeHead(code, { "Content-Type": "application/json" }); res.end(JSON.stringify(o)); }
 const UI = path.join(__dirname, "ui.html");
 
+// The local port answers only this PC's own window: the request must name 127.0.0.1/localhost at this port (no other
+// host name, so a web page cannot reach it through DNS rebinding), carry no other site's Origin, and show the key that
+// is written at start to a file only this account can read (cookie set by /open, or the X-Zenos-Local header).
+const LOCAL_KEY = crypto.randomBytes(32).toString("base64url");
+fs.writeFileSync(path.join(DIR, "local.key"), LOCAL_KEY, { mode: 0o600 }); fs.chmodSync(path.join(DIR, "local.key"), 0o600);
+const OWN = new Set([`127.0.0.1:${PORT}`, `localhost:${PORT}`]);
+const eqKey = (k) => { const a = Buffer.from(String(k || "")), b = Buffer.from(LOCAL_KEY); return a.length === b.length && crypto.timingSafeEqual(a, b); };
+function localGate(req, res, u) {
+  const origin = req.headers.origin;
+  if (!OWN.has(String(req.headers.host || "")) || (origin && !["http://127.0.0.1:" + PORT, "http://localhost:" + PORT].includes(origin))) {
+    json(res, 403, { error: "Only this PC's own window may use this port." }); return true; }
+  if (u.pathname === "/open") {
+    if (!eqKey(u.searchParams.get("k"))) { json(res, 403, { error: "bad key" }); return true; }
+    res.writeHead(302, { "Set-Cookie": `zlk=${LOCAL_KEY}; Path=/; HttpOnly; SameSite=Strict`, Location: "/" }); res.end(); return true;
+  }
+  const m = (req.headers.cookie || "").match(/(?:^|;\s*)zlk=([A-Za-z0-9_-]+)/);
+  if (eqKey(m && m[1]) || eqKey(req.headers["x-zenos-local"])) return false;
+  json(res, 401, { error: "Open this from the ZENOS menu." }); return true;
+}
+
 async function handle(req, res, remote) {
   const u = new URL(req.url, "http://x");
   try {
     if (remote && (await remoteGate(req, res, u))) return;
+    if (!remote && localGate(req, res, u)) return;
     if (u.pathname.startsWith("/rtc")) {
       const pr = http.request({ host: "127.0.0.1", port: 7880, path: req.url, method: req.method, headers: { ...req.headers, cookie: "" } }, (r2) => { res.writeHead(r2.statusCode, r2.headers); r2.pipe(res); });
       pr.on("error", () => { res.writeHead(502); res.end(); }); req.pipe(pr); return; }

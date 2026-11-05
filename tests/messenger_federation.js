@@ -15,7 +15,7 @@ const base = 18900 + Math.floor(Math.random() * 400);
 const relays = {}, homes = [];
 function start(name, port) {
   const HOME = fs.mkdtempSync(path.join(os.tmpdir(), "zfed-")); homes.push(HOME);
-  const p = spawn(process.execPath, [path.join(MSG, "relay.js")], { env: { ...process.env, HOME, ZENOS_RELAY_PORT: String(port), ZENOS_RELAY_ADMIN: ADMIN }, stdio: "ignore" });
+  const p = spawn(process.execPath, [path.join(MSG, "relay.js")], { env: { ...process.env, HOME, ZENOS_RELAY_DIRECTORY: path.join(__dirname, "fixtures", "msg-directory.json"), ZENOS_RELAY_PORT: String(port), ZENOS_RELAY_ADMIN: ADMIN }, stdio: "ignore" });
   relays[name] = { p, url: `http://127.0.0.1:${port}`, HOME };
 }
 const finish = (code) => { for (const r of Object.values(relays)) r.p.kill(); for (const h of homes) fs.rmSync(h, { recursive: true, force: true }); process.exit(code); };
@@ -139,12 +139,15 @@ async function signed(dev, url, method, p, obj) { const raw = obj ? JSON.stringi
   const [, al] = await j(B.url + "/alerts");
   check("the city's devices see the alert, with its label and source", al.length === 1 && al[0].label === "official" && al[0].from === "geoid.example" && !al[0].answers, al);
   const k = encodeURIComponent("geoid.example") + "/" + encodeURIComponent(alert.id);
-  const t1 = crypto.randomBytes(16).toString("hex"), t2 = crypto.randomBytes(16).toString("hex");
-  await j(`${B.url}/alerts/${k}/answer`, "POST", { status: "help", token: t1 });
-  await j(`${B.url}/alerts/${k}/answer`, "POST", { status: "safe", token: t1 });                 // the same device changes its answer
-  await j(`${B.url}/alerts/${k}/answer`, "POST", { status: "safe", token: t2 });
+  const carol = device("carol"); await j(B.url + "/keys/carol", "POST", carol.bundle());
+  const ans = (dev, status) => signed(dev, B.url, "POST", `/alerts/${k}/answer`, { by: dev.acc, status });
+  await ans(bob, "help");
+  await ans(bob, "safe");                                                                          // the same person changes their answer
+  await ans(carol, "safe");
+  r = await j(`${B.url}/alerts/${k}/answer`, "POST", { status: "help", token: crypto.randomBytes(16).toString("hex") });
+  check("an unsigned answer is refused (the counts cannot be stuffed)", r[0] === 403, r);
   r = await j(`${B.url}/alerts/${k}/counts`);
-  check("answers counted per device, no account", r[1].safe === 2 && r[1].help === 0, r);
+  check("answers counted once per registered person", r[1].safe === 2 && r[1].help === 0, r);
   r = await F.relayRequest(me("ministry.example", aKey), B.url, "GET", `/fed/counts/${k}`);
   check("the ministry gets the city's counts only", r.status === 200 && r.body.safe === 2 && Object.keys(r.body).sort().join() === "help,org,safe", r);
   r = await F.relayRequest(me("rogue.example", cKey), B.url, "GET", `/fed/counts/${k}`);

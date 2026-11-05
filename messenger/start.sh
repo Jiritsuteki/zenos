@@ -7,6 +7,9 @@ DATA="$HOME/.local/share/zenos/msg"
 mkdir -p "$DATA"
 cd "$DATA"
 [ -f ports.env ] || echo "zenos=8096" > ports.env
+# the local relay's directory (who is which clearance and organization) starts as the demo list; a ministry's relay
+# keeps its own, set by its administrator (POST /directory)
+mkdir -p "$DATA/relay"; [ -f "$DATA/relay/directory.json" ] || install -m 600 "$M/demo-directory.json" "$DATA/relay/directory.json"
 pgrep -f "node $M/relay.js" >/dev/null || setsid /usr/bin/node "$M/relay.js" >/tmp/zenos-relay.log 2>&1 < /dev/null &
 sleep 1
 while IFS='=' read -r a p; do

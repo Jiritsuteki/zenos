@@ -18,7 +18,7 @@ A mitigation (switching a kernel setting off, keeping a module from loading) is 
 /etc/zenos/mitigations/ that release officers sign as they sign a release (zenos_release.py sign). It is never
 applied on the word of a source, of an AI, or of a single person: `apply` refuses it unless the decision allows.
 """
-import json, os, sys, time
+import json, os, re, sys, time
 from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "lib", "zenos"))
@@ -64,7 +64,11 @@ def mitigation_records(d=None):
         try:
             rec = json.loads(p.read_text())
             m = rec["manifest"]
-            if m.get("kind") == KIND and zvuln.NAME.match(str(m.get("id", ""))):
+            cves = m.get("cves")
+            # the id names a file under /etc and the CVE list is written into its first line: both only in their
+            # plain shapes (no line breaks, no path), whatever the officers signed
+            if (m.get("kind") == KIND and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", str(m.get("id", "")))
+                    and isinstance(cves, list) and cves and all(isinstance(c, str) and zvuln.CVE.fullmatch(c) for c in cves)):
                 out[m["id"]] = rec
         except (OSError, ValueError, KeyError, TypeError):
             continue

@@ -210,6 +210,12 @@ class DpkgWrapper(unittest.TestCase):
         self.assertEqual(W.main(["--unpack", str(good)]), 2)
         self.assertEqual(len((tmp / "read").read_text().splitlines()), 1)   # dpkg never saw the swapped file
         self.assertEqual(os.listdir(tmp / "stage"), [])
+        renamed = tmp / "package"                              # a package without the .deb name is checked too
+        shutil.copy(evil, renamed)
+        self.assertEqual(W.main(["--install", str(renamed)]), 2)
+        self.assertEqual(W.main(["-R", "--install", str(tmp)]), 2)          # a whole folder: refused
+        self.assertEqual(W.main(["-iR", str(tmp)]), 2)
+        self.assertEqual(len((tmp / "read").read_text().splitlines()), 1)
         for k in ("ZENOS_REAL_DPKG", "ZENOS_DPKG_STAGE", "ZENOS_PKGCHECK_CACHE", "ZENOS_PKGCHECK_LEDGER", "ZENOS_SUPPLY_CONF"):
             os.environ.pop(k, None)
         importlib.reload(Z); importlib.reload(P)

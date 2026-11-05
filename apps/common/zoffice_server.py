@@ -44,6 +44,28 @@ def guard_check(url):
 ANTHROPIC = 'https://api.anthropic.com'
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *a, **k):            # an AI endpoint that sends us elsewhere is not followed
+        return None
+
+
+OPENER = urllib.request.build_opener(_NoRedirect)
+
+
+def endpoint_ok(base):
+    """an AI endpoint the relay will call: http(s) only (never file: or others), no user name, query or fragment,
+    and plain http only for this machine (a model server running here); everything else over https"""
+    from urllib.parse import urlsplit
+    try:
+        u = urlsplit(base)
+        host = (u.hostname or '').lower()
+        if u.scheme not in ('http', 'https') or not host or u.username or u.password or u.query or u.fragment:
+            return False
+        return u.scheme == 'https' or host in ('127.0.0.1', 'localhost', '::1')
+    except ValueError:
+        return False
+
+
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *a, **k):
         super().__init__(*a, directory=DIST, **k)
@@ -70,8 +92,16 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(403, {'error': 'forbidden'})
         return super().do_GET()
 
+    def _origin_ok(self):
+        # a page in a browser (another site) must not make this relay call anywhere: its Origin is not ours, and
+        # without the JSON content type its request would skip the browser's preflight
+        o = self.headers.get('Origin')
+        if o and o not in ('http://127.0.0.1:%d' % PORT, 'http://localhost:%d' % PORT, 'null'):
+            return False
+        return (self.headers.get('Content-Type') or '').split(';')[0].strip().lower() == 'application/json'
+
     def do_POST(self):
-        if not self._host_ok():
+        if not self._host_ok() or not self._origin_ok():
             return self._json(403, {'error': 'forbidden'})
         if self.path.rstrip('/') != '/ai/chat':
             return self._json(404, {'error': 'not found'})
@@ -90,6 +120,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(400, {'error': 'No AI is set up yet (register a key first).'})
         if provider != 'anthropic' and not base:
             return self._json(400, {'error': 'Enter an OpenAI-compatible endpoint (/v1).'})
+        if base and not endpoint_ok(base):
+            return self._json(400, {'error': 'The AI address must start with https:// (http:// only for this PC).'})
         ok, why = guard_check(base or ANTHROPIC if provider == 'anthropic' else base)
         if not ok:
             return self._json(403, {'error': why})
@@ -123,7 +155,7 @@ class Handler(SimpleHTTPRequestHandler):
             method='POST',
             headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key},
         )
-        with urllib.request.urlopen(req, timeout=120) as r:
+        with OPENER.open(req, timeout=120) as r:
             data = json.loads(r.read())
         return data['choices'][0]['message']['content']
 
@@ -151,7 +183,7 @@ class Handler(SimpleHTTPRequestHandler):
                 'anthropic-version': '2023-06-01',
             },
         )
-        with urllib.request.urlopen(req, timeout=120) as r:
+        with OPENER.open(req, timeout=120) as r:
             data = json.loads(r.read())
         parts = data.get('content') or []
         return ''.join(p.get('text', '') for p in parts if p.get('type') == 'text')

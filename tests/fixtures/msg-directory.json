@@ -1,0 +1,42 @@
+{
+ "zenos": {
+  "name": "ZENOS User",
+  "level": 4,
+  "org": "ZENOS Gov"
+ },
+ "sato": {
+  "name": "Sato Kenji · Section Chief",
+  "level": 4,
+  "org": "ZENOS Gov"
+ },
+ "tanaka": {
+  "name": "Tanaka Yuko · Director",
+  "level": 5,
+  "org": "ZENOS Gov"
+ },
+ "suzuki": {
+  "name": "Suzuki Akira · Security Officer",
+  "level": 5,
+  "org": "ZENOS Gov"
+ },
+ "press": {
+  "name": "Test Reporter · The Daily Example",
+  "level": 1,
+  "org": "The Daily Example (press)"
+ },
+ "alice": {
+  "name": "alice",
+  "level": 5,
+  "org": ""
+ },
+ "bob": {
+  "name": "bob",
+  "level": 3,
+  "org": ""
+ },
+ "carol": {
+  "name": "carol",
+  "level": 3,
+  "org": ""
+ }
+}

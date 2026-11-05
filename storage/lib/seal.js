@@ -19,11 +19,36 @@ const sha256 = b => crypto.createHash('sha256').update(b).digest()
 const b64u = b => Buffer.from(b).toString('base64url')
 const LEVEL = /^L[1-5]$/
 
-function seal (plaintext, { k = 3, n = 5, level = 'L1', name = '' } = {}) {
+// The uploader owns the file id: fileId = first 16 bytes of SHA-256(owner key || salt), and the manifest is signed
+// with that key. A node keeps a manifest only when both hold, so nobody else can place a different manifest under
+// that id first (and block the real one): they would need the owner's key, or a hash collision.
+const ED_SPKI = Buffer.from('302a300506032b6570032100', 'hex')
+const ED_PKCS8 = Buffer.from('302e020100300506032b657004220420', 'hex')
+const ownedId = (ownerHex, salt) => sha256(Buffer.concat([Buffer.from(ownerHex, 'hex'), Buffer.from(salt, 'hex')])).subarray(0, 16).toString('hex')
+const unsigned = m => Buffer.from(JSON.stringify({ ...m, sig: undefined }))
+// a signer from a 32-byte Ed25519 seed (a Hyperswarm key pair's secretKey starts with it)
+function signerFromSecret (secretKey) {
+  const seed = Buffer.from(secretKey).subarray(0, 32)
+  const priv = crypto.createPrivateKey({ key: Buffer.concat([ED_PKCS8, seed]), format: 'der', type: 'pkcs8' })
+  const pub = crypto.createPublicKey(priv).export({ format: 'der', type: 'spki' }).subarray(ED_SPKI.length)
+  return { publicKey: pub.toString('hex'), sign: buf => crypto.sign(null, buf, priv) }
+}
+function ownerOk (m) {
+  if (!/^[0-9a-f]{64}$/.test(m.owner || '') || !/^[0-9a-f]{32}$/.test(m.salt || '') || !/^[0-9a-f]{128}$/.test(m.sig || '')) return false
+  if (ownedId(m.owner, m.salt) !== m.fileId) return false
+  try {
+    const pub = crypto.createPublicKey({ key: Buffer.concat([ED_SPKI, Buffer.from(m.owner, 'hex')]), format: 'der', type: 'spki' })
+    return crypto.verify(null, unsigned(m), pub, Buffer.from(m.sig, 'hex'))
+  } catch { return false }
+}
+
+function seal (plaintext, { k = 3, n = 5, level = 'L1', name = '', owner } = {}) {
   if (!LEVEL.test(level)) throw new Error(`invalid level: ${level}`)
+  owner = owner || signerFromSecret(crypto.randomBytes(32))
   const key = crypto.randomBytes(32)
   const iv = crypto.randomBytes(12)
-  const fileId = crypto.randomBytes(16).toString('hex')
+  const salt = crypto.randomBytes(16).toString('hex')
+  const fileId = ownedId(owner.publicKey, salt)
 
   const c = crypto.createCipheriv('aes-256-gcm', key, iv)
   c.setAAD(Buffer.from(fileId)) // shards cannot be moved under another file id
@@ -39,8 +64,11 @@ function seal (plaintext, { k = 3, n = 5, level = 'L1', name = '' } = {}) {
     n,
     length: blob.length,
     shardHashes: shards.map(s => sha256(s).toString('hex')),
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    owner: owner.publicKey,
+    salt
   }
+  manifest.sig = owner.sign(unsigned(manifest)).toString('hex')
   const manifestBuf = Buffer.from(JSON.stringify(manifest))
   const capability = ['zenos', '1', fileId, b64u(key), sha256(manifestBuf).toString('hex')].join(':')
   return { capability, manifest, manifestBuf, shards }
@@ -70,6 +98,7 @@ function checkManifest (manifestBuf) {
   if (!(Number.isInteger(m.k) && Number.isInteger(m.n) && m.k >= 1 && m.n > m.k && m.n <= 255)) throw new Error('malformed manifest')
   if (!Array.isArray(m.shardHashes) || m.shardHashes.length !== m.n || !m.shardHashes.every(h => /^[0-9a-f]{64}$/.test(h))) throw new Error('malformed manifest')
   if (!(Number.isInteger(m.length) && m.length > 0)) throw new Error('malformed manifest')
+  if (!ownerOk(m)) throw new Error('the manifest is not signed by the owner of this file id')
   return m
 }
 
@@ -89,4 +118,4 @@ function open (cap, manifest, shardMap) {
   return Buffer.concat([d.update(blob.subarray(12, blob.length - 16)), d.final()])
 }
 
-module.exports = { seal, open, parseCapability, verifyManifest, checkManifest, shardOk }
+module.exports = { seal, open, parseCapability, verifyManifest, checkManifest, shardOk, signerFromSecret }

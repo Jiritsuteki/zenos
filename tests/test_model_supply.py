@@ -147,6 +147,10 @@ class Models(unittest.TestCase):
         self.assertEqual(zmodel.check_api(conf, 1, self.conf()), (True, None))
         self.assertFalse(zmodel.check_api(dict(conf, model="claude-opus-5-6"), 1, self.conf())[0])
         self.assertFalse(zmodel.check_api(dict(conf, url="https://elsewhere.example/v1"), 1, self.conf())[0])
+        for other in ("http://api.anthropic.com", "https://api.anthropic.com:8443", "https://api.anthropic.com/proxy",
+                      "https://x@api.anthropic.com", "https://api.anthropic.com/?u=evil.example"):
+            self.assertFalse(zmodel.check_api(dict(conf, url=other), 1, self.conf())[0], other)   # the whole address
+        self.assertEqual(zmodel.check_api(dict(conf, url="https://API.anthropic.com/"), 1, self.conf()), (True, None))
         self.assertEqual(zmodel.check_api(conf, 2, self.conf()), (False, "level"))
 
     def test_a_refused_provider_stays_refused_even_when_pinned(self):

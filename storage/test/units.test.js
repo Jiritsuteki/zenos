@@ -33,6 +33,30 @@ test('fewer than k shards is refused', () => {
   assert.throws(() => rs.decode(new Map([[0, shards[0]], [4, shards[4]]]), 3, 5, 11))
 })
 
+test('only the owner of a file id can place a manifest under it', () => {
+  const crypto = require('crypto')
+  const { signerFromSecret } = require('../lib/seal')
+  const alice = signerFromSecret(crypto.randomBytes(32)), mallory = signerFromSecret(crypto.randomBytes(32))
+  const { manifest, manifestBuf } = seal(Buffer.from('x'), { owner: alice })
+  checkManifest(manifestBuf)
+  // the same id with another owner, or signed by someone else, or with a changed field, is refused
+  const forged = { ...manifest, owner: mallory.publicKey, level: 'L1', sig: undefined }
+  forged.sig = mallory.sign(Buffer.from(JSON.stringify(forged))).toString('hex')
+  assert.throws(() => checkManifest(Buffer.from(JSON.stringify(forged))), /owner/)
+  const resigned = { ...manifest, name: 'other', sig: undefined }
+  resigned.sig = mallory.sign(Buffer.from(JSON.stringify(resigned))).toString('hex')
+  assert.throws(() => checkManifest(Buffer.from(JSON.stringify(resigned))), /owner/)
+  assert.throws(() => checkManifest(Buffer.from(JSON.stringify({ ...manifest, name: 'changed' }))), /owner/)
+  const legacy = { ...manifest }; delete legacy.owner; delete legacy.salt; delete legacy.sig
+  assert.throws(() => checkManifest(Buffer.from(JSON.stringify(legacy))), /owner/)
+})
+
+test('a peer that claims nothing is the lowest level (no administrator key)', () => {
+  const { resolveTrust } = require('../lib/policy')
+  assert.strictEqual(resolveTrust({}, 'ab'.repeat(32), null).clearance, 'L1')
+  assert.strictEqual(resolveTrust({ clearance: 'L9' }, 'ab'.repeat(32), null).clearance, 'L1')
+})
+
 test('seal and open round trip; the capability pins the manifest', () => {
   const pt = crypto.randomBytes(5000)
   const { capability, manifest, manifestBuf, shards } = seal(pt, { level: 'L3', name: 'x' })

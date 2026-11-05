@@ -3,7 +3,7 @@
 Shows who / which level / why. Never shows the file content.
 PoC: the signature is made with the officer's key held by this service.
 Production: the officer touches their FIDO2 key (NFC) and the phone only relays the signature."""
-import html, json, os, sys
+import hmac, html, json, os, secrets, sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -43,30 +43,39 @@ def load_requests():
     return sorted(rs, key=lambda r: r["created"], reverse=True)
 
 
+def num(x, lo=0, hi=10 ** 6):
+    """a number shown in the page: always an integer in range, never text from the request file"""
+    try:
+        return max(lo, min(hi, int(x)))
+    except (TypeError, ValueError):
+        return lo
+
+
 def card(r):
     e = html.escape
+    r = dict(r, level=num(r.get("level"), 1, 5), required=num(r.get("required"), 1, 9))
     c = LV[r["level"]]
-    who = ", ".join(zenos.ROSTER[a["approver"]].split(" · ")[0] for a in r["approvals"]) or "none yet"
+    who = ", ".join(str(zenos.ROSTER.get(a.get("approver"), a.get("approver"))).split(" · ")[0] for a in r["approvals"]) or "none yet"
     kind = r.get("kind", "access")
-    sent = e(r["created"][:16].replace("T", " "))
+    sent = e(str(r["created"])[:16].replace("T", " "))
     if kind == "release":
         sc = r["scope"]
         tag, c = f"Emergency release · L{r['level']}", "#F97316"
-        who_line = f"ZENOS stopped {e(r['requester'])}'s PC"
-        meta = (f"Anomaly: {e(r['reason'])}<br>Files: {e(', '.join(sc.get('files', [])[:5]))}<br>"
+        who_line = f"ZENOS stopped {e(str(r['requester']))}'s PC"
+        meta = (f"Anomaly: {e(str(r['reason']))}<br>Files: {e(', '.join(map(str, sc.get('files', [])[:5])))}<br>"
                 f"Approving unlocks the PC. The stopped operation is cancelled and quarantined files stay in quarantine.<br>Stopped: {sent}")
         done_txt = "Approved · stop released"
     elif kind == "plan":
         sc = r["scope"]
         tag, c = f"Pre-filed operation · L{r['level']}", "#38BDF8"
-        who_line = f"{e(r['requester'])} files an operation in advance"
-        meta = (f"Operation: {e(zenos.PLAN_RULES[sc['rule']])} · up to {sc['max_files']} file(s) · "
-                f"{sc['minutes']} min<br>Reason: {e(r['reason'])}<br>Sent: {sent}")
+        who_line = f"{e(str(r['requester']))} files an operation in advance"
+        meta = (f"Operation: {e(str(zenos.PLAN_RULES.get(sc.get('rule'), sc.get('rule'))))} · up to {num(sc.get('max_files'))} file(s) · "
+                f"{num(sc.get('minutes'))} min<br>Reason: {e(str(r['reason']))}<br>Sent: {sent}")
         done_txt = "Approved · ZENOS will not stop this operation"
     else:
         tag = f"Approval request · L{r['level']}"
-        who_line = f"{e(r['requester'])} requests access"
-        meta = (f"File: {e(r['name'])} (L{r['level']} · {e(r['label'])})<br>Reason: {e(r['reason'])}<br>Sent: {sent}")
+        who_line = f"{e(str(r['requester']))} requests access"
+        meta = (f"File: {e(str(r['name']))} (L{r['level']} · {e(str(r['label']))})<br>Reason: {e(str(r['reason']))}<br>Sent: {sent}")
         done_txt = "Approved · access granted"
     head = (f'<span class="tag" style="background:{c}33;color:{c}">{tag}</span>'
             f'<p class="who">{who_line}</p><p class="meta">{meta}</p>'
@@ -77,7 +86,7 @@ def card(r):
     opts = "".join(f'<option value="{k}">{e(v)}</option>' for k, v in zenos.ROSTER.items()
                    if not any(a["approver"] == k for a in r["approvals"]))
     return (f'<div class="card">{head}<form method="post">'
-            f'<input type="hidden" name="id" value="{e(r["id"])}">'
+            f'<input type="hidden" name="id" value="{e(str(r["id"]))}">'
             f'<label>Signing as (in production: the officer\'s own key)</label><select name="approver">{opts}</select>'
             f'<label>Match code shown on the requester\'s screen</label>'
             f'<input class="code" name="code" inputmode="numeric" maxlength="4" placeholder="····" autocomplete="off">'
@@ -102,20 +111,47 @@ def page(msg=None, good=True):
             f'{"<h1 style=margin-top:28px;font-size:15px>Recent</h1>" + hist if hist else ""}</main></body></html>')
 
 
+# The page signs as an officer, so it answers only who shows its key: written at start to a file only this account
+# can read (approval-url), turned into a cookie by the first visit. Another account on the PC, or a web page in a
+# browser (another site's Origin, or a host name other than this one), gets nothing.
+KEY = secrets.token_urlsafe(32)
+PORT = int(os.environ.get("ZENOS_APPROVAL_PORT", "8090"))
+
+
 class H(BaseHTTPRequestHandler):
-    def send(self, text, code=200):
+    def send(self, text, code=200, extra=()):
         b = text.encode()
         self.send_response(code)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(b)))
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'")
+        for k, v in extra:
+            self.send_header(k, v)
         self.end_headers()
         self.wfile.write(b)
 
+    def allowed(self):
+        host = self.headers.get("Host", "")
+        own = {f"{h}:{PORT}" for h in ("127.0.0.1", "localhost", "[::1]", os.environ.get("ZENOS_APPROVAL_HOST", "127.0.0.1"))}
+        origin = self.headers.get("Origin")
+        if host not in own or (origin and origin.split("://", 1)[-1] not in own):
+            return False
+        ck = dict(x.strip().split("=", 1) for x in self.headers.get("Cookie", "").split(";") if "=" in x)
+        return hmac.compare_digest(ck.get("zak", ""), KEY)
+
     def do_GET(self):
+        q = parse_qs(self.path.split("?", 1)[1]) if "?" in self.path else {}
+        if hmac.compare_digest(q.get("k", [""])[0], KEY) and self.headers.get("Host", "").endswith(f":{PORT}"):
+            return self.send("", 302, [("Set-Cookie", f"zak={KEY}; Path=/; HttpOnly; SameSite=Strict"), ("Location", "/")])
+        if not self.allowed():
+            return self.send("Open the approval page from the link in approval-url on this PC.", 403)
         self.send(page())
 
     def do_POST(self):
-        n = int(self.headers.get("Content-Length", 0))
+        if not self.allowed():
+            return self.send("Open the approval page from the link in approval-url on this PC.", 403)
+        n = min(int(self.headers.get("Content-Length", 0) or 0), 65536)
         f = {k: v[0] for k, v in parse_qs(self.rfile.read(n).decode()).items()}
         rid = os.path.basename(f.get("id", ""))
         if not zenos.request_path(rid).exists():
@@ -141,7 +177,13 @@ if __name__ == "__main__":
     if bind not in ("127.0.0.1", "::1", "localhost") and not (cert and key):
         # an approval page reachable from a network is an administration screen: never in plain HTTP
         raise SystemExit("ZENOS_APPROVAL_BIND other than this machine needs TLS (ZENOS_APPROVAL_CERT, ZENOS_APPROVAL_KEY)")
-    srv = ThreadingHTTPServer((bind, 8090), H)
+    srv = ThreadingHTTPServer((bind, PORT), H)
+    zenos.Z.mkdir(parents=True, exist_ok=True)
+    url = zenos.Z / "approval-url"
+    fd = os.open(url, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600)
+    os.fchmod(fd, 0o600)
+    os.write(fd, f"{'https' if cert and key else 'http'}://127.0.0.1:{PORT}/?k={KEY}\n".encode())
+    os.close(fd)
     if cert and key:
         import ssl
         ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)

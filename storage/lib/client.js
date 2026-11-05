@@ -8,7 +8,7 @@
 const Hyperswarm = require('hyperswarm')
 const { Rpc } = require('./wire')
 const { topicFor } = require('./topic')
-const { seal, open, parseCapability, verifyManifest, shardOk } = require('./seal')
+const { seal, open, parseCapability, verifyManifest, shardOk, signerFromSecret } = require('./seal')
 const { resolveTrust, planPlacement, verifyRevocations, newerRevocations } = require('./policy')
 
 const HEX64 = /^[0-9a-f]{64}$/
@@ -88,7 +88,7 @@ class ZenosClient {
   async put (plaintext, opts = {}) {
     const peers = this.livePeers()
     if (!peers.length) throw new Error('no storage node connected')
-    const { capability, manifest, manifestBuf, shards } = seal(plaintext, opts)
+    const { capability, manifest, manifestBuf, shards } = seal(plaintext, { ...opts, owner: signerFromSecret(this.swarm.keyPair.secretKey) })
     const plan = planPlacement(manifest, peers) // nothing is sent if the placement rules cannot be met
     const targets = [...new Set(plan.targets)]
 

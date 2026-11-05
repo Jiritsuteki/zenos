@@ -55,6 +55,23 @@ class Decision(unittest.TestCase):
                 put(G.EXPOSED, bad)
                 self.assertEqual(G.exposure(), 5, bad)   # a record that cannot be read counts as the highest level
 
+    def test_learning_is_bounded(self):
+        """any local account can ask, so it can add only so much: LEARN_RATE new services an hour, MAX_LEARNED in all"""
+        with tempfile.TemporaryDirectory() as d:
+            G.REGISTRY, G.LEARNED = d + "/ai.json", d + "/learned.json"
+            G.LOG, G.LEDGER = d + "/g.log", d + "/l.jsonl"
+            g = G.Guard()
+            for i in range(G.LEARN_RATE + 5):
+                g.learn(("h%d.example" % i, 443), uid=1001)
+            self.assertEqual(len(json.load(open(G.LEARNED))), G.LEARN_RATE)
+            g.learn(("other.example", 443), uid=1002)                     # another account has its own allowance
+            self.assertEqual(len(json.load(open(G.LEARNED))), G.LEARN_RATE + 1)
+            g.learn(("bad host$(x)", 443), uid=1003)
+            self.assertEqual(len(json.load(open(G.LEARNED))), G.LEARN_RATE + 1)
+            put(G.LEARNED, ["https://x%d.example/" % i for i in range(G.MAX_LEARNED)])
+            g.learn(("full.example", 443), uid=1004)
+            self.assertEqual(len(json.load(open(G.LEARNED))), G.MAX_LEARNED)
+
     def test_target(self):
         self.assertEqual(G.target("https://API.Example.com/v1"), ("api.example.com", 443))
         self.assertEqual(G.target("http://10.0.0.5:8000/v1"), ("10.0.0.5", 8000))

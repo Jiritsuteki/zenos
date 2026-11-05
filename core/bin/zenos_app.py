@@ -62,6 +62,33 @@ def finfo(p):
             "dir": os.path.dirname(p), "mtime": mtime}
 
 
+# What the page may name as a file. The page is the app's own HTML, but it shows files from anywhere, so a path it
+# asks for is held to the places a person keeps files: the home folder (not its hidden folders, where keys, settings
+# and ZENOS's own data live), removable drives, and the RAM folder a sealed file is opened into. The file the app was
+# started with is always allowed.
+ROOTS = [os.path.realpath(x) for x in (HOME, "/media", "/mnt", "/run/media/" + os.environ.get("USER", ""),
+                                        "/dev/shm/zenos-%d" % os.getuid())]
+
+
+def safe_path(p):
+    if not isinstance(p, str) or not p or "\0" in p:
+        raise PermissionError("bad path")
+    r = os.path.realpath(p)
+    if start_file and r == os.path.realpath(start_file):
+        return r
+    for root in ROOTS:
+        if r == root or r.startswith(root + os.sep):
+            rel = os.path.relpath(r, root)
+            if rel == "." or not any(part.startswith(".") for part in rel.split(os.sep)):
+                return r
+    raise PermissionError("This app does not open files from there.")
+
+
+PATH_ARGS = {"read": ("path",), "list": ("dir",), "thumb": ("path",), "img_preview": ("src",), "img_segment": ("src",),
+             "export_image": ("src", "dir"), "move_file": ("path", "dest"), "pick_dir": ("path", "dir"),
+             "studio_peaks": ("path",), "open": ("dir",), "save": ("dir",), "cloud_url": (), "cloud_ls": ()}
+
+
 class App(Gtk.Window):
     def __init__(self):
         super().__init__(title=title)
@@ -176,11 +203,23 @@ class App(Gtk.Window):
         self.view.run_javascript("window.__zr(%d,%s)" % (i, json.dumps(result)), None, None, None)
 
     def on_msg(self, ucm, js):
+        # only the app's own page speaks to this window: not another page the view was taken to
+        own = GLib.filename_to_uri(os.path.abspath(html), None)
+        if (self.view.get_uri() or "").split("#", 1)[0].split("?", 1)[0] != own:
+            return
         try:
             m = json.loads(js.get_js_value().to_string())
         except Exception:
             return
         i, cmd, a = m.get("id", 0), m.get("cmd"), m.get("args", {})
+        if not isinstance(cmd, str) or not hasattr(self, "cmd_" + cmd) or not isinstance(a, dict):
+            return self.reply(i, {"error": "unknown command"})
+        try:
+            for k in PATH_ARGS.get(cmd, ()):
+                if a.get(k):
+                    a[k] = safe_path(a[k])
+        except PermissionError as e:
+            return self.reply(i, {"error": str(e)})
         if cmd and (cmd.startswith("cloud_") or cmd.startswith("img_") or cmd.startswith("studio_") or cmd == "thumb"):
             # network calls run off the UI thread; the answer is posted back when ready
             def work():

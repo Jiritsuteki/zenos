@@ -102,9 +102,15 @@ class Peer:
             seen[nonce] = now
         return True
 
-    def _person_ok(self, c, person, proof):
+    def _person_ok(self, c, person, proof, server):
+        """the sign-in service's token: for this person, made for this server, and short-lived (at most `token_max`
+        seconds from issue to end, one hour unless configured)"""
         try:
             body, sig = proof["body"], zdata.unb64(proof["sig"])
+            if not isinstance(body, dict) or body.get("aud") != server:
+                return False
+            if float(body["exp"]) - float(body["iat"]) > float(c.get("token_max", 3600)):
+                return False
         except (KeyError, TypeError, ValueError):
             return False
         for idp in c.get("idps") or []:
@@ -161,7 +167,7 @@ class Peer:
         facts = {"op": "share", "enrolled": enrolled, "sig_ok": sig_ok,
                  "fresh": bool(sig_ok and self._fresh(c, server, core.get("t", 0), str(core.get("nonce", "")))),
                  "now": int(self.now()), "last_seen": int(self._last_seen(c, server)) if enrolled else 0,
-                 "silence": int(c.get("silence", 90)), "person_verified": self._person_ok(c, person, proof),
+                 "silence": int(c.get("silence", 90)), "person_verified": self._person_ok(c, person, proof, server),
                  "purpose_ok": enrolled and purpose in ((s.get("purposes") or {}).get(table) or []),
                  "level": level, "clearance": max(0, min(5, int((c.get("clearance") or {}).get(person, 0)))),
                  "grant_ok": person in ((c.get("grants") or {}).get(rid) or []),
@@ -227,8 +233,9 @@ class Peer:
         except (KeyError, TypeError, ValueError):
             return 400, {"ok": False, "error": "bad request"}
         s, ok = self._server_sig_ok(c, server, {k: v for k, v in b.items() if k != "sig"}, sig)
-        if not ok or abs(self.now() - float(b.get("t", 0))) > float(c.get("skew", 120)):
-            return 403, {"ok": False, "error": "not an enrolled server, or not signed now"}
+        if not ok or not self._fresh(c, server, b.get("t", 0), "get:" + str(b.get("nonce", ""))) \
+                or not re.fullmatch(r"[0-9a-f]{32}", str(b.get("nonce", ""))):
+            return 403, {"ok": False, "error": "not an enrolled server, or not signed now (or a request seen before)"}
         p = self.dir / "records" / f"{rid}.json"
         try:
             d = json.loads(p.read_text())

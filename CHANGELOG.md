@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+**Self-audit before the external audit (Cloudflare's security-audit-skill, run 1 of at least 3)**
+- 28 weaknesses found in the first pass, 27 fixed with tests: in the messenger and its relay, the guard, the key
+  agent and the network sentinel, the AI guard, the approval page, the audit node, ZENOS Data, the vulnerability
+  watcher, the package wrapper, the model pinning, the app windows, the office AI relay, the storage grid and the
+  repository's automation. One needs a change of design and is not fixed yet. Details are published with the
+  release that carries the fixes (SECURITY.md).
+- Changes others may notice: the messenger's local port and the approval page answer only this PC's own window
+  (a key in a file only the account can read); a relay takes names, organizations and clearances from its
+  directory (`directory.json`, `POST /directory` by its administrator), never from an account's own bundle; a
+  storage manifest is signed by its uploader, whose key the file id is bound to (files stored before this need to
+  be stored again); an API model's pin covers its whole address (pins made before this need to be made again);
+  ZENOS Data sign-in tokens name the server they were made for (`aud`).
+
 **Vulnerability information from outside, and ZENOS's own SBOM**
 - `zenos-vulnwatch` (`zvuln.py`, timer every 6 hours): CISA KEV, the Debian security tracker, NVD and JVN (and
   national CERTs' SPDX inventories) matched against the installed packages; each part affected, fixed, mitigated or

@@ -123,7 +123,9 @@ function resolveTrust (hello, publicKey, adminKey, revocations = null) {
     return v ? { ...v, certified: true } : { role: null, clearance: 'L0', zone: null, certified: false }
   }
   const role = hello && hello.role === 'client' ? 'client' : 'node'
-  return { role, clearance: (hello && hello.clearance) || 'L5', zone: (hello && (hello.zone || hello.label)) || publicKey.slice(0, 8), certified: false }
+  // a peer that says nothing is the lowest level, not the highest
+  const claimed = hello && LEVELS.includes(hello.clearance) ? hello.clearance : 'L1'
+  return { role, clearance: claimed, zone: (hello && (hello.zone || hello.label)) || publicKey.slice(0, 8), certified: false }
 }
 
 // May this peer read or write a file at this level? (adminKey set: only certified peers.)

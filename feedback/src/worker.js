@@ -202,7 +202,11 @@ async function api(req, env, ctx) {
       else await run(env.DB, "UPDATE posts SET reviewed = ? WHERE id = ?", Date.now(), post.id);
       if (b.appropriate !== false && typeof b.answer === "string" && b.answer.trim()) {
         await run(env.DB, "INSERT OR IGNORE INTO users (id, handle, name, via, joined, young, banned) VALUES ('ai', '@zenos-ai', 'ZENOS AI', 'ai', ?, 0, 0)", Date.now());
-        await run(env.DB, "INSERT INTO posts (thread, edition, text, at, user, staff, reply, byai) VALUES (?, '', ?, ?, 'ai', 0, ?, 1)", post.thread, clip(b.answer, 1500), Date.now(), post.reply || post.id);
+        // the AI read a stranger's post to write this, so a post can steer it: an answer that carries a link or an
+        // address waits for a maintainer instead of going out under the AI's name
+        const steered = /(https?:\/\/|www\.|\b[a-z0-9-]+\.(?:com|net|org|io|xyz|ru|cn|info|app|dev)\b|@[a-z0-9_-]+\.[a-z])/i.test(b.answer);
+        await run(env.DB, "INSERT INTO posts (thread, edition, text, at, user, staff, reply, byai, hidden, held) VALUES (?, '', ?, ?, 'ai', 0, ?, 1, ?, ?)", post.thread, clip(b.answer, 1500), Date.now(), post.reply || post.id,
+          steered ? 1 : 0, steered ? "An AI answer with a link waits for a maintainer." : "");
       }
       await run(env.DB, "INSERT INTO meta (k, v) VALUES ('lastReview', ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v", String(Date.now()));
       return json(200, { ok: true });

@@ -29,7 +29,7 @@ Protocol: one JSON line per connection on /run/zenos/aiguard.sock
 Not covered: a service reached under a name or address the guard was never told about. That is ordinary outbound
 traffic, which the network sentinel (volume to unapproved destinations) and the open-time cut (L4 and above) watch.
 """
-import ipaddress, json, os, socket, struct, subprocess, sys, threading, time
+import ipaddress, json, os, re, socket, struct, subprocess, sys, threading, time
 from urllib.parse import urlsplit
 
 # the ZENOS library is ../lib/zenos beside this program (/usr/lib/zenos, root-owned)
@@ -42,6 +42,7 @@ except Exception:
 
 REGISTRY = os.environ.get("ZENOS_AI_REGISTRY", "/etc/zenos/ai.json")
 LEARNED = os.environ.get("ZENOS_AI_LEARNED", "/var/lib/zenos/ai-learned.json")
+MAX_LEARNED, LEARN_RATE = 256, 20
 EXPOSED = os.environ.get("ZENOS_EXPOSED", "/run/zenos/exposed.json")
 SOCK = os.environ.get("ZENOS_AIGUARD_SOCK", "/run/zenos/aiguard.sock")
 LOG = os.environ.get("ZENOS_AIGUARD_LOG", "/var/log/zenos/aiguard.jsonl")
@@ -150,6 +151,7 @@ class Guard:
         self.addrs = {}            # (host, port) -> {addr: last seen}
         self.applied = None        # (v4, v6) last written
         self.state = []
+        self.learned_by = {}       # uid -> times it taught a new service (bounded per hour)
 
     def resolve(self, s):
         key, now = (s["host"], s["port"]), time.time()
@@ -207,11 +209,25 @@ class Guard:
             self.state = svcs
             return ok, level
 
-    def learn(self, t):
+    def learn(self, t, uid=0):
+        """Remember a service an app was pointed at. Any local account can ask, so what it can add is bounded: a host
+        name of letters, digits, dots and dashes, at most MAX_LEARNED in all, and LEARN_RATE new ones per account
+        an hour (the rest are still refused while exposed, just not remembered)."""
         if any((s["host"], s["port"]) == t for s in services()):
+            return
+        if not re.fullmatch(r"[a-z0-9.-]{1,253}|\[[0-9a-f:.]{2,45}\]|[0-9a-f:.]{2,45}", t[0]) or not 0 < t[1] < 65536:
+            return
+        now = time.time()
+        recent = [x for x in self.learned_by.get(uid, []) if now - x < 3600]
+        if len(recent) >= LEARN_RATE:
+            log(event="ai-learn-throttled", uid=uid)
             return
         cur = _load(LEARNED, [])
         cur = cur if isinstance(cur, list) else []
+        if len(cur) >= MAX_LEARNED:
+            log(event="ai-learn-full", uid=uid)
+            return
+        self.learned_by[uid] = recent + [now]
         cur.append("https://%s:%d/" % t)
         os.makedirs(os.path.dirname(LEARNED), exist_ok=True)
         tmp = LEARNED + ".tmp"
@@ -220,11 +236,11 @@ class Guard:
         os.replace(tmp, LEARNED)
         log(event="ai-learned", host=t[0], port=t[1], kind="external-ai")
 
-    def check(self, url):
+    def check(self, url, uid=0):
         t = target(url)
         if not t:
             return {"ok": True, "allow": False, "message": "Only http and https AI addresses can be used."}
-        self.learn(t)
+        self.learn(t, uid)
         ok, level = self.sync()
         s = next((s for s in self.state if (s["host"], s["port"]) == t), None)
         if not ok or s is None:
@@ -236,10 +252,10 @@ class Guard:
                 "message": "An L%d file has been opened on this PC, so %s cannot be reached until the PC restarts "
                            "or the administrator resets it." % (level, NAME[s["kind"]])}
 
-    def handle(self, msg):
+    def handle(self, msg, uid=0):
         op = msg.get("op")
         if op == "check":
-            return self.check(msg.get("url", ""))
+            return self.check(msg.get("url", ""), uid)
         if op == "sync":
             ok, level = self.sync()
             return {"ok": ok, "level": level}
@@ -309,7 +325,8 @@ def serve(g):
                 if not chunk:
                     break
                 buf += chunk
-            out = g.handle(json.loads(buf or b"{}"))
+            uid = struct.unpack("3i", c.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, struct.calcsize("3i")))[1]
+            out = g.handle(json.loads(buf or b"{}"), uid)
         except Exception:
             out = {"ok": False, "error": "bad request"}
         try:

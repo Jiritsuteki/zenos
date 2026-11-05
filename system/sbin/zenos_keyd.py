@@ -43,6 +43,14 @@ LEDGER = os.environ.get("ZENOS_KEYD_LEDGER", "/var/log/zenos/access-ledger.jsonl
 HALT = Path(os.environ.get("ZENOS_HALT", "/var/lib/zenos/halt.json"))      # written by zenos-guardd
 EXPOSED = Path(os.environ.get("ZENOS_EXPOSED", "/run/zenos/exposed.json"))  # read by zenos-aiguard
 AIGUARD_SOCK = os.environ.get("ZENOS_AIGUARD_SOCK", "/run/zenos/aiguard.sock")
+# the AI guard counts as installed when its service unit is; then a missing socket means it is not running, and L3+
+# files stay closed (only a development layout without the unit opens them without it)
+AIGUARD_UNITS = [u for u in os.environ.get("ZENOS_AIGUARD_UNIT", "/lib/systemd/system/zenos-aiguard.service:"
+                                           "/usr/lib/systemd/system/zenos-aiguard.service:"
+                                           "/etc/systemd/system/zenos-aiguard.service").split(":") if u]
+# who holds L4+ plaintext: the process that asked for it (pid and start time, from the socket), read by the network
+# sentinel, which keeps the network cut while that process or anything it started is alive
+HOLDERS = Path(os.environ.get("ZENOS_OPEN_HOLDERS", "/run/zenos/open-holders.json"))
 MAGIC = b"ZENOS1\n"
 LABEL = {1: "Public", 2: "Confidentiality 2", 3: "Confidentiality 3",
          4: "Important Economic Security Information", 5: "Specially Designated Secret"}
@@ -241,7 +249,7 @@ def expose(level):
         if level < 3:
             return True
         if not os.path.exists(AIGUARD_SOCK):
-            return True                      # the guard is not installed (development layout)
+            return not any(os.path.exists(u) for u in AIGUARD_UNITS)   # installed but not running: closed
         try:
             s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             s.settimeout(10)
@@ -260,7 +268,35 @@ def expose(level):
             return False
 
 
-def handle(msg, uid):
+def _start_time(pid):
+    try:
+        return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[19]
+    except (OSError, IndexError):
+        return None
+
+
+def hold(pid, uid, level):
+    """note that process `pid` now holds plaintext of `level` (the sentinel cuts the network from L4 while it lives)"""
+    if level < 4 or not pid:
+        return
+    with EXPOSE_LOCK:
+        try:
+            cur = json.loads(HOLDERS.read_text())
+        except Exception:
+            cur = []
+        cur = [h for h in cur if _start_time(h.get("pid", 0)) == h.get("start")]
+        cur.append({"pid": pid, "uid": uid, "start": _start_time(pid), "level": level, "t": time.time()})
+        try:
+            HOLDERS.parent.mkdir(parents=True, exist_ok=True)
+            tmp = HOLDERS.with_name(HOLDERS.name + ".tmp")
+            tmp.write_text(json.dumps(cur))
+            os.chmod(tmp, 0o644)
+            os.replace(tmp, HOLDERS)
+        except OSError:
+            pass
+
+
+def handle(msg, uid, pid=0):
     user = pwd.getpwuid(uid).pw_name
     op = msg.get("op")
     if op == "whoami":
@@ -343,6 +379,7 @@ def handle(msg, uid):
                 reason="key-mismatch")
             return {"ok": False, "error": "key", "message": "The key for this file did not fit: its level or id was changed."}
         dek = None
+        hold(pid, uid, level)
         log(event="unseal", user=user, level=level, by=how, name=h.get("name"), sha256=fh[:16],
             **({"fid": fid} if fid else {}))
         return {"ok": True, "header": h, "data": base64.b64encode(data).decode()}
@@ -400,7 +437,7 @@ def client(c):
             buf += chunk
             if len(buf) > MAX * 4 // 3 + 4096:
                 raise ValueError("too large")
-        out = handle(json.loads(buf or b"{}"), uid)
+        out = handle(json.loads(buf or b"{}"), uid, pid)
     except Exception:
         out = {"ok": False, "error": "bad request"}
     try:

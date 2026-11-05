@@ -8,7 +8,7 @@ const W = require(path.join(MSG, "wasm", "pkg", "zenos_signal_wasm.js"));
 const b64 = (u) => Buffer.from(u).toString("base64"), ub = (s) => Buffer.from(s, "base64");
 const sha = (x) => crypto.createHash("sha256").update(String(x)).digest("hex");
 const HOME = fs.mkdtempSync(path.join(os.tmpdir(), "zwasm-")), PORT = 19800 + Math.floor(Math.random() * 300), R = `http://127.0.0.1:${PORT}`;
-const relay = spawn(process.execPath, [path.join(MSG, "relay.js")], { env: { ...process.env, HOME, ZENOS_RELAY_PORT: String(PORT) }, stdio: "ignore" });
+const relay = spawn(process.execPath, [path.join(MSG, "relay.js")], { env: { ...process.env, HOME, ZENOS_RELAY_DIRECTORY: path.join(__dirname, "fixtures", "msg-directory.json"), ZENOS_RELAY_PORT: String(PORT) }, stdio: "ignore" });
 const finish = (c) => { relay.kill(); fs.rmSync(HOME, { recursive: true, force: true }); process.exit(c); };
 let fail = 0; const check = (n, c, g) => { console.log((c ? "ok   " : "FAIL ") + n, c ? "" : JSON.stringify(g)); if (!c) fail++; };
 const j = async (p, method = "GET", obj, h = {}) => { const r = await fetch(R + p, { method, headers: { "Content-Type": "application/json", ...h }, body: obj === undefined ? undefined : JSON.stringify(obj) }); return r.json(); };

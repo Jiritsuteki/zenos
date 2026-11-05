@@ -17,8 +17,8 @@ const j = async (url, method = "GET", obj, h = {}) => { const r = await fetch(ur
 const wait = async (f, ms = 15000) => { const t = Date.now(); while (Date.now() - t < ms) { try { const v = await f(); if (v) return v; } catch {} await new Promise((z) => setTimeout(z, 250)); } return null; };
 (async () => {
   const A = { url: `http://127.0.0.1:${base}`, HOME: home() }, B = { url: `http://127.0.0.1:${base + 1}`, HOME: home() };
-  run([path.join(MSG, "relay.js")], { HOME: A.HOME, ZENOS_RELAY_PORT: String(base), ZENOS_RELAY_ADMIN: ADMIN });
-  run([path.join(MSG, "relay.js")], { HOME: B.HOME, ZENOS_RELAY_PORT: String(base + 1), ZENOS_RELAY_ADMIN: ADMIN });
+  run([path.join(MSG, "relay.js")], { HOME: A.HOME, ZENOS_RELAY_DIRECTORY: path.join(__dirname, "fixtures", "msg-directory.json"), ZENOS_RELAY_PORT: String(base), ZENOS_RELAY_ADMIN: ADMIN });
+  run([path.join(MSG, "relay.js")], { HOME: B.HOME, ZENOS_RELAY_DIRECTORY: path.join(__dirname, "fixtures", "msg-directory.json"), ZENOS_RELAY_PORT: String(base + 1), ZENOS_RELAY_ADMIN: ADMIN });
   for (const r of [A, B]) r.key = (await wait(() => j(r.url + "/.well-known/zenos-relay"))).key;
   const au = { ministry: crypto.generateKeyPairSync("ed25519"), prefecture: crypto.generateKeyPairSync("ed25519") };
   const raw = (kp) => b64(kp.publicKey.export({ format: "der", type: "spki" }).subarray(12));
@@ -28,9 +28,20 @@ const wait = async (f, ms = 15000) => { const t = Date.now(); while (Date.now() 
     entries: [entry("ministry.example", A.url, A.key, 5), entry("city.example", B.url, B.key, 3)] };
   await j(A.url + "/fed/config", "POST", { org: "ministry.example", url: A.url, members }, { "X-Zenos-Admin": ADMIN });
   await j(B.url + "/fed/config", "POST", { org: "city.example", url: B.url, members }, { "X-Zenos-Admin": ADMIN });
-  const za = `http://127.0.0.1:${base + 10}`, zb = `http://127.0.0.1:${base + 20}`;
-  run([path.join(MSG, "client.js"), "zenos", String(base + 10)], { HOME: home(), ZENOS_RELAY: A.url });
-  run([path.join(MSG, "client.js"), "sato", String(base + 20)], { HOME: home(), ZENOS_RELAY: B.url });
+  const za = `http://127.0.0.1:${base + 10}`, zb = `http://127.0.0.1:${base + 20}`, ha = home(), hb = home();
+  run([path.join(MSG, "client.js"), "zenos", String(base + 10)], { HOME: ha, ZENOS_RELAY: A.url });
+  run([path.join(MSG, "client.js"), "sato", String(base + 20)], { HOME: hb, ZENOS_RELAY: B.url });
+  // the local port wants the key that only this account can read; the test reads it as the PC's own window would
+  const keyOf = (h, a) => { try { return fs.readFileSync(path.join(h, ".local/share/zenos/msg/store", a, "local.key"), "utf8"); } catch { return ""; } };
+  const plain = globalThis.fetch;
+  globalThis.fetch = (url, o = {}) => { const k = url.startsWith(za) ? keyOf(ha, "zenos") : url.startsWith(zb) ? keyOf(hb, "sato") : "";
+    return plain(url, k ? { ...o, headers: { ...(o.headers || {}), "X-Zenos-Local": k } } : o); };
+  await wait(() => keyOf(ha, "zenos"));
+  await wait(async () => (await plain(za + "/api/me")).status);              // the port is listening
+  check("the local port refuses a request without the key", (await plain(za + "/api/me")).status === 401);
+  check("the local port refuses another site's page", (await fetch(za + "/api/send", { method: "POST", headers: { Origin: "http://evil.example" }, body: "{}" })).status === 403);
+  check("the local port refuses another host name (DNS rebinding)", await new Promise((ok) => require("http").get({ host: "127.0.0.1", port: base + 10, path: "/api/me", headers: { Host: "evil.example:" + (base + 10), "X-Zenos-Local": keyOf(ha, "zenos") } }, (r) => ok(r.statusCode === 403)).on("error", () => ok(false))));
+  check("the key file is readable by this account only", (fs.statSync(path.join(ha, ".local/share/zenos/msg/store/zenos/local.key")).mode & 0o077) === 0);
   check("both clients start on their own organization's relay", !!(await wait(() => j(za + "/api/me"))) && !!(await wait(() => j(zb + "/api/me"))));
   await new Promise((z) => setTimeout(z, 1500));
   let r = await j(za + "/api/send", "POST", { to: "sato@city.example", text: "Please confirm the shelter list.", level: 2 });

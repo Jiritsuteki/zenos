@@ -289,6 +289,53 @@ def _heartbeat():
 
 
 OPEN_FLAG = os.path.join(zconf.data(), "open.flag")
+OPEN_HOLDERS = os.environ.get("ZENOS_OPEN_HOLDERS", "/run/zenos/open-holders.json")
+
+
+def _proc_stat(pid):
+    """(parent pid, start time) of a process, or None when it is gone"""
+    try:
+        f = open("/proc/%d/stat" % int(pid)).read().rsplit(")", 1)[1].split()
+        return int(f[1]), f[19]
+    except (OSError, IndexError, ValueError):
+        return None
+
+
+def holders_alive(path=OPEN_HOLDERS, min_level=4):
+    """True while a process that received L4+ plaintext from zenos-keyd (recorded there, root-owned), or a process it
+    started, is still alive. Children are followed and added as they appear, so handing the plaintext to a child and
+    exiting keeps the cut. The user's own open.flag can only add to this, never lift it."""
+    try:
+        recs = json.load(open(path))
+    except Exception:
+        return False
+    live = {}
+    for h in recs:
+        st = _proc_stat(h.get("pid", 0))
+        if st and st[1] == h.get("start") and int(h.get("level", 0)) >= min_level:
+            live[int(h["pid"])] = h
+    if not live:
+        return False
+    grown = True
+    while grown:                                   # descendants of a holder hold it too
+        grown = False
+        for d in os.listdir("/proc"):
+            if d.isdigit() and int(d) not in live:
+                st = _proc_stat(d)
+                if st and st[0] in live:
+                    live[int(d)] = {"pid": int(d), "start": st[1], "level": live[st[0]]["level"], "uid": live[st[0]].get("uid")}
+                    grown = True
+    try:
+        tmp = path + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump(list(live.values()), f)
+        os.chmod(tmp, 0o644)
+        os.replace(tmp, path)
+    except OSError:
+        pass
+    return True
+
+
 def open_flag_watch():
     if zconf.SBIN not in sys.path:
         sys.path.insert(0, zconf.SBIN)
@@ -297,9 +344,18 @@ def open_flag_watch():
     while True:
         want = False
         try:
-            want = int((open(OPEN_FLAG).read().strip() or "0")) >= zopenguard.MIN_LEVEL
+            fd = os.open(OPEN_FLAG, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)   # in the user's folder: no links,
+            try:                                                                      # no pipes that would block
+                import stat as _st
+                want = _st.S_ISREG(os.fstat(fd).st_mode) and int((os.read(fd, 16).strip() or b"0")) >= zopenguard.MIN_LEVEL
+            finally:
+                os.close(fd)
         except Exception:
             want = False
+        try:
+            want = want or holders_alive(min_level=zopenguard.MIN_LEVEL)
+        except Exception:
+            want = True                              # unsure: keep the network cut
         if want and not cut:
             zopenguard._cut_on(); cut = True
             log({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "type": "open-netcut", "state": "on"})

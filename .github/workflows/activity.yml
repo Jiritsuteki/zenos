@@ -1,5 +1,7 @@
 name: activity
 # The repository's recent activity as one JSON file on the `activity` branch, read by the feedback board.
+# Two jobs, so the token that can write never meets the repository's code: "collect" runs the script with a token
+# that can only read; "publish" runs no code from the repository and only pushes the one file.
 on:
   schedule:
     - cron: "*/30 * * * *"
@@ -13,24 +15,45 @@ on:
     types: [published]
   milestone:
   workflow_dispatch:
-permissions:
-  contents: write
+permissions: {}
 concurrency:
   group: activity
   cancel-in-progress: true
 jobs:
-  activity:
+  collect:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Collect
         run: python3 tools/github_activity.py /tmp/activity.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: activity
+          path: /tmp/activity.json
+          retention-days: 1
+  publish:
+    needs: collect
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: activity
+          path: /tmp/in
       - name: Publish on the activity branch
         run: |
+          python3 -c "import json,sys; json.load(open('/tmp/in/activity.json'))"   # one JSON file, nothing else
           mkdir /tmp/pub && cd /tmp/pub && git init -q -b activity
-          cp /tmp/activity.json .
+          cp /tmp/in/activity.json .
           git add activity.json
           git -c user.name="zenos-activity" -c user.email="hello@zenos-os.org" commit -q -m "activity"
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" activity

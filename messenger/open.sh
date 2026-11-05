@@ -14,4 +14,6 @@ case $V in
   requests) T="ZENOS Approvals"; I="$R/icons/zenos-approvals.svg";;
   *) V="";;
 esac
-setsid python3 "$M/zenos_webapp.py" "http://127.0.0.1:$P/${V:+#$V}" "$T" "$I" 980x620 >"/tmp/zenos-msgwin-$A.log" 2>&1 < /dev/null &
+K=""; for i in 1 2 3 4 5; do K=$(cat "$HOME/.local/share/zenos/msg/store/$A/local.key" 2>/dev/null) && [ -n "$K" ] && break; sleep 1; done
+# the key goes through the environment (readable only by this account), never the command line (readable by everyone)
+ZENOS_WEBAPP_START="http://127.0.0.1:$P/open?k=$K${V:+#$V}" setsid python3 "$M/zenos_webapp.py" "http://127.0.0.1:$P/${V:+#$V}" "$T" "$I" 980x620 >"/tmp/zenos-msgwin-$A.log" 2>&1 < /dev/null &
