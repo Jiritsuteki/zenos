@@ -28,6 +28,9 @@ install -m 644 "$SRC/system/lib/zledger.py" "$SRC/system/lib/zdecide.py" "$SRC/s
 echo "== key service (beside the audit node; it shares the proven decision program)"
 install -m 755 "$SRC/system/sbin/zenos_keysvc.py" "$G/audit/"
 install -m 644 "$SRC/system/lib/zkeysvc.py" "$SRC/system/lib/zwebauthn.py" "$G/audit/"
+echo "== ZENOS Data peers (key and storage peers for servers' records)"
+install -m 755 "$SRC/system/sbin/zenos_datapeer.py" "$G/audit/"
+install -m 644 "$SRC/system/lib/zdata.py" "$G/audit/"
 # the proven chain check (formal/), built the same way as for the zenos package
 LAKE="${LAKE:-$(command -v lake || echo /opt/lean/lean-4.34.1-linux/bin/lake)}"
 [ -x "$LAKE" ] || { echo "Lean 4 (lake) is needed to build zenos-decide: docs/FORMAL_VERIFICATION.md" >&2; exit 1; }
@@ -46,7 +49,8 @@ mkdir -p "$D/examples"
 cp "$SRC/packaging/grid/README.md" "$SRC/LICENSE" "$SRC/NOTICE" "$D/"
 cp "$SRC"/config/examples/storage-node.example.json "$SRC"/config/examples/grid-bootstrap.example.json \
    "$SRC"/config/examples/auditnode.example.json "$SRC"/config/examples/grid.example.json \
-   "$SRC"/config/examples/keysvc-server.env.example "$D/examples/"
+   "$SRC"/config/examples/keysvc-server.env.example "$SRC"/config/examples/datapeer.example.json \
+   "$SRC"/config/examples/datapeer.env.example "$D/examples/"
 
 echo "== control"
 find "$P" -name __pycache__ -prune -exec rm -rf {} +
@@ -61,13 +65,15 @@ Architecture: amd64
 Installed-Size: $SIZE
 Maintainer: The ZENOS Authors <zenos-authors@users.noreply.invalid>
 Depends: nodejs (>= 20), python3 (>= 3.11), python3-cryptography
-Description: ZENOS grid servers: storage node, bootstrap, audit node and key service (Developer Preview)
+Description: ZENOS grid servers: storage node, bootstrap, audit node, key service, data peers (Developer Preview)
  Servers for a ZENOS grid, run by each party outside the PCs: a storage node keeps
  encrypted, erasure-coded shards and serves them only to certified PCs cleared for
  their level; the bootstrap is the closed network's own entry point; the audit node
  keeps a copy of every enrolled PC's ledger and compares it with the other parties'
  audit nodes, so a rewritten or forked history is caught; the key service holds the
- keys of sealed files and releases one file's key at a time to a healthy PC.
+ keys of sealed files and releases one file's key at a time to a healthy PC;
+ the data peers keep server programs' records with no plaintext and no key at
+ rest (ZENOS Data).
  .
  This is a proof of concept and not yet safe for real classified data.
 EOF
@@ -76,7 +82,7 @@ cat > "$P/DEBIAN/postinst" <<'EOF'
 set -e
 if [ "$1" = "configure" ] && [ -d /run/systemd/system ]; then
     systemctl daemon-reload || true
-    for u in zenos-storage-node zenos-grid-bootstrap zenos-auditnode zenos-keysvc; do
+    for u in zenos-storage-node zenos-grid-bootstrap zenos-auditnode zenos-keysvc zenos-datapeer; do
         systemctl enable "$u.service" >/dev/null 2>&1 || true   # inert until its config file exists
         systemctl try-restart "$u.service" || true
     done
@@ -86,7 +92,7 @@ cat > "$P/DEBIAN/prerm" <<'EOF'
 #!/bin/sh
 set -e
 if [ "$1" = "remove" ] && [ -d /run/systemd/system ]; then
-    for u in zenos-storage-node zenos-grid-bootstrap zenos-auditnode zenos-keysvc; do
+    for u in zenos-storage-node zenos-grid-bootstrap zenos-auditnode zenos-keysvc zenos-datapeer; do
         systemctl disable --now "$u.service" >/dev/null 2>&1 || true
     done
 fi

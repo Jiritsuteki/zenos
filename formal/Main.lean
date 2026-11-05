@@ -9,6 +9,7 @@ import ZenosFormal.Orchestrator
 import ZenosFormal.Federation
 import ZenosFormal.Model
 import ZenosFormal.Approval
+import ZenosFormal.DataStore
 
 /-!
 `zenos-decide`: reads one JSON request on stdin, writes one JSON answer on stdout, runs the proven decision
@@ -48,6 +49,9 @@ functions of `ZenosFormal.Decide` and nothing else. Any input it cannot read is 
    "max_level"}                                                       -> {"allow": bool, "reason": str|null}
   {"op":"passkey_approval", "sig_ok", "challenge_ok", "origin_ok", "user_verified", "counter_ok", "near",
    "near_required", "exception_allowed", "exception_used"}           -> {"ok": bool, "reason": str|null}
+  {"op":"share", "enrolled", "sig_ok", "fresh", "now", "last_seen", "silence", "person_verified", "purpose_ok",
+   "level", "clearance", "grant_ok", "recent", "rate_max", "server_recent", "server_rate_max"}
+      -> {"allow": bool, "reason": str|null}                          (a key peer of ZENOS Data)
   {"op":"sysegress", "system", "listed", "loopback", "enforce"}       -> {"cut": bool}   (the network sentinel)
   {"op":"route", "allowed":[..], "frags":[{"to", "atoms":[{"record","role":"ident"|"attr"|"other"}]}]}
       -> {"allow": bool, "reason": str|null}                          (the conductor)
@@ -290,6 +294,16 @@ def answer (j : J) : Except String J := do
     return match decideInstall r with
       | .allow => .obj [("allow", .bool true), ("reason", .null)]
       | .refuse why => .obj [("allow", .bool false), ("reason", .str why)]
+  | "share" =>
+    let r : ShareReq := { enrolled := ← getB j "enrolled", sigOk := ← getB j "sig_ok", fresh := ← getB j "fresh",
+                          now := ← getN j "now", lastSeen := ← getN j "last_seen", silence := ← getN j "silence",
+                          personVerified := ← getB j "person_verified", purposeOk := ← getB j "purpose_ok",
+                          level := ← getN j "level", clearance := ← getN j "clearance", grantOk := ← getB j "grant_ok",
+                          recent := ← getN j "recent", rateMax := ← getN j "rate_max",
+                          serverRecent := ← getN j "server_recent", serverRateMax := ← getN j "server_rate_max" }
+    return match decideShare r with
+      | none => .obj [("allow", .bool true), ("reason", .null)]
+      | some why => .obj [("allow", .bool false), ("reason", .str why)]
   | "passkey_approval" =>
     let sigOk ← getB j "sig_ok"
     let challengeOk ← getB j "challenge_ok"

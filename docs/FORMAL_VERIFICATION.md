@@ -110,6 +110,10 @@ for that request only (X25519, HKDF, AES-256-GCM); the answer is signed with the
 | `changed_file_refused` | A model folder with any file added, changed or missing is never loaded. |
 | `model_one_key_not_enough`, `model_one_node_not_enough` | One officer's key, or one audit node, never lets a model in. |
 | `model_level_bound` | A model never sees data above the level its record allows. |
+| `share_sound` | A ZENOS Data key peer releases its share of a record's key only when the server is enrolled and signed this request, recent and not seen before, the audit node heard from the server within the silence limit, the person is verified by the sign-in service, the purpose is registered, the person's clearance covers the record's level or a grant names the record, and both rate limits hold (`DataStore.lean`). |
+| `above_clearance_no_record` | When no grant names the record and the person's clearance is below its level, every key peer refuses, so the key cannot be made with any threshold of at least one. |
+| `one_peer_not_enough` | With a threshold of two or more, one key peer's share never makes a record's key, however that peer decides. |
+| `share_silent_refused`, `share_unverified_refused` | A server the audit node no longer hears from, or a person not verified, gets no share. |
 | `api_sound`, `api_other_version_refused`, `api_denied_refused` | A model called through an API is used only at the provider, address, model and version pinned in its record, and never at a provider ZENOS refuses. |
 | `sysegress_cut_only_unlisted`, `sysegress_listed_kept` | The network sentinel cuts a system account's connection only in enforce mode and only to a destination that is not listed; listed destinations and people's own programs are never cut by this rule. |
 

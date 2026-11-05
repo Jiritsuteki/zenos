@@ -9,6 +9,7 @@ control. Only the key service holds keys that open files; it releases them one f
 | `zenos-grid-bootstrap` | the closed network's own entry point, so nothing touches the public internet | `/etc/zenos/grid-bootstrap.json` |
 | `zenos-storage-node` | keeps encrypted, erasure-coded shards; serves them only to certified PCs cleared for the level | `/etc/zenos/storage-node.json` |
 | `zenos-auditnode` | keeps a copy of every enrolled PC's ledger and compares it with the other parties' audit nodes | `/etc/zenos/auditnode.json` |
+| `zenos-datapeer` | a key peer or a storage peer of ZENOS Data: server programs' records with no plaintext and no key at rest ([docs/DATA_STORE.md](../../docs/DATA_STORE.md)) | `/etc/zenos/datapeer.env` and `/etc/zenos/datapeer.json` |
 | `zenos-keysvc` | holds the keys of sealed files and releases one file's key at a time to a healthy PC ([docs/KEY_SERVICE.md](../../docs/KEY_SERVICE.md)) | `/etc/zenos/keysvc-server.env` |
 
 Each service starts only once its config file exists. Examples are in `/usr/share/doc/zenos-grid/examples`.
@@ -35,6 +36,16 @@ The public key it prints goes into every node's and every PC's config (`admin`).
 A node without a valid certificate starts but holds nothing. A node never takes a file above its own
 clearance, whoever asks. Files are spread 3-of-5 with at most two shards per zone, so a whole site can
 be lost and every file still restores.
+
+## A ZENOS Data peer
+
+1. Write `/etc/zenos/datapeer.env` (`ROLE=key` or `ROLE=store`, `PORT`) and `/etc/zenos/datapeer.json` (the
+   enrolled servers with their public keys and purposes, the sign-in services, clearances, limits and the audit
+   node; see `datapeer.example.json`), and put a TLS certificate in `/etc/zenos/datapeer.crt` and `.key`.
+2. `sudo systemctl start zenos-datapeer`. For a key peer, give its public key to the servers' administrators:
+   `sudo python3 /usr/share/zenos-grid/audit/zenos_datapeer.py --state /var/lib/private/zenos-data --pub`.
+3. Run the key peers at different parties (k of n, n at least 3, k at least 2). A changed `datapeer.json` takes
+   effect after `systemctl restart zenos-datapeer`.
 
 ## A ZENOS PC
 

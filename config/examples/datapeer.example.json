@@ -1,0 +1,17 @@
+{
+  "servers": {
+    "cases": {
+      "pub": "<the server's Ed25519 public key, base64>",
+      "purposes": {"cases": ["casework", "audit"], "cases.index": ["index"]},
+      "rate_max": 600
+    }
+  },
+  "idps": ["<the organization's sign-in service, Ed25519 public key, base64>"],
+  "clearance": {"tanaka": 3, "sato": 4},
+  "grants": {},
+  "rate_max": 30,
+  "window": 60,
+  "skew": 120,
+  "silence": 90,
+  "audit": {"url": "https://audit.example.org", "pub": "<the audit node's public key, base64>"}
+}

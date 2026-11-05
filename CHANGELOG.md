@@ -8,7 +8,18 @@ Still a preview for testing and evaluation; production use of sensitive work wai
 [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md). This release brings what was in the source since 0.1.2: the off-PC key
 service (keys of newly sealed files no longer kept on the PC), the release ledger for packages and AI models,
 ZENOS Office on the LibreOffice engine, approvals with a passkey on the officer's phone, sign-ins in the ledger,
-messages across organizations, and the conductor for work with several AI models.
+messages across organizations, the conductor for work with several AI models, and ZENOS Data, which keeps a
+server program's records with no plaintext and no key at rest. The server side (audit node, key service, storage
+and data peers) is released as the `zenos-grid` package next to the installer image.
+
+**ZENOS Data: server records with no plaintext and no key at rest**
+- `zdata.py` for server programs, and key and storage peers (`zenos_datapeer.py`, `zenos-datapeer.service` in
+  `zenos-grid`): each record encrypted with its own key, copied to storage peers that hold only ciphertext, its key
+  split k-of-n (Shamir over GF(2^8)) and sealed to key peers of different parties. A key peer releases its share only
+  for an enrolled server's fresh signed request, a person verified by the organization's sign-in service, a
+  registered purpose and a level within the person's clearance (or a grant), within rate limits and while the audit
+  node hears from the server; every answer is in its chained ledger. Blind indexes for equality lookups. Lean:
+  `DataStore.lean` (`share_sound`, `above_clearance_no_record`, `one_peer_not_enough`). docs/DATA_STORE.md.
 
 **Sign-ins in the ledger**
 - A new root service, `zenos-signinledger`, writes sign-ins to the PC into the ledger shipped to the audit nodes:

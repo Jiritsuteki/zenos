@@ -1,0 +1,39 @@
+[Unit]
+Description=ZENOS Data peer (a key peer or a storage peer for servers that keep their records with ZENOS Data)
+Documentation=file:///usr/share/doc/zenos-grid/README.md
+ConditionPathExists=/etc/zenos/datapeer.env
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+StateDirectory=zenos-data
+StateDirectoryMode=0700
+EnvironmentFile=/etc/zenos/datapeer.env
+LoadCredential=datapeer.json:/etc/zenos/datapeer.json
+LoadCredential=datapeer.crt:/etc/zenos/datapeer.crt
+LoadCredential=datapeer.key:/etc/zenos/datapeer.key
+ExecStart=/usr/bin/python3 -I /usr/share/zenos-grid/audit/zenos_datapeer.py --role ${ROLE} --state /var/lib/zenos-data --conf ${CREDENTIALS_DIRECTORY}/datapeer.json --host 0.0.0.0 --port ${PORT} --cert ${CREDENTIALS_DIRECTORY}/datapeer.crt --key ${CREDENTIALS_DIRECTORY}/datapeer.key
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target
