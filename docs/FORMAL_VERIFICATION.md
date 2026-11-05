@@ -160,6 +160,9 @@ passed as facts.
   file, freeze or thaw processes, cut a destination), the folder-level and CIDR lookups, and the readers in
   `formal/Main.lean`.
 - The network sensor (eBPF/bpftrace) that reports each outbound send.
+- The sentinel's clock: `prune_prune` assumes the times it is given never go backwards. The sentinel currently
+  stamps sends with wall-clock time, which can jump; a monotonic clock is tracked in
+  [#58](https://github.com/zenos-org/zenos/issues/58).
 - Lean's compiler and runtime, the Linux kernel, Python.
 - What the proofs do not speak about: the firewall rules themselves, ledger shipping, the trust agent and the
   messenger are tested, not proved. The signature model in `Protocol.lean` is symbolic (unforgeability and
@@ -192,8 +195,9 @@ Lean 4 v4.34.1 (`formal/lean-toolchain`); no other dependency.
 Review of the specifications is the most useful help for this part: whether each theorem states what it should,
 and whether a gap between a theorem and what a service actually does is missing from the list above.
 
-- Walkthroughs: [where file content may go (`Flow.lean`)](https://github.com/zenos-org/zenos/discussions/11) and
-  [how the ledger catches a rewritten history (`Ledger.lean`)](https://github.com/zenos-org/zenos/discussions/17).
+- Walkthroughs: [where file content may go (`Flow.lean`)](https://github.com/zenos-org/zenos/discussions/11),
+  [how the ledger catches a rewritten history (`Ledger.lean`)](https://github.com/zenos-org/zenos/discussions/17) and
+  [what may leave the PC (`Egress.lean`)](https://github.com/zenos-org/zenos/discussions/59).
 - A theorem that says less than it should, or a missing assumption: open an
   [issue](https://github.com/zenos-org/zenos/issues) or reply in [Discussions](https://github.com/zenos-org/zenos/discussions).
 - A way to get data out despite the decisions: please report it privately as described in
