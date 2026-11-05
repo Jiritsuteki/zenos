@@ -7,6 +7,7 @@ import ZenosFormal.KeyService
 import ZenosFormal.Supply
 import ZenosFormal.Orchestrator
 import ZenosFormal.Federation
+import ZenosFormal.Model
 
 /-!
 `zenos-decide`: reads one JSON request on stdin, writes one JSON answer on stdout, runs the proven decision
@@ -40,6 +41,10 @@ functions of `ZenosFormal.Decide` and nothing else. Any input it cannot read is 
       -> {"allow": bool, "by": "clearance"|"grant"|null, "reason": str|null}   (the key service)
   {"op":"install", "nodes":[..], "votes":[{"node","sig_ok","record"}], "record", "hash_ok", "signers":[..],
    "officers":[..], "required", "revoked", "ring_open", "now"}       -> {"allow": bool, "reason": str|null}
+  {"op":"model", the fields of "install" for the model's record, "kind_ok", "files_ok", "level", "max_level"}
+      -> {"allow": bool, "reason": str|null}                          (an AI model kept on the PC, before loading)
+  {"op":"model_api", the fields of "install" for the pinned identity, "kind_ok", "same_model", "denied", "level",
+   "max_level"}                                                       -> {"allow": bool, "reason": str|null}
   {"op":"sysegress", "system", "listed", "loopback", "enforce"}       -> {"cut": bool}   (the network sentinel)
   {"op":"route", "allowed":[..], "frags":[{"to", "atoms":[{"record","role":"ident"|"attr"|"other"}]}]}
       -> {"allow": bool, "reason": str|null}                          (the conductor)
@@ -245,6 +250,18 @@ def presence (j : J) : Except String Presence := do
            originOk := ← getB j "origin_ok", userVerified := ← getB j "user_verified",
            counterOk := ← getB j "counter_ok" }
 
+def installReq (j : J) : Except String InstallReq := do
+  let votes ← (← getArr j "votes").mapM fun v => do
+    return ({ node := ← getS v "node", sigOk := ← getB v "sig_ok", record := ← getS v "record" } : Vote)
+  return { nodes := ← getSs j "nodes", votes, record := ← getS j "record", hashOk := ← getB j "hash_ok",
+           signers := ← getSs j "signers", officers := ← getSs j "officers",
+           required := ← getN j "required", revoked := ← getB j "revoked",
+           ringOpen := ← getN j "ring_open", now := ← getN j "now" }
+
+def installJ : InstallDecision → J
+  | .allow => .obj [("allow", .bool true), ("reason", .null)]
+  | .refuse why => .obj [("allow", .bool false), ("reason", .str why)]
+
 def answer (j : J) : Except String J := do
   match ← getS j "op" with
   | "open" => return decisionJ (decideOpen (← openReq j))
@@ -270,6 +287,13 @@ def answer (j : J) : Except String J := do
     return match decideInstall r with
       | .allow => .obj [("allow", .bool true), ("reason", .null)]
       | .refuse why => .obj [("allow", .bool false), ("reason", .str why)]
+  | "model" =>
+    return installJ (decideModel { ledger := ← installReq j, kindOk := ← getB j "kind_ok", filesOk := ← getB j "files_ok",
+                                   level := ← getN j "level", maxLevel := ← getN j "max_level" })
+  | "model_api" =>
+    return installJ (decideApiModel { ledger := ← installReq j, kindOk := ← getB j "kind_ok",
+                                      sameModel := ← getB j "same_model", denied := ← getB j "denied",
+                                      level := ← getN j "level", maxLevel := ← getN j "max_level" })
   | "route" =>
     let frags ← (← getArr j "frags").mapM fun f => do
       let atoms ← (← getArr f "atoms").mapM fun a => do

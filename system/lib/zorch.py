@@ -139,6 +139,13 @@ class HTTPProvider:
         self.key = Path(os.path.expanduser(kf)).read_text().strip() if kf else ""
         if not provider_ok(conf):
             raise Refused(f"provider {self.name} is not used by ZENOS")
+        # the model is called only at the identity pinned in the release ledger (provider, address, model, version),
+        # when this PC checks the supply (zmodel.py; /etc/zenos/supply.json)
+        import zmodel
+        ok, why = zmodel.check_api(conf, 0)
+        if not ok:
+            record("model-api-refused", provider=self.name, model=self.model, reason=why)
+            raise Refused(f"provider {self.name}: the model {self.model} is not pinned in the release ledger ({why})")
 
     def complete(self, prompt):
         if self.kind == "anthropic":

@@ -104,6 +104,11 @@ for that request only (X25519, HKDF, AES-256-GCM); the answer is signed with the
 | `one_node_not_enough` | With two or more audit nodes configured, one node vouching never lets a package in. |
 | `one_key_not_enough` | When two or more officers must sign, one release key never lets a package in. |
 | `revoked_refused` | An agreed revocation keeps a package out. |
+| `model_sound` | An AI model kept on the PC is loaded only when its record is a model record, every file in its folder is in the record with the same SHA-256 and every listed file is there, the data is within the record's level, and the ledger holds the record as for a package (`Model.lean`). |
+| `changed_file_refused` | A model folder with any file added, changed or missing is never loaded. |
+| `model_one_key_not_enough`, `model_one_node_not_enough` | One officer's key, or one audit node, never lets a model in. |
+| `model_level_bound` | A model never sees data above the level its record allows. |
+| `api_sound`, `api_other_version_refused`, `api_denied_refused` | A model called through an API is used only at the provider, address, model and version pinned in its record, and never at a provider ZENOS refuses. |
 | `sysegress_cut_only_unlisted`, `sysegress_listed_kept` | The network sentinel cuts a system account's connection only in enforce mode and only to a destination that is not listed; listed destinations and people's own programs are never cut by this rule. |
 
 The PC checks the node answers' signatures, the officers' signatures over the record digest and the file's SHA-256

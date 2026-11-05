@@ -173,6 +173,16 @@ def candidates(deb, nodes, keys, required, ring, get=fetch, now=None):
     copies of the same record are put together (a copy with signatures stripped cannot hide them either)."""
     sha = sha256_file(deb)
     name, version, arch = deb_fields(deb)
+    ident = lambda m: m.get("kind", "zenos-release") == "zenos-release" and m.get("sha256") == sha and \
+        (m.get("name"), m.get("version"), m.get("arch")) == (name, version, arch)
+    return ledger_candidates(sha, ident, {"name": name, "version": version}, nodes, keys, required, ring, get, now)
+
+
+def ledger_candidates(sha, ident, about, nodes, keys, required, ring, get=fetch, now=None):
+    """the same for anything the ledger describes by one SHA-256: a package file, or an AI model (zmodel.py: the
+    digest of its files list, or of the API identity it is pinned to). ident(manifest) says whether a record is the
+    thing being checked (`hash_ok`); about: {"name", "version"} for the facts."""
+    name, version = about.get("name"), about.get("version")
     answers = {}
     for n in nodes:
         try:
@@ -200,7 +210,7 @@ def candidates(deb, nodes, keys, required, ring, get=fetch, now=None):
     for d in sorted(held, key=lambda x: (-len(held[x]), x)):
         rec = dict(records[d], sigs=list(sigs.get(d, {}).values()), digest=d)
         m = rec["manifest"]
-        hash_ok = m.get("sha256") == sha and (m.get("name"), m.get("version"), m.get("arch")) == (name, version, arch)
+        hash_ok = m.get("sha256") == sha and bool(ident(m))
         rings = m.get("rings") or {}
         ring_open = int(rings.get(str(ring), max([int(x) for x in rings.values()] or [0])))
         votes = [{"node": n, "sig_ok": n in reachable, "record": d if n in held[d] else ""} for n in answers]

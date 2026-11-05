@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+**AI models**
+- AI models in the release ledger: a model kept on the PC (weights, tokenizer, settings, adapters) is loaded only
+  when every file is the released one, byte for byte, its record is signed by two or more release officers and held
+  by a majority of the audit nodes, and the data is within the record's level (`zmodel.py`, `zenos_model.py`,
+  zenos-decide "model", proved in `Model.lean`). The models folder is watched (`zenos-supplywatch`: a changed or
+  unreleased model is quarantined) and checked hourly (`zenos-integrity`). Models called through an API are pinned
+  to provider, address, model and version (zenos-decide "model_api"); refused providers stay refused. See "If a
+  model's files are changed" in docs/THREAT_MODEL.md.
+
 **Office files**
 - The ZENOS office engine (docs/OFFICE_ENGINE.md; `zoffice.py`): Word, Excel and PowerPoint files, new and old
   formats (.docx .doc .xlsx .xls .pptx .ppt), are read, written and drawn by LibreOffice, run in the ZENOS sandbox

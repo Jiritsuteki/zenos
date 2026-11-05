@@ -99,6 +99,31 @@ and in a VM with lockdown "integrity" and `ima_policy=tcb` the kernel measured e
 (`security.ima`), which Debian's packages do not carry; signing ZENOS's own files and appraising them is the next
 step, and the measurement list is to be sent to the audit nodes with a TPM quote.
 
+## If a model's files are changed
+
+On 2 November 2026 researchers at MIT CSAIL published "Weight-Space Programming"
+(https://rikiyat.github.io/blog/weight-space-programming/): a frontier model read and wrote another model's weights
+directly. In their report, rewriting 0.016% of a small model's weights (131,072 values) changed its behaviour
+markedly, and the weights of a game-playing model were written from scratch without training. A model file can
+therefore look the same and behave differently, for example wake on one particular input. Neither a person looking
+at the weights nor running the model on tests is sure to see it.
+
+ZENOS does not judge what a model does. It treats a model like a package: the files must be, byte for byte, the
+ones that were released (in the repository, not in a release yet).
+
+| | What ZENOS does |
+|---|---|
+| A model kept on the PC (speech-to-text, a model an organization runs, a model called from Studio) | It lives in a folder under `/var/lib/zenos/models` with its release record: every file (weights, tokenizer, settings, adapters such as LoRA) with its SHA-256, the model's name, version, publisher, where it came from, its licence and the highest level of data it may see. The record is released like a package: two or more release officers sign it and it goes into the audit nodes' ledgers (`zenos_release.py model`). Before a model is loaded, the proven decision (`Model.lean`, zenos-decide "model") allows it only when the record is a model record, every file in the folder is in it with the same SHA-256 and every listed file is there, the data is within the record's level, and the ledger holds the record as for a package. Proved: one changed file, or one officer's key, or one audit node, never lets a model be loaded; a model never sees data above its level. |
+| Putting a model in | Only root writes to the models folder, and only through `zenos_model.py install`, which checks the signatures and the ledger first. A person cannot load a model of their own choosing on their own. |
+| A model file changed or added later | `zenos-supplywatch` watches the models folder: a folder whose files are not the released ones, or that the ledger does not hold, is moved to quarantine as a whole and reported to the audit nodes. `zenos-integrity` checks every model's files against its record every hour, without the network. |
+| A model called through an API | Its weights cannot be seen, so what is pinned is whom it is called at: provider, address, model name and version, released the same way (`zenos_release.py model-api`). The conductor calls a provider only at the pinned identity (zenos-decide "model_api"); when a provider changes the version, the new one is pinned by the officers before it is used. Providers ZENOS refuses (Google, Qwen, providers under laws that compel handing over data without due process) stay refused even if pinned. |
+
+What this does not stop: a model whose publisher put the trigger in before it was released has the right
+fingerprints, and passes. Against that, the fingerprints only make sure every PC runs the same model that was
+reviewed; finding a trigger in the weights themselves is a research question. ZENOS follows the work on auditing
+weights without running the model ("auditing without evaluation" in the article above) and will add such a check
+when one exists that can be relied on. Off unless `/etc/zenos/supply.json` turns the supply check on.
+
 ## Known weaknesses in dependencies
 
 - `xlsx` (SheetJS) is no longer published on npm; the npm copy (0.18.5) has known vulnerabilities (prototype

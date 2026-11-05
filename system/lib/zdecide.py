@@ -226,6 +226,35 @@ def install(f):
         return False, "no decision: %s" % e
 
 
+def _install_fields(f):
+    return {"nodes": [str(n) for n in f["nodes"]],
+            "votes": [{"node": str(v["node"]), "sig_ok": v["sig_ok"] is True, "record": str(v["record"])} for v in f["votes"]],
+            "record": str(f["record"]), "hash_ok": f["hash_ok"] is True, "signers": [str(s) for s in f["signers"]],
+            "officers": [str(o) for o in f["officers"]], "required": max(0, int(f["required"])),
+            "revoked": f["revoked"] is not False, "ring_open": max(0, int(f["ring_open"])), "now": max(0, int(f["now"]))}
+
+
+def model(f):
+    """(allowed, reason) for loading an AI model kept on the PC; f: the facts from zmodel.facts"""
+    try:
+        a = ask({"op": "model", **_install_fields(f), "kind_ok": f["kind_ok"] is True, "files_ok": f["files_ok"] is True,
+                 "level": max(0, int(f["level"])), "max_level": max(0, int(f["max_level"]))})
+        return bool(a["allow"]), a.get("reason")
+    except (Refused, KeyError, TypeError, ValueError) as e:
+        return False, "no decision: %s" % e
+
+
+def model_api(f):
+    """(allowed, reason) for calling an AI model through an API at its pinned identity"""
+    try:
+        a = ask({"op": "model_api", **_install_fields(f), "kind_ok": f["kind_ok"] is True,
+                 "same_model": f["same_model"] is True, "denied": f["denied"] is not False,
+                 "level": max(0, int(f["level"])), "max_level": max(0, int(f["max_level"]))})
+        return bool(a["allow"]), a.get("reason")
+    except (Refused, KeyError, TypeError, ValueError) as e:
+        return False, "no decision: %s" % e
+
+
 def sysegress(system, listed, loopback, enforce):
     """cut this destination? (the network sentinel's rule for system accounts); no decision cuts in enforce mode"""
     try:

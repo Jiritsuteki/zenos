@@ -12,6 +12,13 @@ officer key, and neither does any central service.
   zenos_release.py sign RECORD.json --key OFFICER.key --by NAME
   zenos_release.py verify RECORD.json --keys DIR --required N
   zenos_release.py revoke SHA256 --reason TEXT --out RECORD.json      (then sign it like a release)
+  zenos_release.py model FOLDER --name N --version V --publisher P --source URL --licence L --max-level 0..5
+                   [--rings 0=0,1=+1d] --out RECORD.json
+      an AI model kept on the PCs: every file of the folder (weights, tokenizer, settings, adapters) with its
+      SHA-256 (zmodel.py); sign and publish it like a package, then `zenos_model.py install` on the PCs
+  zenos_release.py model-api --kind anthropic|openai|openai-compatible --model M [--url URL] [--version V]
+                   --publisher P --max-level 0..5 --out RECORD.json
+      an AI model called through an API: the identity calls are pinned to (provider, address, model, version)
   zenos_release.py publish RECORD.json --ledger FILE --conf PUBLISHER.json
       PUBLISHER.json: {"machine": "zenos-release", "nodes": [...audit nodes...], "ledgers": {"releases": FILE}}
       (shipped with the audit shipping, signed with the publisher's own identity key: ZENOS_AUDIT_KEY)
@@ -76,6 +83,25 @@ def main():
         rec["digest"] = zsupply.record_digest(rec)
         Path(opt("--out")).write_text(json.dumps(rec, indent=1))
         return print(f"{m['name']} {m['version']} {m['sha256'][:16]} digest {rec['digest'][:16]}: {len(m['files'])} files")
+    if cmd == "model":
+        import zmodel
+        m = zmodel.manifest(a[1], opt("--name"), opt("--version"), opt("--publisher", ""), opt("--source", ""),
+                            opt("--licence", ""), int(opt("--max-level", 0)), rings=rings_arg(opt("--rings")))
+        if not zsupply.NAME.match(str(m["name"] or "")) or not zsupply.NAME.match(str(m["version"] or "")):
+            sys.exit("--name and --version: letters, digits, . _ - only")
+        rec = {"manifest": m}
+        rec["digest"] = zsupply.record_digest(rec)
+        Path(opt("--out")).write_text(json.dumps(rec, indent=1))
+        return print(f"model {m['name']} {m['version']} {m['sha256'][:16]}: {len(m['files'])} files, up to L{m['max_level']}")
+    if cmd == "model-api":
+        import zmodel
+        m = zmodel.api_manifest({"kind": opt("--kind"), "model": opt("--model"), "url": opt("--url"),
+                                 "version": opt("--version")}, opt("--publisher", ""), int(opt("--max-level", 0)),
+                                rings=rings_arg(opt("--rings")))
+        rec = {"manifest": m}
+        rec["digest"] = zsupply.record_digest(rec)
+        Path(opt("--out")).write_text(json.dumps(rec, indent=1))
+        return print(f"API model {m['provider']} {m['host']} {m['model']} {m['version']} {m['sha256'][:16]}")
     if cmd == "revoke":
         rec = {"revoke": {"sha256": a[1], "reason": opt("--reason", ""), "t": int(time.time())}}
         rec["digest"] = zsupply.record_digest(rec)

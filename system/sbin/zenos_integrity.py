@@ -8,7 +8,9 @@ data file from the update folder. A signature on the program does not see that. 
     against the record, configuration files included; and every other package against dpkg's own sums;
   - the paths that make a genuine program load something else: /etc/ld.so.preload, LD_PRELOAD and friends in
     environment files and systemd settings, Python .pth and sitecustomize files, systemd drop-ins, apt hooks,
-    ld.so.conf.d entries, NODE_OPTIONS — any of these that no installed package owns is reported.
+    ld.so.conf.d entries, NODE_OPTIONS — any of these that no installed package owns is reported;
+  - the AI models kept on the PC (/var/lib/zenos/models, zmodel.py): every file against the model's release record,
+    and the record's officers' signatures. A file added, changed or missing is an alert.
 Findings go into the PC's ledger (the audit nodes alert the officers on "integrity-alert") and
 /var/lib/zenos/integrity.json (for the System Monitor).
 
@@ -194,6 +196,22 @@ def check_loaders(owned):
     return found
 
 
+def check_models():
+    """every AI model folder against its release record (no network needed: the record carries the officers'
+    signatures, checked with the keys enrolled on this PC)"""
+    try:
+        import zmodel
+    except Exception:
+        return []
+    out = []
+    for folder in zmodel.models():
+        if folder.name.startswith("."):
+            continue
+        for f in zmodel.offline_check(folder):
+            out.append({"level": "alert", "kind": f["kind"], "path": f["path"], "detail": f["detail"]})
+    return out
+
+
 def run(with_dpkg=None):
     """with_dpkg None: dpkg's full check once a day (it reads every installed file), the rest every run"""
     owned = owned_files()
@@ -203,7 +221,7 @@ def run(with_dpkg=None):
         last = 0
     if with_dpkg is None:
         with_dpkg = time.time() - last > 86400
-    found = check_manifests(owned) + check_loaders(owned) + (check_dpkg() if with_dpkg else [])
+    found = check_manifests(owned) + check_loaders(owned) + check_models() + (check_dpkg() if with_dpkg else [])
     alerts = [f for f in found if f["level"] == "alert"]
     st = {"t": int(time.time()), "alerts": len(alerts), "review": len(found) - len(alerts), "findings": found[:500],
           "dpkg_t": int(time.time()) if with_dpkg else last}

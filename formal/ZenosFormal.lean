@@ -10,3 +10,4 @@ import ZenosFormal.KeyService
 import ZenosFormal.Supply
 import ZenosFormal.Orchestrator
 import ZenosFormal.Federation
+import ZenosFormal.Model
