@@ -10,7 +10,7 @@ const THREADS = [
   { id: "office", group: "Editions", edition: "office", about: "ZENOS Office: for companies and teams." },
   { id: "family", group: "Editions", edition: "family", about: "ZENOS Family: for a household, with parents' approvals." },
   { id: "personal", group: "Editions", edition: "personal", about: "ZENOS Personal: for one person." },
-  { id: "github", group: "From the project", view: "github", about: "What happens in the repository: releases, merged changes, issues opened and closed, milestones." },
+  { id: "github", group: "From the project", view: "github", about: "What happens in the repository: releases, merged changes, pull requests, who offered to take an issue, comments from contributors, issues opened and closed, milestones." },
   { id: "release-notes", group: "From the project", staff: true, about: "What changed, and which threads it came from." },
   { id: "accepted", group: "From the project", view: "accepted", about: "Proposals a maintainer accepted, and where they are." },
   { id: "roadmap", group: "From the project", staff: true, about: "What the project plans next." },
@@ -30,7 +30,7 @@ async function syncGithub(env, force) {
   if (!r.ok) throw new Error("activity " + r.status);
   const a = await r.json();
   const cut = (t) => String(t || "").slice(0, 200);
-  const KINDS = ["release", "merged", "opened", "closed"];
+  const KINDS = ["release", "merged", "pr", "claim", "comment", "opened", "closed"];
   const ev = (Array.isArray(a.events) ? a.events : []).filter((e) => e && KINDS.includes(e.kind)).slice(0, 60)
     .map((e) => ({ kind: e.kind, n: Number.isInteger(e.n) ? e.n : undefined, title: cut(e.title), url: ghUrl(e.url), at: +e.at || 0, who: cut(e.who) }));
   const ms = (Array.isArray(a.milestones) ? a.milestones : []).slice(0, 5)

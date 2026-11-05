@@ -5,11 +5,15 @@ Run by .github/workflows/activity.yml with the workflow's own GITHUB_TOKEN (no o
 `activity` branch; the board reads it from raw.githubusercontent.com. (The board cannot ask the GitHub API itself:
 the API's limit for requests without a key is shared by every Cloudflare server on the same address.)
   github_activity.py OUT.json"""
-import json, os, sys, time, urllib.request
+import json, os, re, sys, time, urllib.request
 from datetime import datetime
 
 REPO = os.environ.get("GITHUB_REPOSITORY", "zenos-org/zenos")
 TOKEN = os.environ.get("GITHUB_TOKEN", "")
+# Comments by the project's own accounts are left out (their work already shows as issues and merges); a comment
+# that offers to take an issue is marked as a volunteer, so a reader sees who is working on what.
+TEAM = {"OWNER", "MEMBER", "COLLABORATOR"}
+CLAIM = re.compile(r"\b(work on (this|it)|(i('|\u2019)?ll take|i will take|let me take|taking) (this|it)|pick (this|it) up|assign (this|it|me)|i('|\u2019)?d like to (work|help|contribute|take|do)|i would like to (work|help|contribute|take|do)|can i (work|take|help|do)|i want to (work|take|do)|(gonna|going to) (start|work|do|take))\b", re.I)
 
 
 def get(path):
@@ -36,6 +40,19 @@ def main():
     for p in get("/pulls?state=closed&sort=updated&direction=desc&per_page=20"):
         if p.get("merged_at"):
             ev.append({"kind": "merged", "n": p["number"], "title": cut(p["title"]), "url": p["html_url"], "at": ms(p["merged_at"]), "who": cut((p.get("user") or {}).get("login"))})
+    for p in get("/pulls?state=all&sort=created&direction=desc&per_page=20"):
+        ev.append({"kind": "pr", "n": p["number"], "title": cut(p["title"]), "url": p["html_url"], "at": ms(p["created_at"]), "who": cut((p.get("user") or {}).get("login"))})
+    titles = {}
+    for c in get("/issues/comments?sort=created&direction=desc&per_page=40"):
+        u = c.get("user") or {}
+        if u.get("type") != "User" or c.get("author_association") in TEAM:
+            continue
+        n = int(str(c.get("issue_url", "")).rsplit("/", 1)[-1] or 0)
+        if n not in titles:
+            titles[n] = get(f"/issues/{n}").get("title", "")
+        # Only who and where are shown, never the comment's text: the board does not republish what others wrote.
+        kind = "claim" if CLAIM.search(c.get("body") or "") else "comment"
+        ev.append({"kind": kind, "n": n, "title": cut(titles[n]), "url": c["html_url"], "at": ms(c.get("created_at")), "who": cut(u.get("login"))})
     for i in get("/issues?state=all&sort=updated&direction=desc&per_page=40"):
         if i.get("pull_request"):
             continue

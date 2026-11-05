@@ -106,7 +106,7 @@ async function render() {
         h("span", { cls: "bar", style: "flex:0 0 90px" }, h("i", { style: "width:" + (all ? Math.round(100 * m.closed / all) : 0) + "%" }))));
     }
     if (!g.events.length) TL.append(h("div", { cls: "empty" }, "Nothing from GitHub yet. Activity in the repository appears here within 30 minutes."));
-    const LABEL = { release: "Released", merged: "Merged", opened: "New issue", closed: "Closed" };
+    const LABEL = { release: "Released", merged: "Merged", pr: "Pull request", claim: "Volunteered", comment: "Comment", opened: "New issue", closed: "Closed" };
     for (const e of g.events) TL.append(h("a", { cls: "ghe ghe-" + e.kind, href: e.url, target: "_blank", rel: "noopener" },
       h("b", {}, LABEL[e.kind] || e.kind), h("span", { cls: "t" }, (e.n ? "#" + e.n + " " : "") + e.title),
       h("span", { cls: "m" }, (e.who ? "@" + e.who + " · " : "") + when(e.at))));
