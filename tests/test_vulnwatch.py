@@ -28,7 +28,9 @@ def feeds(desc="Out-of-bounds write in the TLS handshake."):
                                    "releases": {"trixie": {"status": "resolved", "fixed_version": "5.2.37-2"}}}},
         "zlib": {"CVE-2026-3001": {"description": desc, "releases": {"trixie": {"status": "resolved", "fixed_version": "0"}}}},
         "curl": {"CVE-2026-4001": {"description": desc, "scope": "remote",
-                                   "releases": {"trixie": {"status": "open"}}}},
+                                   "releases": {"trixie": {"status": "resolved", "fixed_version": "8.14.1-3"}}},
+                 "CVE-2026-4002": {"description": desc, "releases": {"trixie": {"status": "open",
+                                                                                 "urgency": "not yet assigned"}}}},
         "notinstalled": {"CVE-2026-5001": {"releases": {"trixie": {"status": "open"}}}},
         "tar": {"CVE-2005-2541": {"description": desc, "releases": {"trixie": {"status": "open", "urgency": "unimportant"}}}},
         "nodejs": {"CVE-2026-7001": {"description": desc, "scope": "remote", "releases": {"trixie": {"status": "open"}}}},
@@ -98,7 +100,7 @@ class Vuln(unittest.TestCase):
         self.assertEqual(s["summary"]["fixed"], 2)                 # openssl CVE-2026-1002 and bash
         self.assertEqual(s["summary"]["not_affected"], 1)
         self.assertEqual(s["summary"]["kev_affected"], 1)
-        self.assertEqual(s["summary"]["minor"], 1)                  # Debian: "unimportant", not counted as affected
+        self.assertEqual(s["summary"]["minor"], 2)                  # open with no fix in Debian: tar, curl 4002
         # NodeSource's nodejs is not the package Debian's entry is about
         self.assertNotIn("nodejs", {f["package"] for f in s["findings"]})
 

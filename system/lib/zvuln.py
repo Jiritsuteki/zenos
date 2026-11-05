@@ -38,9 +38,11 @@ NAME = re.compile(r"^[a-z0-9][a-z0-9.+_-]{0,99}$")
 VERSION = re.compile(r"^[A-Za-z0-9.+~:_-]{1,80}$")
 PRODUCT = re.compile(r"^[A-Za-z0-9 ._+/()-]{1,80}$")
 RELEASE = "trixie"
-# Debian's security team marks some open issues as not worth a fix in a stable release ("unimportant": a theoretical
-# issue, a tool's documented behaviour) or past support ("end-of-life"). They stay listed, as "minor", and are not
-# counted as affected unless they are known to be exploited.
+# What is counted as affected (and turns the System Monitor amber) is what someone can act on: a vulnerability
+# known to be exploited (KEV), or one Debian has fixed while the PC still runs an older version. Debian's tracker
+# also lists thousands of open issues with no fix in the archive, most not yet triaged ("not yet assigned"), judged
+# not worth a fix in a stable release ("unimportant", "no DSA"), or past support ("end-of-life"). Those are kept
+# as "open" (counted apart, shown on request), unless they are known to be exploited.
 MINOR = {"unimportant", "end-of-life"}
 
 
@@ -133,7 +135,7 @@ def parse_debian(data, release=RELEASE):
             urg = str(r.get("urgency") or "")
             out.setdefault(p, {})[c] = {"status": status, "fixed": None if fixed == "0" else fixed,
                                         "remote": True if scope == "remote" else (False if scope == "local" else None),
-                                        "minor": urg in MINOR}
+                                        "minor": urg in MINOR or bool(r.get("nodsa"))}
     return out
 
 
@@ -265,7 +267,7 @@ def match(debian, kev, scores, inv, mitigations=None, signers=None, required=2, 
                         "fix_available": bool(d["fixed"]) and not fixed_installed, "kev": c in kev,
                         "score": facts["score"], "remote": facts["remote"], "status": r["status"],
                         "priority": int(r["priority"]), "may_mitigate": bool(r["may_mitigate"]),
-                        "minor": bool(d.get("minor")) and c not in kev,
+                        "minor": c not in kev and (d["status"] == "open" or bool(d.get("minor"))),
                         "binaries": sorted(bins)[:20]})
     out.sort(key=lambda f: (-f["priority"], f["cve"], f["package"]))
     return out
