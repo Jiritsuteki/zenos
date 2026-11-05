@@ -9,7 +9,10 @@
   "passkey_approval", `Approval.lean`). From a set level up (`/etc/zenos/approval.json`), an approval counts only
   when made on the stopped PC's screen with the officer's phone near it (the passkey standard's QR code and
   Bluetooth check): "An officer is here" in My requests. Exceptions, when allowed, are written to the ledger.
-  docs/PHONE_KEYS.md, including a proposal for a lost phone. Not yet tested on physical phones.
+  docs/PHONE_KEYS.md, including a proposal for a lost phone.
+- Tested on a physical iPhone (5 Nov 2026): passkey made, an approval signed and verified, and the phone-near check
+  passed with an iPad in the PC's place. Found: a PC without Bluetooth cannot show nearness; iPhone passkeys are
+  synced through iCloud Keychain and keep their counter at 0. Not yet tested on Android.
 
 **AI models**
 - AI models in the release ledger: a model kept on the PC (weights, tokenizer, settings, adapters) is loaded only

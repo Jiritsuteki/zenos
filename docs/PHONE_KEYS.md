@@ -1,7 +1,7 @@
 # Officers' approvals with a passkey in the phone
 
 Status: in the source, not released. Tested with software passkeys (Chrome's virtual authenticator, a simulated
-P-256 phone key); tests on physical phones are listed at the end as they are done.
+P-256 phone key) and on a physical iPhone (5 November 2026, results at the end). Not yet tested on Android.
 
 ## What changes
 
@@ -63,7 +63,27 @@ officers' approval have to cover.
 
 | Phone | OS | Browser | Make a passkey | Approve on the phone | Approve on a PC with the phone near |
 |---|---|---|---|---|---|
-| (waiting) | | | | | |
+| iPhone (Face ID) | iOS; the browser reports "iPhone OS 18_7" | Safari 26.6 | Yes: ES256 (P-256), user verified, PRF on, synced (iCloud Keychain) | Yes: signature verified in the page, bound to the request, user verified | Yes, with an iPad (Safari 26.5) in the PC's place: QR read by the iPhone, Face ID, "cross-platform" reported |
+| Android | | | (waiting) | (waiting) | (waiting) |
+
+Tested 5 November 2026 at https://passkey-test.zenos-site.pages.dev (a preview address, not zenos-os.org). One
+approval attempt on the iPhone ended with the browser's "not allowed" error and went through when pressed again;
+the browser gives that error for a cancelled or timed-out prompt as well, and which it was is not known.
+
+What the tests showed:
+
+- A PC without Bluetooth cannot show that the phone is near. The desk PC used for the test has no Bluetooth
+  adapter; its Chrome offered only a USB security key, never the QR code. So from the level where nearness is
+  required, the PC needs Bluetooth (built in or a USB adapter), or approvals at that level are refused (or go
+  through only as exceptions, when the policy allows them).
+- An iPhone passkey is synced. Apple keeps passkeys in iCloud Keychain, so the same approval key is also on the
+  officer's iPad or Mac signed in to the same Apple ID (on the iPad the page offered it with Touch ID straight
+  away). The key is in Apple's secure chips and end-to-end encrypted in iCloud, but it is not tied to one phone.
+  Synced passkeys also keep their counter at 0, so the copied-key check (a counter that does not move forward)
+  does not apply to them. Whether ZENOS should accept only passkeys that are not synced (the authenticator data
+  says which) is an open decision; refusing them would rule out iPhones as approvers.
+- The near check works between Apple devices: "cross-platform" was reported only when the iPhone was used through
+  the QR code, and "platform" when the passkey was used on the device itself.
 
 The test page is `tests/manual/passkey-test.html`; it is served for testing at a preview address of the website
 project (not zenos-os.org), and it sends nothing anywhere.
