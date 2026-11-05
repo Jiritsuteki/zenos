@@ -85,8 +85,11 @@ What the tests showed:
   officer's iPad or Mac signed in to the same Apple ID (on the iPad the page offered it with Touch ID straight
   away). The key is in Apple's secure chips and end-to-end encrypted in iCloud, but it is not tied to one phone.
   Synced passkeys also keep their counter at 0, so the copied-key check (a counter that does not move forward)
-  does not apply to them. Whether ZENOS should accept only passkeys that are not synced (the authenticator data
-  says which) is an open decision; refusing them would rule out iPhones as approvers.
+  does not apply to them. Decided on 5 November 2026: synced passkeys are accepted, because refusing them would
+  rule out iPhones as approvers. What stands in for the counter is the rest of the rule: from the set level up the
+  approval has to be made on the stopped PC's screen with the phone near it, higher levels need more than one
+  officer, and every approval is in the ledger. A copy of the key on another of the officer's devices does not help
+  someone who is not at that PC.
 - The near check works between Apple devices: "cross-platform" was reported only when the iPhone was used through
   the QR code, and "platform" when the passkey was used on the device itself.
 
