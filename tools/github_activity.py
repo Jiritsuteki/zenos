@@ -13,6 +13,8 @@ TOKEN = os.environ.get("GITHUB_TOKEN", "")
 # Comments by the project's own accounts are left out (their work already shows as issues and merges); a comment
 # that offers to take an issue is marked as a volunteer, so a reader sees who is working on what.
 TEAM = {"OWNER", "MEMBER", "COLLABORATOR"}
+# The workflow's own key does not see private organization membership, so the project's account is also named.
+TEAM_LOGINS = {"zenos-maintainer"}
 CLAIM = re.compile(r"\b(work on (this|it)|(i('|\u2019)?ll take|i will take|let me take|taking) (this|it)|pick (this|it) up|assign (this|it|me)|i('|\u2019)?d like to (work|help|contribute|take|do)|i would like to (work|help|contribute|take|do)|can i (work|take|help|do)|i want to (work|take|do)|(gonna|going to) (start|work|do|take))\b", re.I)
 
 
@@ -45,14 +47,16 @@ def main():
     titles = {}
     for c in get("/issues/comments?sort=created&direction=desc&per_page=40"):
         u = c.get("user") or {}
-        if u.get("type") != "User" or c.get("author_association") in TEAM:
+        if u.get("type") != "User" or c.get("author_association") in TEAM or u.get("login") in TEAM_LOGINS:
             continue
         n = int(str(c.get("issue_url", "")).rsplit("/", 1)[-1] or 0)
         if n not in titles:
-            titles[n] = get(f"/issues/{n}").get("title", "")
+            i = get(f"/issues/{n}")
+            titles[n] = (i.get("title", ""), bool(i.get("pull_request")))
         # Only who and where are shown, never the comment's text: the board does not republish what others wrote.
-        kind = "claim" if CLAIM.search(c.get("body") or "") else "comment"
-        ev.append({"kind": kind, "n": n, "title": cut(titles[n]), "url": c["html_url"], "at": ms(c.get("created_at")), "who": cut(u.get("login"))})
+        title, is_pr = titles[n]
+        kind = "claim" if not is_pr and CLAIM.search(c.get("body") or "") else "comment"
+        ev.append({"kind": kind, "n": n, "title": cut(title), "url": c["html_url"], "at": ms(c.get("created_at")), "who": cut(u.get("login"))})
     for i in get("/issues?state=all&sort=updated&direction=desc&per_page=40"):
         if i.get("pull_request"):
             continue
