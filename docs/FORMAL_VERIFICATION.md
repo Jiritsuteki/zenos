@@ -206,8 +206,9 @@ Review of the specifications is the most useful help for this part: whether each
 and whether a gap between a theorem and what a service actually does is missing from the list above.
 
 - Walkthroughs: [where file content may go (`Flow.lean`)](https://github.com/zenos-org/zenos/discussions/11),
-  [how the ledger catches a rewritten history (`Ledger.lean`)](https://github.com/zenos-org/zenos/discussions/17) and
-  [what may leave the PC (`Egress.lean`)](https://github.com/zenos-org/zenos/discussions/59).
+  [how the ledger catches a rewritten history (`Ledger.lean`)](https://github.com/zenos-org/zenos/discussions/17),
+  [what may leave the PC (`Egress.lean`)](https://github.com/zenos-org/zenos/discussions/59) and
+  [what a PC lets in before apt installs (`Supply.lean`)](https://github.com/zenos-org/zenos/discussions/62).
 - A theorem that says less than it should, or a missing assumption: open an
   [issue](https://github.com/zenos-org/zenos/issues) or reply in [Discussions](https://github.com/zenos-org/zenos/discussions).
 - A way to get data out despite the decisions: please report it privately as described in
