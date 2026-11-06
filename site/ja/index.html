@@ -72,7 +72,7 @@ h1,h2{word-break:auto-phrase}h1{word-break:keep-all;overflow-wrap:anywhere}
 <section class="hero"><div class="wrap">
 <span class="pill">開発者向けプレビュー版 · 試用と評価のための版です</span>
 <h1>情報やデータが<wbr>流出しない OS を<wbr>めざして。<wbr>仕組みで守り、<wbr>誰でも使える。</h1>
-<p class="lead">すべてのファイルがレベルを持ちます。自分のレベルより上のファイルを開くには、信頼できる人の承認が要り、その承認は本人の端末で署名されます。漏えいに見える動きがあれば、PC は止まります。中核の判定は数学的に証明されており、システム全体がオープンソースです。</p>
+<p class="lead">すべてのファイルがレベルを持ちます。自分のレベルより上のファイルを開くには、信頼できる人の承認が要り、その承認は本人の端末で署名されます。漏えいに見える動きがあれば、PC は止まります。同じ規則は、その先のサーバーにも及びます。データベースを平文で置かず、データは一件ずつ、別々の組織が持つ部品から、サインインした本人が目的を示したときにだけ組み立てられます。中核の判定は数学的に証明されており、システム全体がオープンソースです。</p>
 <div class="ctas"><a class="btn p" href="#download">プレビュー版をダウンロード</a><a class="btn" href="https://github.com/zenos-org/zenos">GitHub でソースを見る</a><a class="btn" href="https://feedback.zenos-os.org">意見を送る</a></div>
 <img class="hero-img" src="../img/desktop.png" width="1200" height="800" alt="ZENOS のデスクトップ。スタートメニュー、L1〜L5 のレベル別フォルダ、タスクバーに表示されたレベル">
 </div></section>
@@ -90,7 +90,7 @@ h1,h2{word-break:auto-phrase}h1{word-break:keep-all;overflow-wrap:anywhere}
 
 <section id="protects"><div class="wrap">
 <p class="eyebrow">守り方</p>
-<h2>六つの層、一つの規則：データはそのレベルにとどまる</h2>
+<h2>PC からサーバーまで、一つの規則：データはそのレベルにとどまる</h2>
 <div class="grid g3">
 <div class="card"><span class="tag t-ok">動作中</span><h3>レベル付きで封印されるファイル</h3><p>レベル別フォルダ（L1〜L5）に保存すると、ファイルは暗号化され、署名付きのヘッダーにレベルが記録されます。中身が平文になるのは、開いている間のメモリ上だけです。</p></div>
 <div class="card"><span class="tag t-ok">動作中</span><h3>開くには承認</h3><p>自分のレベルより上は、責任者に申請が届きます。レベルが高いほど承認者が増え、自分の申請を自分で承認することはできません。</p></div>
@@ -100,6 +100,11 @@ h1,h2{word-break:auto-phrase}h1{word-break:keep-all;overflow-wrap:anywhere}
 <div class="card"><span class="tag t-ok">動作中</span><h3>改ざんが分かる台帳</h3><p>すべての操作はハッシュの鎖につながり、別々の組織が運用する監査ノードに写されます。履歴を書き換えれば検出されます。</p></div>
 <div class="card"><span class="tag t-warn">試作</span><h3>分散保存</h3><p>封印されたファイルは暗号化された断片に分けられ、認証されたノードに散らばります。一台のマシンがファイル全体を持つことはありません。</p></div>
 <div class="card"><span class="tag t-acc">証明済み</span><h3>中身がどこへ行けるか</h3><p>フォルダ、ウィンドウ、クリップボード、プリンター、AI の種類ごとに、一つの規則がすべての複製を判定します。L5 は印刷されません。</p></div>
+</div>
+<div class="grid g3">
+<div class="card"><span class="tag t-warn">試作</span><h3>サーバーのデータも平文で置かない</h3><p>ZENOS Data は、データを一件ずつ暗号化します。その鍵は、別々の組織が運用する鍵のピアに分けて預け、保存用のピアには暗号文しか置きません。データが組み立てられるのは、サインインした本人が目的を示し、その人の権限の範囲内のときだけです。ピア一つからは何も得られません。</p></div>
+<div class="card"><span class="tag t-warn">ソースにあり</span><h3>既知の脆弱性を PC の中で照合</h3><p>公開されている一覧（CISA KEV、Debian のセキュリティ追跡、NVD、JVN、OSV）を取り込み、PC で動いているものと PC の中で照らし合わせます。何を動かしているかが外のサービスに伝わりません。実際に悪用されているものから先に示し、対策を当てるにはリリース担当の署名が要ります。</p></div>
+<div class="card"><span class="tag t-warn">ソースにあり</span><h3>AI モデルは、リリースされたものだけ</h3><p>PC に置く AI モデルは、すべてのファイルが、リリース担当2人が署名し監査ノードが持っているものと1バイト残らず同じでなければなりません。書き換えられたモデルや、リリースされていないモデルは、読み込む前に隔離します。</p></div>
 </div></div></section>
 
 <section class="tint" id="proofs"><div class="wrap">
@@ -197,8 +202,11 @@ h1,h2{word-break:auto-phrase}h1{word-break:keep-all;overflow-wrap:anywhere}
 <h2>どこまでできているか、そのまま</h2>
 <p class="lead">ZENOS は開発者向けプレビュー版です。試して、穴を探して、意見をもらうための版で、そのための試用は歓迎します。いくつかの守りはまだ実演の段階なので、外部の独立した監査が終わるまでは、大切なデータを扱う本番の業務には使わないでください。</p>
 <div class="grid g2">
-<div class="card"><span class="tag t-ok">完了</span><h3>今動いているもの</h3><p>レベル付きで封印されるファイル、責任者の端末で署名する承認、停止と解除、改ざんが分かる台帳、暗号化されたメッセンジャーと通話、証明された判定、ディスクを暗号化するインストーラー。スマートフォンでのサインインとパスキーによる承認は実機の iPhone で試しました。Android ではまだ試していません。</p></div>
-<div class="card"><span class="tag t-warn">次</span><h3>これから</h3><p>ソースにあるもの（鍵サービス、TPM の鍵、更新の通り道の確認、指揮者）のリリース、ファイルごとのスマートフォンでの確認、責任者用の FIDO2 キー、強制アクセス制御（SELinux MLS）、同じものを作り直せるインストール用イメージ、Office 形式との互換性の向上、外部のセキュリティ監査。</p></div>
+<div class="card"><span class="tag t-ok">完了</span><h3>今動いているもの</h3><p>レベル付きで封印されるファイル、責任者の端末で署名する承認、停止と解除、サインインと承認も記録する改ざんが分かる台帳、暗号化されたメッセンジャーと通話、証明された判定、ディスクを暗号化するインストーラー、PC の外の鍵サービス。スマートフォンでのサインインとパスキーによる承認は実機の iPhone で試しました。Android ではまだ試していません。サーバーのデータをピアに分けて預ける仕組み（ZENOS Data）は、1台のマシンの中のプロセスどうしで動いています。別々のマシンの間ではまだ試していません。</p></div>
+<div class="card"><span class="tag t-warn">次</span><h3>これから</h3><p>ファイルごとのスマートフォンでの確認、責任者用の FIDO2 キー、別々のマシンの間での ZENOS Data、同じ利用者の別のプログラムがブラウザのふりをできないよう、ブラウザを専用のアカウントで動かすこと、強制アクセス制御（SELinux MLS）、同じものを作り直せるインストール用イメージ、Office 形式との互換性の向上、Android での試験、外部のセキュリティ監査。</p></div>
+</div>
+<div class="grid g2" style="margin-top:20px">
+<div class="card"><span class="tag t-acc">自己監査</span><h3>まず自分たちで監査する</h3><p>外部の監査の前に、Cloudflare が公開しているセキュリティ監査の手順で、ソース全体を少なくとも3回監査し、今後はリリースのたびに行います。調べる中でプログラムを動かす部分は、ネットにつながらない ZENOS 自身の囲いの中だけで動かします。1回目で見つかった弱点は28件で、27件をテスト付きで直しました。残る1件は設計の変更が要ります。弱点の中身は、直したものを含むリリースで公開します（SECURITY.md）。</p></div>
 </div></div></section>
 
 <section class="alt" id="download"><div class="wrap">
