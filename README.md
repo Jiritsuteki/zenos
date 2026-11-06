@@ -183,6 +183,7 @@ Read the [Code of Conduct](CODE_OF_CONDUCT.md) for the project's community stand
 Browse the [documentation index](docs/README.md) for the project's guides and design notes.
 Look up unfamiliar terms in the [glossary](docs/GLOSSARY.md).
 To find a starting task, see the [good first issues](https://github.com/zenos-org/zenos/labels/good%20first%20issue).
+See who has contributed so far in [CONTRIBUTORS.md](CONTRIBUTORS.md).
 
 ## Citing ZENOS
 
