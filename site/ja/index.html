@@ -206,10 +206,10 @@ h1,h2{word-break:auto-phrase}h1{word-break:keep-all;overflow-wrap:anywhere}
 <p class="lead">ZENOS は開発者向けプレビュー版です。試して、穴を探して、意見をもらうための版で、そのための試用は歓迎します。いくつかの守りはまだ実演の段階なので、外部の独立した監査が終わるまでは、大切なデータを扱う本番の業務には使わないでください。</p>
 <div class="grid g2">
 <div class="card"><span class="tag t-ok">完了</span><h3>今動いているもの</h3><p>レベル付きで封印されるファイル、責任者の端末で署名する承認、停止と解除、サインインと承認も記録する改ざんが分かる台帳、暗号化されたメッセンジャーと通話、証明された判定、ディスクを暗号化するインストーラー、PC の外の鍵サービス。スマートフォンでのサインインとパスキーによる承認は実機の iPhone で試しました。Android ではまだ試していません。サーバーのデータをピアに分けて預ける仕組み（ZENOS Data）は、1台のマシンの中のプロセスどうしで動いています。別々のマシンの間ではまだ試していません。</p></div>
-<div class="card"><span class="tag t-warn">次</span><h3>これから</h3><p>ファイルごとのスマートフォンでの確認、責任者用の FIDO2 キー、別々のマシンの間での ZENOS Data、同じ利用者の別のプログラムがブラウザのふりをできないよう、ブラウザを専用のアカウントで動かすこと、強制アクセス制御（SELinux MLS）、同じものを作り直せるインストール用イメージ、Office 形式との互換性の向上、Android での試験、外部のセキュリティ監査。</p></div>
+<div class="card"><span class="tag t-warn">次</span><h3>これから</h3><p>ファイルごとのスマートフォンでの確認、責任者用の FIDO2 キー、別々のマシンの間での ZENOS Data、強制アクセス制御（SELinux MLS）、同じものを作り直せるインストール用イメージ、Office 形式との互換性の向上、Android での試験、外部のセキュリティ監査。</p></div>
 </div>
 <div class="grid g2" style="margin-top:20px">
-<div class="card"><span class="tag t-acc">自己監査</span><h3>まず自分たちで監査する</h3><p>外部の監査の前に、Cloudflare が公開しているセキュリティ監査の手順で、ソース全体を少なくとも3回監査し、今後はリリースのたびに行います。調べる中でプログラムを動かす部分は、ネットにつながらない ZENOS 自身の囲いの中だけで動かします。1回目で見つかった弱点は28件で、27件をテスト付きで直しました。残る1件は設計の変更が要ります。直したものは 0.2.0 に入っています。一つ一つの中身は <a href="https://github.com/zenos-org/zenos/blob/main/docs/SELF_AUDIT.md">SELF_AUDIT.md</a>（英語）にあります。</p></div>
+<div class="card"><span class="tag t-acc">自己監査</span><h3>まず自分たちで監査する</h3><p>外部の監査の前に、Cloudflare が公開しているセキュリティ監査の手順で、ソース全体を少なくとも3回監査し、今後はリリースのたびに行います。調べる中でプログラムを動かす部分は、ネットにつながらない ZENOS 自身の囲いの中だけで動かします。1回目で見つかった弱点は28件で、27件をテスト付きで直して 0.2.0 に入れ、設計の変更が要った残りの1件も、その後ソースで直しました。直したものは 0.2.0 に入っています。一つ一つの中身は <a href="https://github.com/zenos-org/zenos/blob/main/docs/SELF_AUDIT.md">SELF_AUDIT.md</a>（英語）にあります。</p></div>
 </div></div></section>
 
 <section class="alt" id="download"><div class="wrap">

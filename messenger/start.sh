@@ -14,5 +14,7 @@ pgrep -f "node $M/relay.js" >/dev/null || setsid /usr/bin/node "$M/relay.js" >/t
 sleep 1
 while IFS='=' read -r a p; do
   if [ -z "$a" ] || [ "${a#\#}" != "$a" ]; then continue; fi
-  pgrep -f "node $M/client.js $a " >/dev/null || setsid /usr/bin/node "$M/client.js" "$a" "$p" >"/tmp/zenos-msg-$a.log" 2>&1 < /dev/null &
+  # started by zenos-launchd (root) when it is there: only such a messenger may carry the phone's answers to the vault
+  pgrep -f "node $M/client.js $a " >/dev/null || python3 -I "$M/../bin/zenos_launch.py" messenger "$a" "$p" 2>/dev/null \
+    || setsid /usr/bin/node "$M/client.js" "$a" "$p" >"/tmp/zenos-msg-$a.log" 2>&1 < /dev/null &
 done < ports.env

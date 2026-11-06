@@ -9,8 +9,8 @@ it found is published once the fixes are released (SECURITY.md).
 
 ## Run 1 (source at `16c844b`, fixed in 0.2.0, published 6 Nov 2026)
 
-28 weaknesses found; 27 fixed with tests in commit `8b65896`, which the 0.2.0 image is built from; one is not fixed
-and needs a change of design (the last row). "Who" is who could use it before the fix.
+28 weaknesses found; 27 fixed with tests in commit `8b65896`, which the 0.2.0 image is built from; the last one
+needed a change of design and is fixed in the source after 0.2.0 (the last row). "Who" is who could use it before the fix.
 
 | Part | Who | What could happen | Fix |
 |---|---|---|---|
@@ -40,6 +40,6 @@ and needs a change of design (the last row). "Who" is who could use it before th
 | Storage grid, no administrator key | a peer that says nothing | be treated as cleared for L5 | a peer that claims nothing is L1 |
 | Repository automation | a step running the repository's code | use a token that can write to the repository | collecting and publishing are separate jobs; the job with the write token runs none of the repository's code |
 | Feedback board, AI answers | someone posting on the board | steer the AI reviewer into posting links under its name | an AI answer with a link or address waits for a maintainer |
-| Credentials vault (not fixed) | a program of the same user | pose as the browser or messenger and ask for a password after the phone approval | needs the browser in its own account; tracked in the roadmap |
+| Credentials vault (fixed after 0.2.0, in the source) | a program of the same user | pose as the browser or messenger and ask for a password after the phone approval | a root launcher (`zenos-launchd`) starts the browser and the messenger and records each start; the vault serves only a recorded process, which other programs of the user cannot attach to (`ptrace_scope = 1`) |
 
 Changes others may notice are in the [CHANGELOG](../CHANGELOG.md) under 0.2.0.

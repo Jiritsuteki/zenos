@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The password vault serves only a browser or messenger that the new root launcher `zenos-launchd` started; it
+  records each start (pid, start time, person, program), and other programs of the same person cannot attach to
+  such a process (`kernel.yama.ptrace_scope = 1`). Closes the last finding of the first self-audit
+  ([docs/SELF_AUDIT.md](docs/SELF_AUDIT.md)). The browser and the messenger start through it when it is installed.
+
 ## 0.2.0 Developer Preview (published 2026-11-06)
 
 Still a preview for testing and evaluation; production use of sensitive work waits for an independent audit, see

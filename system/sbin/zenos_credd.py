@@ -46,7 +46,12 @@ ENROLL_TRIES, ENROLL_GAP = 20, 2.0     # wrong enrolment codes: 20 tries, 2 s ap
 MAX_LINE = 64 * 1024
 # who may ask: the browser asks for passwords, ZENOS Messages carries the phone's answers. Each is a root-owned
 # program run by the person; another program of the same person is refused (it could show a fake code on screen).
-# A hurdle, not a wall: a same-user program can rewrite its own command line (docs/SECURITY_ARCHITECTURE.md).
+# The process must also be one zenos-launchd started (its record: pid, start time, uid, program). A program of the
+# same person can rename itself, but it cannot get into that record, and it cannot attach to a process whose parent
+# is root (kernel.yama.ptrace_scope = 1). A development layout without zenos-launchd keeps the name checks only.
+LAUNCHED = os.environ.get("ZENOS_LAUNCHED", "/run/zenos/launched.json")
+LAUNCH_UNITS = [u for u in os.environ.get("ZENOS_LAUNCH_UNIT", "/lib/systemd/system/zenos-launchd.service:"
+                                          "/usr/lib/systemd/system/zenos-launchd.service").split(":") if u]
 BROWSERS = os.environ.get("ZENOS_CREDD_BROWSER", "/usr/share/zenos/bin/zenos_webkit.py").split(":")
 MESSENGERS = os.environ.get("ZENOS_CREDD_MESSENGER", "/usr/share/zenos/msg/client.js").split(":")
 BROWSER_OPS = {"accounts", "ask", "wait", "cancel"}
@@ -142,6 +147,18 @@ def good_origin(o):
 def _proc(pid, name):
     with open("/proc/%d/%s" % (pid, name), "rb") as f:
         return f.read()
+
+
+def launched(pid, uid, kind, path=None):
+    """was `pid` started by zenos-launchd as `kind` for `uid`, and is it still that process (same start time)"""
+    try:
+        with open(path or LAUNCHED) as f:
+            recs = json.load(f)
+        st = _proc(pid, "stat").decode().rsplit(")", 1)[1].split()[19]
+    except (OSError, ValueError, IndexError):
+        return False
+    return any(isinstance(h, dict) and h.get("pid") == pid and h.get("start") == st and h.get("uid") == uid
+               and h.get("program") == kind for h in recs if isinstance(recs, list))
 
 
 def caller(pid):
@@ -402,6 +419,8 @@ def handle(m, uid, pid):
     except KeyError:
         return {"ok": False, "error": "unknown user"}
     kind = caller(pid)
+    if kind and any(os.path.exists(u) for u in LAUNCH_UNITS) and not launched(pid, uid, kind):
+        kind = None                                    # the right name, but not a process zenos-launchd started
     op = m.get("op")
     if (op in BROWSER_OPS and kind != "browser") or (op in PHONE_OPS and kind != "messenger"):
         log(event="cred-caller-refused", user=user, op=str(op)[:20], pid=pid)

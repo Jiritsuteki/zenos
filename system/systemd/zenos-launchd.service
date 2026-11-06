@@ -1,0 +1,11 @@
+[Unit]
+Description=ZENOS launcher: starts the browser and ZENOS Messages so the password vault can tell them from look-alikes
+After=local-fs.target
+[Service]
+ExecStart=/usr/bin/python3 -I /usr/sbin/zenos_launchd.py
+Restart=always
+RestartSec=2
+# the programs it starts belong to the person, not to this service: they keep running when it restarts
+KillMode=process
+[Install]
+WantedBy=multi-user.target

@@ -125,9 +125,13 @@ Saving a password takes the same approval. At most 3 prompts per minute reach th
 Phones are registered with a one-time enrolment code from the administrator (`sudo zenos_credd.py --enroll USER`);
 `--phones USER` lists them and `--revoke USER PHONE` removes one (passwords saved with it can no longer be opened).
 
-The service answers only the installed ZENOS Browser and ZENOS Messages (it checks the connecting process's program
-file, interpreter, environment and debugger state). That is a hurdle, not a wall: a program of the same user can
-rewrite how its own command line looks, so the check stops casual misuse, not a determined local attacker.
+The service answers only the installed ZENOS Browser and ZENOS Messages, and only a process that `zenos-launchd`
+started. The launcher runs as root and starts these two programs as the person who asks, with an environment it
+chooses (no LD_PRELOAD, PYTHONPATH or NODE_OPTIONS) and the installed root-owned files; it records each start (pid,
+start time, uid, program) in a root-owned file the vault reads. A program of the same user can make its command line
+look like the browser's, but it is not in that record, and with `kernel.yama.ptrace_scope = 1` it cannot attach to
+a process whose parent is root to borrow it. A development layout without the launcher keeps only the checks of the
+program file, interpreter, environment and debugger state, which a determined local program can get round.
 
 Not protected: a PC already taken over at the moment of signing in (the password is in the page then), and a program
 of the same user that imitates the browser's request (the person still sees the site on the phone and must pick the

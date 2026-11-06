@@ -4,4 +4,7 @@
 unset WAYLAND_DISPLAY
 export GDK_BACKEND=x11
 R="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"   # program files
-exec python3 -E -s "$R/bin/zenos_webkit.py" "$@"     # -E -s: no PYTHONPATH or user site (zenos_credd checks this)
+# started by zenos-launchd (root): the password vault serves only a browser it started (zenos_launchd.py)
+python3 -I "$R/bin/zenos_launch.py" browser "$@"; rc=$?
+[ "$rc" = 3 ] || exit "$rc"
+exec python3 -E -s "$R/bin/zenos_webkit.py" "$@"     # development layout: no zenos-launchd, no password vault
