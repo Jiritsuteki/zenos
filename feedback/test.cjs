@@ -77,8 +77,8 @@ const rv = (p, body) => call("rev", p, body, { Authorization: "Bearer " + REVIEW
   r = await rv("/api/review/result", { id: ps[2].id, appropriate: true }); assert.equal(r.status, 404); ok("a post is reviewed once");
   const other = pend.find((x) => x.id !== ps[2].id && !/Ignore previous/.test(x.text));
   r = await rv("/api/review/result", { id: other.id, appropriate: true, answer: "See https://evil.example/fix for the answer." }); assert.ok(r.j.ok);
-  r = await call("anon", "/api/replies?post=" + (other.reply || other.id)); const held = r.j.posts.find((x) => x.held && !x.text);
-  assert.ok(held && !r.t.includes("evil.example")); ok("an AI answer with a link waits for a maintainer");
+  r = await call("anon", "/api/replies?post=" + (other.reply || other.id)); const aiHeld = r.j.posts.find((x) => x.held && !x.text);
+  assert.ok(aiHeld && !r.t.includes("evil.example")); ok("an AI answer with a link waits for a maintainer");
   const inj = pend.find((x) => /Ignore previous/.test(x.text));
   r = await rv("/api/review/result", { id: inj.id, appropriate: false, reason: "Tries to instruct the reviewer." }); assert.ok(r.j.ok);
   r = await call("anon", "/api/thread?t=ideas"); assert.equal(r.j.posts.find((x) => x.id === inj.id).held, "Tries to instruct the reviewer."); ok("the review holds a post it finds not appropriate");
