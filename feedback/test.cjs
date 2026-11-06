@@ -61,7 +61,7 @@ const rv = (p, body) => call("rev", p, body, { Authorization: "Bearer " + REVIEW
   r = await call("ana", "/api/post", { thread: "problems", text: "One more problem with the screen" }); assert.equal(r.status, 429); ok("posts per hour limited");
   r = await call("anon", "/api/thread?t=ideas"); assert.ok(!r.t.includes("test:maya") && !/"user"/.test(r.t)); ok("no internal ids on the page");
   r = await call("anon", "/api/state"); assert.match(r.h.get("content-security-policy"), /script-src 'self'/); ok("API answers with a strict CSP");
-  r = await call("anon", "/auth/github/start"); assert.equal(r.status, 404); ok("GitHub sign-in off without keys");
+  r = await call("anon", "/auth/github/start"); assert.ok(r.status === 302 && /github\.com\/login\/oauth/.test(r.h.get("location") || "")); ok("GitHub sign-in goes to GitHub (the app's public id is in wrangler.toml)");
   r = await call("ken", "/api/post", { thread: "ideas", text: "Free crypto giveaway here, click now everyone" }); assert.ok(r.j.ok);
   r = await call("adm", "/api/admin/review", {}); assert.ok(r.j.ok);
   r = await call("anon", "/api/thread?t=ideas"); const held = r.j.posts.find((x) => x.held);
@@ -75,6 +75,10 @@ const rv = (p, body) => call("rev", p, body, { Authorization: "Bearer " + REVIEW
   r = await rv("/api/review/result", { id: ps[2].id, appropriate: true, answer: "Thanks. Dark mode for printing is grouped as Proposal #" + ps[2].proposal.id + "." }); assert.ok(r.j.ok);
   r = await call("anon", "/api/replies?post=" + ps[2].id); const a = r.j.posts.find((x) => x.byAI); assert.ok(a && /Dark mode/.test(a.text) && a.handle === "@zenos-ai"); ok("the AI's answer is a reply marked as the AI's");
   r = await rv("/api/review/result", { id: ps[2].id, appropriate: true }); assert.equal(r.status, 404); ok("a post is reviewed once");
+  const other = pend.find((x) => x.id !== ps[2].id && !/Ignore previous/.test(x.text));
+  r = await rv("/api/review/result", { id: other.id, appropriate: true, answer: "See https://evil.example/fix for the answer." }); assert.ok(r.j.ok);
+  r = await call("anon", "/api/replies?post=" + (other.reply || other.id)); const held = r.j.posts.find((x) => x.held && !x.text);
+  assert.ok(held && !r.t.includes("evil.example")); ok("an AI answer with a link waits for a maintainer");
   const inj = pend.find((x) => /Ignore previous/.test(x.text));
   r = await rv("/api/review/result", { id: inj.id, appropriate: false, reason: "Tries to instruct the reviewer." }); assert.ok(r.j.ok);
   r = await call("anon", "/api/thread?t=ideas"); assert.equal(r.j.posts.find((x) => x.id === inj.id).held, "Tries to instruct the reviewer."); ok("the review holds a post it finds not appropriate");
