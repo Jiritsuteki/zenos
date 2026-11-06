@@ -9,6 +9,7 @@ This folder contains the main documentation for ZENOS.
 - [ZENOS Messages across organizations](FEDERATION.md) — How relays on a signed list of organizations exchange encrypted messages.
 - [Formal verification of the ZENOS decisions](FORMAL_VERIFICATION.md) — Lean 4 definitions and proofs for decisions about classified data.
 - [The key service](KEY_SERVICE.md) — How the key service moves file keys off the PC.
+- [Phone passkeys](PHONE_KEYS.md) — How officers use phone passkeys to approve requests, including proximity checks.
 - [Launch checklist](LAUNCH.md) — Things to check before launch, including accounts, hosting, and filings.
 - [Office files in ZENOS](OFFICE_ENGINE.md) — How ZENOS uses LibreOffice to read, write and display Office files.
 - [ZENOS as the conductor](ORCHESTRATOR.md) — How ZENOS coordinates AI tasks across multiple model providers.
