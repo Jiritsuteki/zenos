@@ -1,0 +1,88 @@
+name: Hardware test report
+description: Tell us how ZENOS ran on a physical PC (works or not, both help)
+title: "Hardware report: <maker and model>"
+labels: ["hardware"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for trying ZENOS on a real PC. So far ZENOS has been tested mainly in QEMU virtual machines, so every report from physical hardware helps, including "it did not boot".
+
+        Before you start:
+        - Booting the live system from a USB stick does not change the PC's disk. "Install ZENOS" erases the disk it installs to.
+        - ZENOS is a Developer Preview and has not been audited. Do not use it for real sensitive data.
+        - Do not paste serial numbers, MAC addresses, user names, Wi-Fi names or anything else you would not post publicly.
+  - type: input
+    id: version
+    attributes:
+      label: ZENOS version
+      description: The ISO name, for example zenos-0.2.0-preview-amd64.iso
+    validations:
+      required: true
+  - type: input
+    id: machine
+    attributes:
+      label: Maker and model
+      description: For example "Lenovo ThinkPad T14 Gen 3" or "desktop, ASUS PRIME B550M-A board"
+    validations:
+      required: true
+  - type: input
+    id: parts
+    attributes:
+      label: CPU, memory and graphics
+      description: For example "Ryzen 5 5600U, 16 GB, integrated AMD graphics"
+  - type: dropdown
+    id: firmware
+    attributes:
+      label: How the PC started the USB stick
+      options:
+        - UEFI, Secure Boot on
+        - UEFI, Secure Boot off
+        - BIOS (legacy)
+        - I don't know
+    validations:
+      required: true
+  - type: dropdown
+    id: tpm
+    attributes:
+      label: TPM
+      options:
+        - TPM 2.0
+        - No TPM
+        - I don't know
+  - type: dropdown
+    id: how
+    attributes:
+      label: How far did you go?
+      options:
+        - Live system from USB only
+        - Installed it to a disk
+    validations:
+      required: true
+  - type: checkboxes
+    id: works
+    attributes:
+      label: What worked
+      description: Tick what you checked and saw working. Leave the rest empty.
+      options:
+        - label: Reached the live desktop
+        - label: The screen used its full resolution
+        - label: Keyboard and touchpad or mouse
+        - label: Wi-Fi
+        - label: Wired network
+        - label: Sound
+        - label: Bluetooth
+        - label: Sleep and wake up
+        - label: The installer finished
+        - label: The installed system started and asked for the disk passphrase
+  - type: textarea
+    id: problems
+    attributes:
+      label: What did not work, or looked wrong
+      description: What you did and what happened. Photos of the screen are welcome.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Output (optional)
+      description: For example from `lspci -nn`, `lsusb` or `journalctl -b -p err`. Remove serial numbers and MAC addresses first.
+      render: shell
