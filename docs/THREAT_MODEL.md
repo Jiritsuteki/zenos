@@ -56,7 +56,7 @@ Kernel holes that give root, sometimes from the network and without signing in, 
 in Multipath TCP was reported by Anthropic on 27 October 2026 and fixed in Debian's kernel 6.12.113-1, which the 0.1.1
 image already carries. ZENOS is designed on the assumption that the kernel can have such a hole on any given day.
 
-| | Today (0.1.2) | With the key service (in the repository, not in a release yet) |
+| | Without the key service (as in 0.1.2) | With the key service (0.2.0) |
 |---|---|---|
 | Taken with root | The level keys (root-owned files), so every file sealed on that PC. The guard, the AI guard and the audit shipping can be stopped. Records written in the seconds before they are shipped can be changed, and the signed status can be faked with the PC's audit key. | Files not yet sealed again through the key service (`zenos_keyd.py --reseal`, then `--drop-local-keys` destroys the keys left on the PC). The use of the PC's identity: root can ask the key service for files that a user assigned to this PC on the service is cleared for, as the service holds the clearance, a limited number per minute per user and per PC, each one recorded on the service at once. On a PC with a TPM the identity key is made inside it and cannot be copied: root has to ask from that PC, while it is reporting, and a PC started with another Secure Boot state cannot use the key at all. Root can also fake the PC's signed status (services running, no stop). From the presence level up (off until the confirmation pages ship), only files the user confirms on their own phone, on a page the key service serves, reached from a link sent to the person's ZENOS Messages and never through the PC. |
 | Not taken, or still seen from outside | Files sealed on other PCs (the keys are per PC). Ledger records already shipped: the audit nodes refuse a rewritten history. A PC that stops shipping is reported silent after 90 seconds. A stopped guard, key agent, AI guard, network sentinel or firewall, and a kernel fix installed but not yet running, are reported by the audit nodes from the PC's signed status, every 10 seconds, for as long as the shipping runs. | Keys of files sealed with the key service: none is stored on the PC. Users not assigned to this PC on the service. A PC whose audit shipping stopped gets no key after 90 seconds (a PC that reports a stopped service or a stop gets none either, but root can fake that report). Each release is in the service's own chained log; a release the PC's shipped ledger does not record is reported (`--reconcile`). Claiming another level or another file id gives a key that does not fit. A silent PC, a refused key from an unhealthy or stopped PC and a release the PC did not record reach the officers through ZENOS Messages within seconds of being noticed. |
@@ -86,7 +86,7 @@ components of a patch tool, plus one crafted configuration file and one data fil
 them. Its controller posed as an AI service (openaigpt4v.com). A signature check on the program does not see this.
 ZENOS updates itself every day, so its update path is exactly such an entrance.
 
-| | Today (0.1.2) | In the repository, not in a release yet |
+| | Until 0.1.2 | From 0.2.0 |
 |---|---|---|
 | What lets a package in | apt's signature check on the repositories (Debian, NodeSource, ZENOS). Whoever holds a repository's signing key, or takes over its server, can ship any package to every PC. | Also the release ledger (`zenos_pkgcheck.py`, apt's pre-install check; proved in `Supply.lean`): the exact file (SHA-256) must be in a record that more than half of the audit nodes configured on the PC hold identically, signed by at least two release officers enrolled on the PC, not revoked (an officer-signed revocation counts wherever it is found), and released to this PC's ring. dpkg is then given root-only copies of the files, checked again by their SHA-256 (`zenos-dpkg`), so a file swapped in the download folder after the check is never what dpkg reads. One audit node, one officer's key, the publisher, or the repository server alone does not let a package in. With `"enforce"`, nothing installs while the audit nodes cannot be reached, and one refused package stops that whole apt run. Debian and NodeSource packages are recorded the same way after their file is checked against the signed index (`zenos_release.py manifest --apt-check`). Off unless `/etc/zenos/supply.json` turns it on (`"warn"` or `"enforce"`); every package installed is recorded in the PC's ledger either way. |
 | A file that does not belong in the update folder | Not looked at. | `zenos-supplywatch` checks every file that appears in apt's download folder at once: a package file must be in the ledger, anything else does not belong there; either is quarantined and reported to the audit nodes, which alert the officers. |
@@ -113,7 +113,7 @@ therefore look the same and behave differently, for example wake on one particul
 at the weights nor running the model on tests is sure to see it.
 
 ZENOS does not judge what a model does. It treats a model like a package: the files must be, byte for byte, the
-ones that were released (in the repository, not in a release yet).
+ones that were released (from 0.2.0).
 
 | | What ZENOS does |
 |---|---|

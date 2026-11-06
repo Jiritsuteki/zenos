@@ -1,6 +1,6 @@
 # Officers' approvals with a passkey in the phone
 
-Status: in the source, not released. Tested with software passkeys (Chrome's virtual authenticator, a simulated
+Status: in 0.2.0 (Developer Preview). Tested with software passkeys (Chrome's virtual authenticator, a simulated
 P-256 phone key) and on a physical iPhone (5 November 2026, results at the end). Not yet tested on Android.
 
 ## What changes

@@ -1,6 +1,6 @@
 # ZENOS Messages across organizations
 
-Status: in the source, not released. It extends ZENOS Messages (messenger/), it is not a separate product.
+Status: in 0.2.0 (Developer Preview). It extends ZENOS Messages (messenger/), it is not a separate product.
 
 Built and tested (tests/messenger_federation.js, tests/messenger_federation_clients.js, tests/test_federation.py):
 

@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 0.2.0 Developer Preview (published 2026-11-06)
+
+Still a preview for testing and evaluation; production use of sensitive work waits for an independent audit, see
+[docs/THREAT_MODEL.md](docs/THREAT_MODEL.md). This release brings what was in the source since 0.1.2: the off-PC key
+service (keys of newly sealed files no longer kept on the PC), the release ledger for packages and AI models,
+ZENOS Office on the LibreOffice engine, approvals with a passkey on the officer's phone, sign-ins in the ledger,
+messages across organizations, the conductor for work with several AI models, and ZENOS Data, which keeps a
+server program's records with no plaintext and no key at rest. The server side (audit node, key service, storage
+and data peers) is released as the `zenos-grid` package next to the installer image.
+
+The published image was rebuilt on 2026-11-06 with what follows, so it is part of 0.2.0:
+
 **Self-audit before the external audit (Cloudflare's security-audit-skill, run 1 of at least 3)**
 - 28 weaknesses found in the first pass, 27 fixed with tests: in the messenger and its relay, the guard, the key
   agent and the network sentinel, the AI guard, the approval page, the audit node, ZENOS Data, the vulnerability
@@ -31,15 +43,6 @@
 - docs/NCO_ALIGNMENT.md: each measure of the National Cybersecurity Office's guidance of 5 Nov 2026 and what in
   ZENOS answers it.
 
-## 0.2.0 Developer Preview (2026-11-05)
-
-Still a preview for testing and evaluation; production use of sensitive work waits for an independent audit, see
-[docs/THREAT_MODEL.md](docs/THREAT_MODEL.md). This release brings what was in the source since 0.1.2: the off-PC key
-service (keys of newly sealed files no longer kept on the PC), the release ledger for packages and AI models,
-ZENOS Office on the LibreOffice engine, approvals with a passkey on the officer's phone, sign-ins in the ledger,
-messages across organizations, the conductor for work with several AI models, and ZENOS Data, which keeps a
-server program's records with no plaintext and no key at rest. The server side (audit node, key service, storage
-and data peers) is released as the `zenos-grid` package next to the installer image.
 
 **ZENOS Data: server records with no plaintext and no key at rest**
 - `zdata.py` for server programs, and key and storage peers (`zenos_datapeer.py`, `zenos-datapeer.service` in

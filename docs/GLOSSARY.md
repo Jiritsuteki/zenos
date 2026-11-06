@@ -2,7 +2,7 @@
 
 ## Conductor
 
-The conductor runs an AI task on the person's PC, coordinates calls to model providers, and keeps the task data and token table locally. It is in the source but not released; see [the conductor's parts](ORCHESTRATOR.md#the-parts) and the limitations in that document.
+The conductor runs an AI task on the person's PC, coordinates calls to model providers, and keeps the task data and token table locally. It is in 0.2.0; see [the conductor's parts](ORCHESTRATOR.md#the-parts) and the limitations in that document.
 
 ## Egress
 
@@ -10,11 +10,11 @@ Egress is what leaves the PC: the pre-send check evaluates files before sending,
 
 ## Federation
 
-Federation lets ZENOS Messages relays at different organizations exchange encrypted envelopes through a shared, signed member list. It is in the source but not released; see [organizations reaching each other](FEDERATION.md#2-organizations-reaching-each-other-federation).
+Federation lets ZENOS Messages relays at different organizations exchange encrypted envelopes through a shared, signed member list. It is in 0.2.0; see [organizations reaching each other](FEDERATION.md#2-organizations-reaching-each-other-federation).
 
 ## Key service
 
-The key service moves the master keys used to derive sealed-file keys off the PC and checks requests using its own records of users, grants and PC health. It is in the repository but not released; see [how the key service works](KEY_SERVICE.md#how-it-works).
+The key service moves the master keys used to derive sealed-file keys off the PC and checks requests using its own records of users, grants and PC health. It is in 0.2.0 (the `zenos-grid` package); see [how the key service works](KEY_SERVICE.md#how-it-works).
 
 ## Ledger
 

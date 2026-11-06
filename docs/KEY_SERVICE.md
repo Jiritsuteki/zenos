@@ -1,6 +1,6 @@
 # The key service
 
-Status: in the repository, tested, not in a release yet. Developer Preview: do not use it for real sensitive data.
+Status: in 0.2.0 (the `zenos-grid` package), tested. Developer Preview: do not use it for real sensitive data.
 
 ## Why
 

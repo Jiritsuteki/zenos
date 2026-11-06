@@ -1,4 +1,4 @@
-REL = "https://github.com/zenos-org/zenos/releases/tag/v0.1.2-preview"
+REL = "https://github.com/zenos-org/zenos/releases/tag/v0.2.0-preview"
 GH = "https://github.com/zenos-org/zenos/blob/main/"
 GT = "https://github.com/zenos-org/zenos/tree/main/"
 PROOFS = GH + "docs/FORMAL_VERIFICATION.md"
@@ -44,7 +44,7 @@ P["approval"] = dict(
          ["Open", "The key agent checks every signature against keys the administrator enrolled, then opens that one file.", ["The requester's own approval never counts", "No officer counts twice"]]],
     provenTitle="Who counts is mathematics",
     proven=["Opening above clearance needs at least one enrolled officer other than the user, whose signature verified", "The requester's own approval never counts, and no officer counts twice", "A signature that counts was made for exactly that request", "An approval can never be read as a decline, or the reverse"],
-    trusted=["Ed25519 signatures cannot be forged, and SHA-256 has no collisions", "The officer's key is kept by the browser, or (in the source, not released) as a passkey in the phone's secure chip, tested on an iPhone; from a set level up, the phone must be near the PC", "An officer who loses the device must be enrolled again"],
+    trusted=["Ed25519 signatures cannot be forged, and SHA-256 has no collisions", "The officer's key is kept by the browser, or, from 0.2.0, as a passkey in the phone's secure chip, tested on an iPhone; from a set level up, the phone must be near the PC", "An officer who loses the device must be enrolled again"],
     tryit=[["Enroll two officers", "Each makes an approval key in ZENOS Messages; the administrator enrolls it."], ["Open a Red · L4 file", "From an account cleared below L4. The request reaches both phones."], ["Read the code, approve", "Each officer matches the code on the screen and approves. The file opens."]],
     links=[["Download the preview", REL], ["Read the proofs", PROOFS], ["Read the source", GH + "system/sbin/zenos_guardd.py"], ["Threat model", THREAT]])
 P["leak-stop"] = dict(
@@ -110,7 +110,7 @@ P["ledger"] = dict(
     extra=dict(eyebrow="Not a cryptocurrency", text="No coins, no mining and no fees. The consortium is a fixed set of organizations that each keep a copy, so nobody, including the PC's administrator, can change the past alone."),
     provenTitle="What the check guarantees",
     proven=["The check accepts exactly the chains whose links and hashes hold", "An audit node's copy stays intact and only grows", "Two histories that pass the check and end at the same hash are the same history"],
-    trusted=["A record can still be changed in the seconds before it is shipped", "A PC kept offline ships nothing, though it is reported as silent", "The consortium assumes most of its members are honest", "The PC's audit key is a root-owned file, not yet in a TPM", "Sign-ins are read from the system journal (in the source, not released); while root stops that service, nothing is recorded"],
+    trusted=["A record can still be changed in the seconds before it is shipped", "A PC kept offline ships nothing, though it is reported as silent", "The consortium assumes most of its members are honest", "The PC's audit key is a root-owned file, not yet in a TPM", "Sign-ins are read from the system journal; while root stops that service, nothing is recorded"],
     tryit=[["Run an audit node", "On a second machine: zenos_auditnode.py, then enroll the PC."], ["Use the PC", "Open and close sealed files. Batches arrive every 30 seconds."], ["Try to rewrite", "Edit the PC's ledger. The node refuses the next batch and raises an alert."]],
     links=[["Download the preview", REL], ["Read the proofs", PROOFS], ["Read the source", GH + "system/sbin/zenos_auditnode.py"], ["Threat model", THREAT]])
 P["proven-decisions"] = dict(

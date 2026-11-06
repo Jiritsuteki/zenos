@@ -1,6 +1,6 @@
 # Office files in ZENOS: the LibreOffice engine under ZENOS's rules
 
-Status: in the source, not released.
+Status: in 0.2.0 (Developer Preview).
 
 ## Why
 

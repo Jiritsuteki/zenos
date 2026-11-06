@@ -21,7 +21,7 @@ leak stops the machine until responsible officers release it from their own devi
 | Distributed storage | Sealed files are fragmented and replicated across storage nodes. | PoC (local test nodes) |
 | Level-gated AI | Which AI may touch a file depends on its level (external AI hidden at L4+). | UI and policy only |
 | Messenger | End-to-end encrypted messages (Signal protocol via libsignal), channels, calls (LiveKit, self-hostable). | Working PoC |
-| Apps | Browser (WebKitGTK, tabs, bookmarks), ZENOS Office for Word, Excel and PowerPoint files (the LibreOffice engine in a ZENOS window: no network, the file only in memory, no macros), PDF, Images, Video, file picker. | In the source, not released. On 632 public files (4 Nov 2026): every file opened and saved, old .doc and .xls files included (no .ppt file found yet); tables, merged cells, print areas, formulas, conditional formats, charts and slides kept in every file that had them; borders kept in full in 185 of 218 workbooks, pictures in 80 of 85 Word files. Compared after saving, not against Microsoft Office ([tests/office/results](tests/office/results), [docs/OFFICE_ENGINE.md](docs/OFFICE_ENGINE.md)) |
+| Apps | Browser (WebKitGTK, tabs, bookmarks), ZENOS Office for Word, Excel and PowerPoint files (the LibreOffice engine in a ZENOS window: no network, the file only in memory, no macros), PDF, Images, Video, file picker. | In 0.2.0. On 632 public files (4 Nov 2026): every file opened and saved, old .doc and .xls files included (no .ppt file found yet); tables, merged cells, print areas, formulas, conditional formats, charts and slides kept in every file that had them; borders kept in full in 185 of 218 workbooks, pictures in 80 of 85 Word files. Compared after saving, not against Microsoft Office ([tests/office/results](tests/office/results), [docs/OFFICE_ENGINE.md](docs/OFFICE_ENGINE.md)) |
 | Proven decisions | Whether a file opens, an approval counts, a stop is released, content may flow to a place, a ledger is intact and a send is allowed are decided by one program built from Lean proofs ([docs/FORMAL_VERIFICATION.md](docs/FORMAL_VERIFICATION.md)). | Working; the proofs are checked on every build |
 | Server records (ZENOS Data) | A server program keeps its records with no plaintext and no key at rest: each record encrypted, copied to storage peers, its key split among key peers of different parties that release a share only for a signed-in person, a registered purpose and a level within their clearance ([docs/DATA_STORE.md](docs/DATA_STORE.md)). | In 0.2.0 (`zenos-grid`); tested, not yet used by a real server program |
 | Sign-in with the phone | Passwords saved in the browser are encrypted with a key only the person's phone produces (passkey, WebAuthn PRF); each sign-in is approved on the phone with fingerprint or face and a matching code. | Working PoC; tested with software and virtual passkeys and on a physical iPhone (5 Nov 2026: passkey, PRF, an approval, and the phone-near check with an iPad in the PC's place); not yet on Android ([docs/PHONE_KEYS.md](docs/PHONE_KEYS.md)) |
@@ -61,10 +61,13 @@ ZENOS is a Debian 13 ("trixie") system with a KDE Plasma 6 X11 session. It does 
 **Try the preview image (no build needed)**
 
 Each Developer Preview comes with a ready-made live / installer image on the
-[Releases page](https://github.com/zenos-org/zenos/releases). For 0.1.2:
+[Releases page](https://github.com/zenos-org/zenos/releases). For 0.2.0:
 
-1. Download `zenos-0.1.2-preview-amd64.iso` (about 2 GB) and `zenos-0.1.2-preview-amd64.iso.sha256`, then check
-   the image: `sha256sum -c zenos-0.1.2-preview-amd64.iso.sha256`
+1. The image is larger than GitHub's 2 GB limit for one file, so it comes in two parts. Download
+   `zenos-0.2.0-preview-amd64.iso.part0`, `.part1` and `zenos-0.2.0-preview-amd64.iso.sha256`, join and check:
+   `cat zenos-0.2.0-preview-amd64.iso.part0 zenos-0.2.0-preview-amd64.iso.part1 > zenos-0.2.0-preview-amd64.iso`
+   then `sha256sum -c zenos-0.2.0-preview-amd64.iso.sha256` (on Windows: `copy /b part0 + part1 <name>.iso`, then
+   `certutil -hashfile <name>.iso SHA256`).
 2. Boot it in a virtual machine (4 GB RAM or more), or write it to a USB stick and boot an ordinary PC (BIOS or
    UEFI). So far it has been tested in QEMU virtual machines, not yet on a wide range of physical PCs.
 3. It starts as a live system, signed in as the user `zenos`. "Install ZENOS" on the desktop installs it with

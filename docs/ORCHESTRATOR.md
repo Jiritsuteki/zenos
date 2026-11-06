@@ -1,6 +1,6 @@
 # ZENOS as the conductor
 
-Status: in the source, not released. First version; the parts not built yet are listed at the end.
+Status: in 0.2.0 (Developer Preview). First version; the parts not built yet are listed at the end.
 
 ## Why
 
