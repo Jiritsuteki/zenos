@@ -659,7 +659,9 @@ function signedAnswer(args) {
 async function carryAnswer(from, m) {
   // the approver is the Signal-authenticated sender; the guard (or zenos.py) still requires that person's own
   // signature, checked against the administrator-enrolled key
-  const a = m.ev, op = a.op === "decline" ? "decline" : "approve";
+  const a = { ...m.ev }, op = a.op === "decline" ? "decline" : "approve";
+  // an answer from afar is never "near" this PC, whatever it says (the passkey does not sign that field)
+  try { const j = JSON.parse(String(a.sig || "")); if (j && j.passkey === 1) a.sig = JSON.stringify({ ...j, attachment: "relayed" }); } catch {}
   const p = reqFile(a.id);
   const out = !p ? { ok: false, message: "Unknown request." }
     : p.startsWith(GSYS) ? await guardd({ op, request: String(a.id || ""), approver: from, sig: String(a.sig || ""), code: String(a.code || "") })
@@ -1057,10 +1059,15 @@ async function handle(req, res, remote) {
     if (u.pathname === "/api/all") return json(res, 200, restrict(hist, remote, req));
     if (u.pathname === "/api/local") {
       const LF = path.join(DIR, "local.json");
+      // a phone that is not government-issued sees and changes only what L1-L2 allows: no drafts (they hold the text
+      // being typed in any conversation, L3+ included), no saved list, no do-not-disturb settings
+      const limited = remote && !official(req);
+      const KEYS = limited ? ["read"] : ["saved", "drafts", "read", "dnd", "dndStep"];
       if (req.method === "POST") { let b = ""; for await (const c of req) b += c; const o = JSON.parse(b);
-        const cur = load(LF, {}); for (const k of ["saved", "drafts", "read", "dnd", "dndStep"]) if (o[k] !== undefined) cur[k] = o[k];
+        const cur = load(LF, {}); for (const k of KEYS) if (o[k] !== undefined) cur[k] = o[k];
         fs.writeFileSync(LF, JSON.stringify(cur), { mode: 0o600 }); return json(res, 200, { ok: true }); }
-      return json(res, 200, load(LF, {}));
+      const all = load(LF, {});
+      return json(res, 200, limited ? { read: all.read } : all);
     }
     if (u.pathname === "/api/react" && req.method === "POST") {
       let b = ""; for await (const c of req) b += c;

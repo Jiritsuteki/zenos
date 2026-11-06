@@ -15,7 +15,7 @@ and digests it relies on. Every unseal is written to the root ledger, which zeno
   zenos_keyd.py --drop-local-keys --yes   destroy the keys kept on this PC (after --reseal)
 Protocol: one JSON line per connection on /run/zenos/keyd.sock; the caller is identified by SO_PEERCRED.
 """
-import base64, hashlib, json, os, pwd, re, socket, struct, sys, threading, time
+import base64, hashlib, json, os, pwd, re, socket, struct, subprocess, sys, threading, time
 from pathlib import Path
 
 # the ZENOS library is ../lib/zenos beside this program (/usr/lib/zenos, root-owned)
@@ -275,17 +275,49 @@ def _start_time(pid):
         return None
 
 
-def hold(pid, uid, level):
-    """note that process `pid` now holds plaintext of `level` (the sentinel cuts the network from L4 while it lives)"""
-    if level < 4 or not pid:
-        return
+def socket_holders(ino, uid):
+    """every process that holds the client end of our connection `ino` (the connector may have handed the socket to
+    another process, or exited): from the kernel's socket table (ss -xp). Without that table, every process of the
+    uid counts (stricter, never looser)."""
+    pids = set()
+    try:
+        out = subprocess.run(["ss", "-xpnH"], capture_output=True, text=True, timeout=5).stdout
+        for line in out.splitlines():
+            f = line.split()
+            # Netid State Recv-Q Send-Q Local Port Peer Port Process
+            if len(f) >= 8 and f[7] == str(ino):
+                pids.update(int(x) for x in re.findall(r"pid=(\d+)", line))
+        if pids:
+            return pids
+    except (OSError, subprocess.SubprocessError):
+        pass
+    for d in os.listdir("/proc"):
+        if d.isdigit():
+            try:
+                if os.stat(f"/proc/{d}").st_uid == uid:
+                    pids.add(int(d))
+            except OSError:
+                pass
+    return pids
+
+
+def hold(pid, uid, level, ino=None):
+    """note the processes that now hold plaintext of `level` (the sentinel cuts the network from L4 while any of
+    them, or anything they start, lives): every process holding our connection's client end, and the connector.
+    False when none is alive to hold it (the plaintext is then not given). This file is written only here."""
+    if level < 4:
+        return True
+    pids = (socket_holders(ino, uid) if ino else set()) | ({pid} if pid else set())
+    recs = [{"pid": p, "uid": uid, "start": _start_time(p), "level": level, "t": time.time()} for p in sorted(pids)]
+    recs = [r for r in recs if r["start"]]
+    if not recs:
+        return False
     with EXPOSE_LOCK:
         try:
             cur = json.loads(HOLDERS.read_text())
         except Exception:
             cur = []
-        cur = [h for h in cur if _start_time(h.get("pid", 0)) == h.get("start")]
-        cur.append({"pid": pid, "uid": uid, "start": _start_time(pid), "level": level, "t": time.time()})
+        cur = [h for h in cur if isinstance(h, dict) and _start_time(h.get("pid", 0)) == h.get("start")] + recs
         try:
             HOLDERS.parent.mkdir(parents=True, exist_ok=True)
             tmp = HOLDERS.with_name(HOLDERS.name + ".tmp")
@@ -293,10 +325,11 @@ def hold(pid, uid, level):
             os.chmod(tmp, 0o644)
             os.replace(tmp, HOLDERS)
         except OSError:
-            pass
+            return False
+    return True
 
 
-def handle(msg, uid, pid=0):
+def handle(msg, uid, pid=0, ino=None):
     user = pwd.getpwuid(uid).pw_name
     op = msg.get("op")
     if op == "whoami":
@@ -379,7 +412,9 @@ def handle(msg, uid, pid=0):
                 reason="key-mismatch")
             return {"ok": False, "error": "key", "message": "The key for this file did not fit: its level or id was changed."}
         dek = None
-        hold(pid, uid, level)
+        if not hold(pid, uid, level, ino):
+            log(event="unseal-refused", user=user, level=level, name=h.get("name"), sha256=fh[:16], reason="no-holder")
+            return {"ok": False, "error": "holder", "message": "The program that asked is gone; the file stays closed."}
         log(event="unseal", user=user, level=level, by=how, name=h.get("name"), sha256=fh[:16],
             **({"fid": fid} if fid else {}))
         return {"ok": True, "header": h, "data": base64.b64encode(data).decode()}
@@ -437,7 +472,7 @@ def client(c):
             buf += chunk
             if len(buf) > MAX * 4 // 3 + 4096:
                 raise ValueError("too large")
-        out = handle(json.loads(buf or b"{}"), uid, pid)
+        out = handle(json.loads(buf or b"{}"), uid, pid, os.fstat(c.fileno()).st_ino)
     except Exception:
         out = {"ok": False, "error": "bad request"}
     try:

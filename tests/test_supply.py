@@ -156,6 +156,19 @@ class ReleaseLedger(unittest.TestCase):
         self.publish(rv, [2])
         self.assertEqual(self.decide(deb), (False, "revoked"))
 
+    def test_one_node_serving_a_malformed_record_changes_nothing(self):
+        """one node of three adds a record of the wrong shape: it is skipped, the majority's record still decides"""
+        deb = make_deb(self.tmp, "zenos-shapes", "1.0", b"shapes")
+        rec = self.record(deb, ["ito", "kato"])
+        sha = rec["manifest"]["sha256"]
+        bad = [{"manifest": {"sha256": sha, "rings": {"1": "x"}}}, {"manifest": {"sha256": sha, "rings": ["1"]}},
+               dict(rec, sigs=5), {"revoke": {"sha256": sha}, "sigs": ["x"]}, "junk", None]
+        def get(node, s):
+            return [rec] + (bad if node["name"] == "n2" else [])
+        nodes = [{"name": f"n{i}"} for i in range(3)]
+        self.assertEqual(zsupply.decide(deb, nodes, self.keys, 2, 1, get=get)[:2], (True, None))
+        self.assertEqual(zsupply.decide(deb, nodes, self.keys, 2, 1, get=lambda n, s: {"not": "a list"})[0], False)
+
     def test_apt_hook(self):
         import zenos_pkgcheck as P
         led = self.tmp / "pc-ledger.jsonl"
@@ -215,6 +228,15 @@ class DpkgWrapper(unittest.TestCase):
         self.assertEqual(W.main(["--install", str(renamed)]), 2)
         self.assertEqual(W.main(["-R", "--install", str(tmp)]), 2)          # a whole folder: refused
         self.assertEqual(W.main(["-iR", str(tmp)]), 2)
+        os.mkfifo(tmp / "pipe.deb")                            # a pipe could hand dpkg other bytes
+        self.assertEqual(W.main(["--install", str(tmp / "pipe.deb")]), 2)
+        dash = tmp / "-x.deb"                                  # after "--", a name starting with "-" is a file
+        shutil.copy(evil, dash)
+        os.chdir(tmp)
+        try:
+            self.assertEqual(W.main(["--install", "--", "-x.deb"]), 2)
+        finally:
+            os.chdir(REPO)
         self.assertEqual(len((tmp / "read").read_text().splitlines()), 1)
         for k in ("ZENOS_REAL_DPKG", "ZENOS_DPKG_STAGE", "ZENOS_PKGCHECK_CACHE", "ZENOS_PKGCHECK_LEDGER", "ZENOS_SUPPLY_CONF"):
             os.environ.pop(k, None)

@@ -127,14 +127,62 @@ def decide(level, svcs, flow=zdecide.flow):
     return svcs
 
 
-def rules(svcs):
-    """the ZENOS_AI chain for IPv4 and IPv6: reject every address of a service that is not allowed"""
+INFRA_CONF = os.environ.get("ZENOS_INFRA_CONF", "/etc/zenos/audit.json:/etc/zenos/keysvc.json:/etc/zenos/supply.json:"
+                            "/etc/zenos/approval.json").split(":")
+
+
+def infra_hosts():
+    """host names of ZENOS's own servers (audit nodes, key service, ...) from root's configuration"""
+    out = set()
+    def walk(x):
+        if isinstance(x, dict):
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+        elif isinstance(x, str) and "://" in x:
+            t = target(x)
+            if t:
+                out.add(t[0])
+    for f in INFRA_CONF:
+        walk(_load(f, {}))
+    return out
+
+
+def protected_addrs(svcs, infra=None):
+    """addresses a learned entry must never block: those of services the administrator listed and of ZENOS's own
+    servers (a name anyone teaches could be made to point at them)"""
+    out = set()
+    for s in svcs:
+        if s.get("listed"):
+            out.update(s.get("addrs", []))
+    for h in (infra if infra is not None else infra_hosts()):
+        try:
+            out.add(str(ipaddress.ip_address(h)))
+        except ValueError:
+            try:
+                out.update(sa[0].split("%")[0] for fam, _, _, _, sa in socket.getaddrinfo(h, None)
+                           if fam in (socket.AF_INET, socket.AF_INET6))
+            except OSError:
+                pass
+    return out
+
+
+def rules(svcs, infra=None):
+    """the ZENOS_AI chain for IPv4 and IPv6: reject every address of a service that is not allowed. For a learned
+    (unlisted) service, never an address of this machine, a private or link-local network, or a listed or ZENOS
+    service: any local account can teach a name, and it must not be able to cut those off."""
     v4, v6 = [], []
+    keep = protected_addrs(svcs, infra) if any(not s.get("listed") for s in svcs) else set()
     for s in svcs:
         if s.get("allow"):
             continue
         for a in sorted(s.get("addrs", [])):
             ip = ipaddress.ip_address(a)
+            if not s.get("listed") and (a in keep or ip.is_loopback or ip.is_private or ip.is_link_local
+                                        or ip.is_multicast or ip.is_reserved or ip.is_unspecified):
+                continue
             r = "-A %s -d %s/%d -p tcp --dport %d -j REJECT --reject-with tcp-reset" % (
                 CHAIN, ip, ip.max_prefixlen, s["port"])
             (v4 if ip.version == 4 else v6).append(r)
@@ -215,7 +263,11 @@ class Guard:
         an hour (the rest are still refused while exposed, just not remembered)."""
         if any((s["host"], s["port"]) == t for s in services()):
             return
-        if not re.fullmatch(r"[a-z0-9.-]{1,253}|\[[0-9a-f:.]{2,45}\]|[0-9a-f:.]{2,45}", t[0]) or not 0 < t[1] < 65536:
+        # a host name with a dot in it, never an address or "localhost": what is learned names a service, and
+        # its addresses are filtered again when the rules are written (rules())
+        h = t[0]
+        if not re.fullmatch(r"(?=.{1,253}$)[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+", h) \
+                or re.fullmatch(r"[0-9.]+", h) or h.endswith(".localhost") or not 0 < t[1] < 65536:
             return
         now = time.time()
         recent = [x for x in self.learned_by.get(uid, []) if now - x < 3600]

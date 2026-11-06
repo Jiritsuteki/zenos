@@ -32,7 +32,7 @@ from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey, X
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 
-VERSION = 1
+VERSION = 2                     # 2: shares and records name the server that wrote them
 
 
 class Refused(Exception):
@@ -140,12 +140,15 @@ def open_sealed(priv, s, info):
     return AESGCM(k).decrypt(unb64(s["nonce"]), unb64(s["ct"]), info)
 
 
-def share_info(rid, table, level, x):
-    return b"share|%s|%s|%d|%d" % (rid.encode(), table.encode(), int(level), int(x))
+def share_info(server, rid, table, level, x):
+    """what a sealed share is bound to: the server that wrote the record, the record, its table and level, and x. A
+    key peer opens it only for that server's request, so another enrolled server with a copy of the record (and a
+    table of the same name) gets nothing."""
+    return b"share|%s|%s|%s|%d|%d" % (server.encode(), rid.encode(), table.encode(), int(level), int(x))
 
 
-def record_aad(rid, table, level):
-    return canon({"v": VERSION, "id": rid, "table": table, "level": int(level)})
+def record_aad(server, rid, table, level):
+    return canon({"v": VERSION, "server": server, "id": rid, "table": table, "level": int(level)})
 
 
 # ---------------------------------------------------------------- what the key peers are told
@@ -215,10 +218,10 @@ class Store:
         rid = rid or secrets.token_hex(16)
         dek = AESGCM.generate_key(bit_length=256)
         n = os.urandom(12)
-        ct = AESGCM(dek).encrypt(n, canon(value), record_aad(rid, table, level))
+        ct = AESGCM(dek).encrypt(n, canon(value), record_aad(self.server, rid, table, level))
         shares = []
         for (x, y), p in zip(split(dek, self.k, len(self.key_peers)), self.key_peers):
-            shares.append({"peer": p.name, "x": x, "sealed": seal_to(p.pub, y, share_info(rid, table, level, x))})
+            shares.append({"peer": p.name, "x": x, "sealed": seal_to(p.pub, y, share_info(self.server, rid, table, level, x))})
         rec = {"v": VERSION, "id": rid, "table": table, "level": int(level), "nonce": b64(n), "ct": b64(ct),
                "k": self.k, "shares": shares}
         body = {"server": self.server, "record": rec, "t": int(time.time())}
@@ -261,7 +264,7 @@ class Store:
                 continue
             try:
                 v = AESGCM(dek).decrypt(unb64(rec["nonce"]), unb64(rec["ct"]),
-                                        record_aad(rec["id"], rec["table"], rec["level"]))
+                                        record_aad(self.server, rec["id"], rec["table"], rec["level"]))
             except Exception:
                 last = Unavailable("a storage peer's copy was changed")
                 continue

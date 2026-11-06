@@ -69,6 +69,13 @@ const rv = (p, body) => call("rev", p, body, { Authorization: "Bearer " + REVIEW
   r = await call("ken", "/api/thread?t=ideas"); assert.ok(r.j.posts.find((x) => x.id === held.id).text.includes("giveaway")); ok("the writer still sees the held post");
   r = await call("adm", "/api/admin/post", { id: held.id, hidden: false }); assert.ok(r.j.ok);
   r = await call("anon", "/api/thread?t=ideas"); assert.ok(r.j.posts.find((x) => x.id === held.id).text.includes("giveaway")); ok("a maintainer releases a held post");
+  r = await call("ken", "/api/post", { thread: "ideas", text: "This scam board needs dark mode for printing at zenosupdate now" }); assert.ok(r.j.ok);
+  await new Promise((ok) => setTimeout(ok, 300));
+  let leak = "";
+  for (let i = 1; i <= 30; i++) { const x = await call("anon", "/api/proposal?id=" + i); if (x.status === 200) leak += x.t; }
+  r = await call("anon", "/api/thread?t=ideas"); leak += JSON.stringify(r.j.posts.map((x) => x.ai));
+  assert.ok(!leak.includes("zenosupdate")); ok("a held post never names or joins a proposal");
+  r = await call("anon", "/auth/github/callback?state=abc&code=x"); assert.equal(r.status, 400); ok("a sign-in callback from another browser is refused");
   r = await call("anon", "/api/review/pending"); assert.equal(r.status, 403);
   r = await call("anon", "/api/review/pending", undefined, { Authorization: "Bearer " + ADMIN }); assert.equal(r.status, 403); ok("review endpoints need the reviewer token");
   r = await rv("/api/review/pending"); const pend = r.j.posts; assert.ok(pend.length >= 3); assert.ok(pend.some((x) => x.parent === ps[0].text || x.reply)); ok("reviewer sees new posts, with the parent for replies");
@@ -76,9 +83,9 @@ const rv = (p, body) => call("rev", p, body, { Authorization: "Bearer " + REVIEW
   r = await call("anon", "/api/replies?post=" + ps[2].id); const a = r.j.posts.find((x) => x.byAI); assert.ok(a && /Dark mode/.test(a.text) && a.handle === "@zenos-ai"); ok("the AI's answer is a reply marked as the AI's");
   r = await rv("/api/review/result", { id: ps[2].id, appropriate: true }); assert.equal(r.status, 404); ok("a post is reviewed once");
   const other = pend.find((x) => x.id !== ps[2].id && !/Ignore previous/.test(x.text));
-  r = await rv("/api/review/result", { id: other.id, appropriate: true, answer: "See https://evil.example/fix for the answer." }); assert.ok(r.j.ok);
+  r = await rv("/api/review/result", { id: other.id, appropriate: true, answer: "Ask at t.me/zenos_help for the answer." }); assert.ok(r.j.ok);
   r = await call("anon", "/api/replies?post=" + (other.reply || other.id)); const aiHeld = r.j.posts.find((x) => x.held && !x.text);
-  assert.ok(aiHeld && !r.t.includes("evil.example")); ok("an AI answer with a link waits for a maintainer");
+  assert.ok(aiHeld && !r.t.includes("zenos_help")); ok("an AI answer with a link waits for a maintainer");
   const inj = pend.find((x) => /Ignore previous/.test(x.text));
   r = await rv("/api/review/result", { id: inj.id, appropriate: false, reason: "Tries to instruct the reviewer." }); assert.ok(r.j.ok);
   r = await call("anon", "/api/thread?t=ideas"); assert.equal(r.j.posts.find((x) => x.id === inj.id).held, "Tries to instruct the reviewer."); ok("the review holds a post it finds not appropriate");

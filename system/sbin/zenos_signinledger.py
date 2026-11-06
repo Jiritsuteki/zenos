@@ -71,6 +71,15 @@ def _kv(text):
     return out
 
 
+def _root_owned(path):
+    """the program file (journald's _EXE, taken from the kernel) is one only root can change"""
+    try:
+        st = os.stat(str(path))
+        return st.st_uid == 0 and not st.st_mode & 0o022
+    except OSError:
+        return False
+
+
 class Recorder:
     """turns journal entries and lock states into ledger lines; `write(event, actor, **fields)` does the writing"""
 
@@ -79,11 +88,19 @@ class Recorder:
         self.sessions = {}            # session id -> {"user", "since", "locked"}
 
     def entry(self, e):
+        # every account can write to the journal and choose MESSAGE_ID and MESSAGE; only the fields journald itself
+        # adds (beginning with "_") tell who wrote an entry. Sessions come from systemd-logind, failed passwords
+        # from PAM in a root process; nothing else is recorded.
+        root = str(e.get("_UID", "")) == "0"
+        locker = str(e.get("_EXE", "")).endswith("/kscreenlocker_greet") and _root_owned(e.get("_EXE"))
+        if not (root or locker):
+            return None
         mid = e.get("MESSAGE_ID")
+        logind = e.get("_COMM") == "systemd-logind" or e.get("_SYSTEMD_UNIT") == "systemd-logind.service"
         if mid == SESSION_START:
-            return self._start(e)
+            return self._start(e) if logind and root else None
         if mid == SESSION_STOP:
-            return self._stop(e)
+            return self._stop(e) if logind and root else None
         m = AUTH_FAIL.search(str(e.get("MESSAGE", "")))
         if m:
             kv = _kv(m.group(2))
@@ -120,6 +137,8 @@ class Recorder:
 
     def _stop(self, e):
         sid = str(e.get("SESSION_ID", ""))
+        if self.show(sid).get("State") in ("active", "online"):
+            return None               # logind still has it: not a real end
         s = self.sessions.pop(sid, None)
         if s is None:
             return None               # a session that was not a sign-in (greeter, background) or began before us

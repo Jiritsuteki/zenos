@@ -15,8 +15,18 @@ A program built for another architecture is killed.
 Inside: an empty root with /usr, /etc and /opt read-only (and the /bin, /lib links), /work/in (the inputs,
 read-only), /work/out (writable), a private /tmp. Not there at all: /home, /root, /var, /run, /media, /mnt, /srv;
 /etc/zenos is hidden.
+
+Limits, so a program cannot take the PC down with it: the private /tmp is a tmpfs of TMP_BYTES; memory
+(RLIMIT_AS), file size (RLIMIT_FSIZE, which also bounds what it can write to /work/out and to its output), CPU time
+and the number of processes are capped; the output kept is at most OUTPUT_BYTES per stream.
 """
-import os, platform, shutil, struct, subprocess, tempfile
+import os, platform, resource, shutil, struct, subprocess, tempfile
+
+TMP_BYTES = 256 << 20
+MEM_BYTES = 4 << 30
+FILE_BYTES = 512 << 20
+OUTPUT_BYTES = 16 << 20
+EXTRA_PROCS = 256          # processes it may start, on top of what the person already runs
 
 AUDIT_ARCH = {"x86_64": 0xC000003E, "aarch64": 0xC00000B7}
 DENY = {
@@ -100,7 +110,7 @@ def run(argv, inputs=None, out_dir=None, timeout=120, stdin=None, text=True):
             args += ["--symlink", os.readlink(p), p]
         elif os.path.isdir(p):
             args += ["--ro-bind", p, p]
-    args += ["--dev", "/dev", "--proc", "/proc", "--tmpfs", "/tmp"]
+    args += ["--dev", "/dev", "--proc", "/proc", "--size", str(TMP_BYTES), "--tmpfs", "/tmp"]
     if os.path.isdir("/etc/zenos"):
         args += ["--tmpfs", "/etc/zenos"]
     args += ["--dir", "/work", "--dir", "/work/in"]
@@ -118,4 +128,36 @@ def run(argv, inputs=None, out_dir=None, timeout=120, stdin=None, text=True):
         f.seek(0)
         fd = f.fileno()
         args += ["--seccomp", str(fd), "--"] + list(argv)
-        return subprocess.run(args, input=stdin, capture_output=True, text=text, timeout=timeout, pass_fds=(fd,))
+        procs = _user_procs() + EXTRA_PROCS
+        cpu = int(timeout) + 5 if timeout else 3600
+
+        def limits():
+            for what, n in ((resource.RLIMIT_AS, MEM_BYTES), (resource.RLIMIT_FSIZE, FILE_BYTES),
+                            (resource.RLIMIT_CPU, cpu), (resource.RLIMIT_NPROC, procs), (resource.RLIMIT_CORE, 0)):
+                soft, hard = resource.getrlimit(what)
+                n = n if hard == resource.RLIM_INFINITY else min(n, hard)
+                resource.setrlimit(what, (n, n if hard == resource.RLIM_INFINITY else hard))
+        with tempfile.TemporaryFile() as out, tempfile.TemporaryFile() as err:
+            data = stdin.encode() if (text and isinstance(stdin, str)) else stdin
+            p = subprocess.run(args, input=data, stdout=out, stderr=err, timeout=timeout, pass_fds=(fd,),
+                               preexec_fn=limits)
+            res = []
+            for f in (out, err):
+                f.seek(0)
+                b = f.read(OUTPUT_BYTES)
+                res.append(b.decode("utf-8", "replace") if text else b)
+            return subprocess.CompletedProcess(args, p.returncode, res[0], res[1])
+
+
+def _user_procs():
+    """how many processes and threads the person runs now (RLIMIT_NPROC counts every thread of every one of them,
+    not just the sandbox's)"""
+    uid, n = os.getuid(), 0
+    for d in os.listdir("/proc"):
+        if d.isdigit():
+            try:
+                if os.stat("/proc/" + d).st_uid == uid:
+                    n += len(os.listdir("/proc/%s/task" % d))
+            except OSError:
+                pass
+    return n

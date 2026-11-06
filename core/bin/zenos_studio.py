@@ -27,8 +27,13 @@ POLICY = "/etc/zenos/policy.conf"
 
 
 def folder_level(p):
-    p = p or ""
-    return 5 if "Black · L5" in p else 4 if "Red · L4" in p else 2 if "Green · L2-L3" in p else 1
+    import sys
+    for lib in ("/usr/lib/zenos", "/usr/local/lib/zenos",
+                os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "system", "lib")):
+        if os.path.isdir(lib) and lib not in sys.path:
+            sys.path.append(lib)
+    import zformat
+    return zformat.desk_level(p, os.path.join(HOME, "Desktop"))
 
 
 def _roots():

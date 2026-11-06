@@ -39,8 +39,8 @@ import zdecide                                            # where content may go
 
 
 def folder_level(p):
-    p = p or ""
-    return 5 if "Black · L5" in p else 4 if "Red · L4" in p else 2 if "Green · L2-L3" in p else 1
+    import zformat
+    return zformat.desk_level(p, os.path.join(HOME, "Desktop"))
 
 
 def sealed_block(path):
@@ -419,8 +419,7 @@ class App(Gtk.Window):
 
     @staticmethod
     def _lvl(p):
-        p = p or ""
-        return 5 if "Black · L5" in p else 4 if "Red · L4" in p else 2 if "Green · L2-L3" in p else 1
+        return folder_level(p)
 
     def cmd_level_folders(self, a):
         d = os.path.join(HOME, "Desktop")

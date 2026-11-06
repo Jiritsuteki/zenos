@@ -33,7 +33,7 @@ import zident                                                      # noqa: E402
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey   # noqa: E402
 from cryptography.hazmat.primitives import serialization          # noqa: E402
 
-NAME = re.compile(r"^[A-Za-z0-9_.-]{1,64}$")
+NAME = re.compile(r"^(?!.*__)[A-Za-z0-9_.-]{1,64}$")   # no "__": it joins machine and chain in file names
 MAX_BATCH = 2000
 lock = threading.Lock()
 
@@ -43,6 +43,7 @@ def canon(o):
 
 
 DAY = 86400
+SKEW = 300                     # seconds a status may differ from this node's clock
 PC_ALERTS = ("supply-alert", "integrity-alert", "pkg-refused")
 
 
@@ -147,17 +148,25 @@ class Node:
             self.alert("bad-signature", machine=machine, chain=chain)
             return 403, {"ok": False, "error": "signature does not verify"}
         with lock:
-            seen = self.dir / "machines" / f"{machine}.seen"         # heard from (even if the batch is refused below)
-            if seen.exists() and seen.read_text().strip() == "silent":
-                self.alert("machine-back", machine=machine)
-            seen.write_text(str(time.time()))
+            # a PC counts as heard from only by a signed status that is fresh (within SKEW of this node's clock) and
+            # newer than the last one taken: an old batch sent again neither hides a silent PC nor a stopped service
             if isinstance(b.get("status"), dict):
                 try:
                     if not zident.verify(pk.read_bytes(), base64.b64decode(b.get("status_sig", "")), status_digest(b)):
                         raise ValueError("bad status signature")
-                    self.note_status(machine, b["status"])
+                    ok_sig = True
                 except Exception:
+                    ok_sig = False
                     self.alert("bad-status-signature", machine=machine)
+                t = b["status"].get("t")
+                if ok_sig and isinstance(t, (int, float)) and not isinstance(t, bool) and abs(time.time() - t) <= SKEW \
+                        and t >= self.status_t(machine):
+                    seen = self.dir / "machines" / f"{machine}.seen"
+                    if seen.exists() and seen.read_text().strip() == "silent":
+                        self.alert("machine-back", machine=machine)
+                    seen.write_text(str(min(time.time(), float(t))))
+                    if t > self.status_t(machine):
+                        self.note_status(machine, b["status"])
             held = self.held(machine, chain)
             n = len(held)
             if frm > n:
@@ -190,6 +199,14 @@ class Node:
             count = n + len(new)
             return 200, {"ok": True, "added": len(new), **self.receipt(machine, chain, count, prev)}
 
+
+    def status_t(self, machine):
+        """the time the PC put on the last status taken here (0 for none)"""
+        try:
+            t = json.loads((self.dir / "machines" / f"{machine}.status.json").read_text())["status"]["t"]
+            return float(t) if isinstance(t, (int, float)) and not isinstance(t, bool) else 0.0
+        except (OSError, ValueError, KeyError, TypeError):
+            return 0.0
 
     def note_status(self, machine, st):
         """alert once when a protecting service stops or a kernel fix is waiting for a restart, and once more when

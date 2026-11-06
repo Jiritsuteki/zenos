@@ -9,9 +9,14 @@ os.environ.update(ZENOS_AI_REGISTRY=D + "/ai.json", ZENOS_AI_LEARNED=D + "/learn
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "../system/sbin"))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "../system/lib"))
 subprocess.run(["ip", "link", "set", "lo", "up"], check=True)
+# the unlisted service: a name (only names are learned) for a public-looking address (a learned entry never blocks
+# this machine or a private network), both only inside this namespace
+subprocess.run(["ip", "addr", "add", "100.64.0.5/32", "dev", "lo"], check=True)
+_gai = socket.getaddrinfo
+socket.getaddrinfo = lambda h, *a, **k: _gai("100.64.0.5" if h == "new-ai.test" else h, *a, **k)
 import zenos_aiguard as G
 
-EXT, GOV, MIN, NEW = ("127.0.0.2", 8101), ("127.0.0.3", 8102), ("127.0.0.4", 8103), ("127.0.0.5", 8104)
+EXT, GOV, MIN, NEW = ("127.0.0.2", 8101), ("127.0.0.3", 8102), ("127.0.0.4", 8103), ("100.64.0.5", 8104)
 for a in (EXT, GOV, MIN, NEW):
     s = socket.socket(); s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1); s.bind(a); s.listen(64)
     threading.Thread(target=lambda s=s: [c.close() for c, _ in iter(s.accept, None)], daemon=True).start()
@@ -42,7 +47,7 @@ for lvl in range(0, 6):
     out[lvl] = [ok, seen, reach(EXT), reach(GOV), reach(MIN)]
 # a service the administrator did not list is learned as external-ai and blocked from then on
 expose(3)
-out["check_new"] = g.check("http://%s:%d/v1" % NEW)
+out["check_new"] = g.check("http://new-ai.test:%d/v1" % NEW[1])
 out["new_reach"] = reach(NEW)
 out["check_gov"] = g.check("http://%s:%d/v1" % GOV)
 # someone removes the hook: the next sync puts it back

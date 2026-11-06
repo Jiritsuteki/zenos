@@ -301,19 +301,30 @@ def _proc_stat(pid):
         return None
 
 
+_KIDS = {}          # descendants of holders found so far (pid -> start time), kept here: the file is keyd's alone
+
+
 def holders_alive(path=OPEN_HOLDERS, min_level=4):
     """True while a process that received L4+ plaintext from zenos-keyd (recorded there, root-owned), or a process it
-    started, is still alive. Children are followed and added as they appear, so handing the plaintext to a child and
-    exiting keeps the cut. The user's own open.flag can only add to this, never lift it."""
+    started, is still alive. Children are followed as they appear and remembered here, so handing the plaintext to
+    a child and exiting keeps the cut. The user's own open.flag can only add to this, never lift it."""
     try:
         recs = json.load(open(path))
     except Exception:
-        return False
+        recs = []
     live = {}
-    for h in recs:
+    for h in recs if isinstance(recs, list) else []:
+        if not isinstance(h, dict):
+            continue
         st = _proc_stat(h.get("pid", 0))
         if st and st[1] == h.get("start") and int(h.get("level", 0)) >= min_level:
-            live[int(h["pid"])] = h
+            live[int(h["pid"])] = st[1]
+    for pid, start in list(_KIDS.items()):
+        st = _proc_stat(pid)
+        if st and st[1] == start:
+            live[pid] = start
+        else:
+            _KIDS.pop(pid, None)
     if not live:
         return False
     grown = True
@@ -323,16 +334,8 @@ def holders_alive(path=OPEN_HOLDERS, min_level=4):
             if d.isdigit() and int(d) not in live:
                 st = _proc_stat(d)
                 if st and st[0] in live:
-                    live[int(d)] = {"pid": int(d), "start": st[1], "level": live[st[0]]["level"], "uid": live[st[0]].get("uid")}
+                    live[int(d)] = _KIDS[int(d)] = st[1]
                     grown = True
-    try:
-        tmp = path + ".tmp"
-        with open(tmp, "w") as f:
-            json.dump(list(live.values()), f)
-        os.chmod(tmp, 0o644)
-        os.replace(tmp, path)
-    except OSError:
-        pass
     return True
 
 

@@ -68,11 +68,24 @@ def inspect(path, c=None, get=zsupply.fetch):
         quarantine(path, "not a package file, in a folder that holds only package files")
         return "quarantined"
     try:
+        zsupply.deb_fields(path)
+        unreadable = None
+    except Exception as e:
+        unreadable = e
+    try:
+        if unreadable is not None:
+            raise ValueError("unreadable")
         ok, why, f = zsupply.decide(path, zsupply.audit_nodes(), zsupply.officers(), c.get("required", 2),
                                     c.get("ring", 1), get=get)
         reachable = f.get("_reachable", 0)
-    except Exception as e:
-        ok, why, reachable = False, f"unreadable package: {e}", 1
+    except ValueError:
+        if unreadable is None:
+            record("supply-unverified", file=path, reason="check failed: ValueError")
+            return "unverified"
+        ok, why, reachable = False, f"unreadable package: {unreadable}", 1
+    except Exception as e:                                 # our own failure is no verdict: nothing is moved
+        record("supply-unverified", file=path, reason=f"check failed: {type(e).__name__}")
+        return "unverified"
     if ok:
         return "ok"
     if not reachable:
@@ -130,6 +143,9 @@ def inspect_model(path, c=None, get=zsupply.fetch):
                 break
     except zmodel.Refused as e:
         ok, why, reachable = False, str(e), 1
+    except Exception as e:                                 # our own failure is no verdict, and never stops watching
+        record("supply-unverified", file=folder, reason=f"check failed: {type(e).__name__}", kind="model")
+        return "unverified"
     if ok:
         return "ok"
     if not reachable:

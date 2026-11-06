@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Self-audit run 2 of at least 3 (Cloudflare's security-audit-skill): 21 confirmed weaknesses (fixed with tests) and 7
+  further ones the run pointed at (fixed too), all in the source. What each one was is published once a release carries the
+  fixes ([SECURITY.md](SECURITY.md), [docs/SELF_AUDIT.md](docs/SELF_AUDIT.md)).
+
 - The password vault serves only a browser or messenger that the new root launcher `zenos-launchd` started; it
   records each start (pid, start time, person, program), and other programs of the same person cannot attach to
   such a process (`kernel.yama.ptrace_scope = 1`). Closes the last finding of the first self-audit

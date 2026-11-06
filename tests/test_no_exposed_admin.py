@@ -102,15 +102,27 @@ class NoExposedAdmin(unittest.TestCase):
             self.assertEqual(ask("GET", "/")[0], 403)
             self.assertEqual(ask("POST", "/", body="id=x&action=decline")[0], 403)
             st, ck = ask("GET", "/?k=" + key)
-            self.assertEqual(st, 302)
-            cookie = ck.split(";", 1)[0]
-            self.assertEqual(ask("GET", "/", {"Cookie": cookie})[0], 200)
-            self.assertEqual(ask("GET", "/", {"Cookie": cookie, "Host": "evil.example:%d" % port})[0], 403)
-            self.assertEqual(ask("POST", "/", {"Cookie": cookie, "Origin": "http://evil.example"}, "id=x&action=decline")[0], 403)
+            self.assertEqual((st, ck), (200, ""))                     # no cookie: other local ports would get it too
+            self.assertEqual(ask("GET", "/", {"Cookie": "zak=" + key})[0], 403)
+            self.assertEqual(ask("GET", "/?k=" + key, {"Host": "evil.example:%d" % port})[0], 403)
+            self.assertEqual(ask("POST", "/", {"Origin": "http://evil.example"}, "k=%s&id=x&action=decline" % key)[0], 403)
+            self.assertEqual(ask("POST", "/", {"Content-Type": "application/x-www-form-urlencoded"},
+                                 "k=%s&id=x&action=decline" % key)[0], 200)
         finally:
             p.kill()
             p.wait()
 
+
+    def test_office_window_opens_only_on_this_users_server(self):
+        sys.path.insert(0, str(REPO / "core" / "bin"))
+        import zenos_portcheck as PC
+        with socket.socket() as so:
+            so.bind(("127.0.0.1", 0))
+            port = so.getsockname()[1]
+            self.assertFalse(PC.ok(port, 0))                     # nothing listening: not opened
+            so.listen(1)
+            self.assertEqual(PC.listeners(port), [os.getuid()])
+            self.assertTrue(PC.ok(port, 0))
 
     def test_office_ai_relay_serves_only_its_own_page(self):
         """the office apps' AI relay: no other site's page, no request that skips the browser's preflight, and no

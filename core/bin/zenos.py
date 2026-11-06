@@ -406,6 +406,9 @@ def request_access(p, h):
        f"Needs {r['required']} approval(s). You will be notified when it is decided.")
 
 
+MAX_CODE_TRIES = 5
+
+
 def approve(rid, approver, code):
     """Returns (ok, message). Signs the request with the approver's key; issues a grant when enough approvals."""
     p = request_path(rid)
@@ -425,7 +428,12 @@ def approve(rid, approver, code):
         return False, "This request is already decided."
     if approver not in ROSTER:
         return False, "Unknown approver."
+    if int(r.get("code_tries", 0) or 0) >= MAX_CODE_TRIES:
+        audit("approve-refused", request=rid, approver=approver, reason="code-tries")
+        return False, "Too many wrong match codes for this request. Nothing was approved; ask for a new request."
     if code.strip() != r["code"]:
+        r["code_tries"] = int(r.get("code_tries", 0) or 0) + 1              # a 4-digit code cannot be tried through
+        p.write_text(json.dumps(r, ensure_ascii=False, indent=1))
         audit("approve-refused", request=rid, approver=approver, reason="match-code")
         return False, "The match code does not match the requester's screen. Nothing was approved."
     if approver == r.get("requester"):
@@ -469,7 +477,12 @@ def signed_answer(rid, approver, op, sig_b64, code=""):
         what = {"release": "the emergency release", "plan": "the pre-filed operation"}.get(r.get("kind"), f"\"{r.get('name')}\"")
         notify("ZENOS · Request declined", f"Your request for {what} (L{r['level']}) was declined.")
         return True, "Declined."
+    if int(r.get("code_tries", 0) or 0) >= MAX_CODE_TRIES:
+        audit("approve-refused", request=r["id"], approver=approver, reason="code-tries")
+        return False, "Too many wrong match codes for this request. Nothing was approved; ask for a new request."
     if str(code).strip() != r["code"]:
+        r["code_tries"] = int(r.get("code_tries", 0) or 0) + 1
+        p.write_text(json.dumps(r, ensure_ascii=False, indent=1))
         audit("approve-refused", request=r["id"], approver=approver, reason="match-code")
         return False, "The match code does not match the requester's screen. Nothing was approved."
     if any(a["approver"] == approver for a in r["approvals"]):

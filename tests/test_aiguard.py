@@ -15,6 +15,11 @@ def put(path, obj):
         f.write(obj if isinstance(obj, str) else json.dumps(obj))
 
 
+
+def rd(p):
+    with open(p) as f:
+        return json.load(f)
+
 class Decision(unittest.TestCase):
     def test_reachable_matches_the_proven_ceilings(self):
         ceiling = {"external-ai": 2, "gov-ai": 3, "ministry-ai": 5}
@@ -33,10 +38,24 @@ class Decision(unittest.TestCase):
         self.assertFalse(svcs[0]["allow"])
 
     def test_rules_reject_only_what_is_not_allowed(self):
-        v4, v6 = G.rules([{"host": "a", "port": 443, "kind": "external-ai", "allow": False, "addrs": ["192.0.2.1", "2001:db8::1"]},
-                          {"host": "b", "port": 8443, "kind": "gov-ai", "allow": True, "addrs": ["192.0.2.2"]}])
+        v4, v6 = G.rules([{"host": "a", "port": 443, "kind": "external-ai", "allow": False, "listed": True, "addrs": ["192.0.2.1", "2001:db8::1"]},
+                          {"host": "b", "port": 8443, "kind": "gov-ai", "allow": True, "listed": True, "addrs": ["192.0.2.2"]}], infra=[])
         self.assertEqual(v4, ["-A ZENOS_AI -d 192.0.2.1/32 -p tcp --dport 443 -j REJECT --reject-with tcp-reset"])
         self.assertEqual(v6, ["-A ZENOS_AI -d 2001:db8::1/128 -p tcp --dport 443 -j REJECT --reject-with tcp-reset"])
+
+    def test_a_learned_name_cannot_cut_off_this_machine_or_zenos_servers(self):
+        listed = {"host": "gov.example", "port": 443, "kind": "gov-ai", "allow": True, "listed": True, "addrs": ["1.1.1.1"]}
+        learned = {"host": "x.example", "port": 443, "kind": "external-ai", "allow": False, "listed": False,
+                   "addrs": ["127.0.0.1", "10.0.0.5", "169.254.1.1", "1.1.1.1", "9.9.9.9", "8.8.8.8", "::1"]}
+        v4, v6 = G.rules([listed, learned], infra=["9.9.9.9"])
+        self.assertEqual(v4, ["-A ZENOS_AI -d 8.8.8.8/32 -p tcp --dport 443 -j REJECT --reject-with tcp-reset"])
+        self.assertEqual(v6, [])
+        with tempfile.TemporaryDirectory() as d:
+            G.LEARNED, G.LOG, G.LEDGER = d + "/learned.json", d + "/g.log", d + "/l.jsonl"
+            g = G.Guard()
+            for h in ("127.0.0.1", "192.0.2.10", "localhost", "[::1]", "a.localhost"):
+                g.learn((h, 443), uid=1001)
+            self.assertFalse(os.path.exists(G.LEARNED))                 # addresses are never learned
 
     def test_registry_learned_and_bad_entries(self):
         with tempfile.TemporaryDirectory() as d:
@@ -63,14 +82,14 @@ class Decision(unittest.TestCase):
             g = G.Guard()
             for i in range(G.LEARN_RATE + 5):
                 g.learn(("h%d.example" % i, 443), uid=1001)
-            self.assertEqual(len(json.load(open(G.LEARNED))), G.LEARN_RATE)
+            self.assertEqual(len(rd(G.LEARNED)), G.LEARN_RATE)
             g.learn(("other.example", 443), uid=1002)                     # another account has its own allowance
-            self.assertEqual(len(json.load(open(G.LEARNED))), G.LEARN_RATE + 1)
+            self.assertEqual(len(rd(G.LEARNED)), G.LEARN_RATE + 1)
             g.learn(("bad host$(x)", 443), uid=1003)
-            self.assertEqual(len(json.load(open(G.LEARNED))), G.LEARN_RATE + 1)
+            self.assertEqual(len(rd(G.LEARNED)), G.LEARN_RATE + 1)
             put(G.LEARNED, ["https://x%d.example/" % i for i in range(G.MAX_LEARNED)])
             g.learn(("full.example", 443), uid=1004)
-            self.assertEqual(len(json.load(open(G.LEARNED))), G.MAX_LEARNED)
+            self.assertEqual(len(rd(G.LEARNED)), G.MAX_LEARNED)
 
     def test_target(self):
         self.assertEqual(G.target("https://API.Example.com/v1"), ("api.example.com", 443))

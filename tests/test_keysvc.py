@@ -49,7 +49,7 @@ class KeyService(unittest.TestCase):
         os.environ.update(ZENOS_KEYD_KEYS=str(d / "keys"), ZENOS_CLEARANCE=str(d / "clearance"),
                           ZENOS_APPROVERS=str(d / "approvers"), ZENOS_KEYD_LOG=str(d / "keyd.jsonl"),
                           ZENOS_KEYD_LEDGER=str(d / "ledger.jsonl"), ZENOS_EXPOSED=str(d / "exposed.json"),
-                          ZENOS_AIGUARD_SOCK=str(d / "aiguard.sock"), ZENOS_HALT=str(d / "halt.json"),
+                          ZENOS_AIGUARD_SOCK=str(d / "aiguard.sock"), ZENOS_OPEN_HOLDERS=str(d / "holders.json"), ZENOS_HALT=str(d / "halt.json"),
                           ZENOS_RESEAL_STATE=str(d / "reseal.json"))
         import zenos_keyd
         cls.K = importlib.reload(zenos_keyd)
@@ -89,7 +89,7 @@ class KeyService(unittest.TestCase):
             {"status": st, "down": [] if services == "active" else ["zenos-keyd"]}))
 
     def call(self, **m):
-        return self.K.handle(m, os.getuid())
+        return self.K.handle(m, os.getuid(), os.getpid())
 
     def seal(self, level, data=b"secret"):
         r = self.call(op="seal", level=level, name="f.txt", data=base64.b64encode(data).decode())

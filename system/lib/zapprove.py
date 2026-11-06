@@ -68,6 +68,19 @@ def roster(pub_dir):
                    for p in d.iterdir() if p.name.endswith(".pub") or p.name.endswith(".passkey.json")})
 
 
+SEEN_MAX = 4096
+
+
+def _save(cf, counts):
+    try:
+        cf.parent.mkdir(parents=True, exist_ok=True)
+        tmp = cf.with_name(cf.name + ".tmp")
+        tmp.write_text(json.dumps(counts))
+        os.replace(tmp, cf)
+    except OSError:
+        pass
+
+
 def _counter_file(state):
     return Path(state) if state else None
 
@@ -109,6 +122,16 @@ def check(pub_dir, name, sig, message, level=0, state=None, pol=None):
         counts = json.loads(cf.read_text()) if cf and cf.exists() else {}
     except (OSError, ValueError):
         counts = {}
+    # every passkey signature is taken once, whatever the outcome: many phones keep the signature counter at 0, and
+    # "attachment" is not signed, so the same signature sent again with another claim must not count
+    counts = counts if isinstance(counts, dict) else {}
+    seen = counts.get("_seen") if isinstance(counts.get("_seen"), list) else []
+    sh = hashlib.sha256(s).hexdigest()
+    if cf:
+        if sh in seen:
+            return False, "replayed", {"key": "passkey", "credential": phone.get("cred_id")}
+        counts["_seen"] = (seen + [sh])[-SEEN_MAX:]
+        _save(cf, counts)
     phone = dict(phone, count=max(int(phone.get("count") or 0), int(counts.get(phone["cred_id"], 0))))
     f = zwebauthn.check_assertion(phone, ad, cdj, s, message)
     near = a.get("attachment") == "cross-platform"
@@ -126,13 +149,7 @@ def check(pub_dir, name, sig, message, level=0, state=None, pol=None):
         return False, ans.get("reason") or "refused", facts
     if cf and f.get("count"):
         counts[phone["cred_id"]] = f["count"]
-        try:
-            cf.parent.mkdir(parents=True, exist_ok=True)
-            tmp = cf.with_name(cf.name + ".tmp")
-            tmp.write_text(json.dumps(counts))
-            os.replace(tmp, cf)
-        except OSError:
-            pass
+        _save(cf, counts)
     facts["exception"] = bool(near_required and not near and exc)
     return True, None, facts
 

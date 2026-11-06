@@ -113,7 +113,7 @@ const POSTQ = `SELECT p.*, u.name uname, u.handle uhandle, pr.status pstatus, pr
   (SELECT COUNT(*) FROM posts r WHERE r.reply = p.id) replies
   FROM posts p LEFT JOIN users u ON u.id = p.user LEFT JOIN proposals pr ON pr.id = p.proposal`;
 async function viewProposal(env, pr) {
-  const posts = await all(env.DB, "SELECT p.id, p.thread, p.text, p.user, p.staff, u.name, u.handle FROM proposal_posts pp JOIN posts p ON p.id = pp.post LEFT JOIN users u ON u.id = p.user WHERE pp.proposal = ? ORDER BY p.id", pr.id);
+  const posts = await all(env.DB, "SELECT p.id, p.thread, p.text, p.user, p.staff, u.name, u.handle FROM proposal_posts pp JOIN posts p ON p.id = pp.post LEFT JOIN users u ON u.id = p.user WHERE pp.proposal = ? AND p.hidden = 0 ORDER BY p.id", pr.id);
   return { id: pr.id, title: pr.title, asked: pr.asked, where: pr.where_, change: pr.change, risk: pr.risk, status: statusOf(pr), note: pr.note,
     pr: pr.pr, release: pr.release, by: pr.by_, security: !!pr.security, people: new Set(posts.map((p) => p.user)).size,
     posts: posts.map((p) => ({ id: p.id, thread: p.thread, text: clip(p.text, 140), name: p.name || "Someone", handle: p.handle || "" })),
@@ -124,11 +124,12 @@ async function viewProposal(env, pr) {
 
 // ---------- triage: group posts that ask for the same thing into one proposal (local grouping)
 async function triage(env) {
-  const todo = await all(env.DB, "SELECT * FROM posts WHERE reply IS NULL AND staff = 0 AND proposal IS NULL AND user != 'ai' ORDER BY id LIMIT 50");
+  // only posts the local check has passed and nobody has held: a held post never names or joins a proposal
+  const todo = await all(env.DB, "SELECT * FROM posts WHERE reply IS NULL AND staff = 0 AND proposal IS NULL AND user != 'ai' AND hidden = 0 AND checked = 1 ORDER BY id LIMIT 50");
   if (!todo.length) return;
   const props = await all(env.DB, "SELECT * FROM proposals WHERE status != 'declined'");
   const texts = {};
-  for (const r of await all(env.DB, "SELECT pp.proposal, p.text FROM proposal_posts pp JOIN posts p ON p.id = pp.post")) texts[r.proposal] = (texts[r.proposal] || "") + " " + r.text;
+  for (const r of await all(env.DB, "SELECT pp.proposal, p.text FROM proposal_posts pp JOIN posts p ON p.id = pp.post WHERE p.hidden = 0")) texts[r.proposal] = (texts[r.proposal] || "") + " " + r.text;
   for (const post of todo) {
     const w = words(post.text); let best = null, score = 0;
     for (const pr of props) {
@@ -153,11 +154,31 @@ async function triage(env) {
     await run(env.DB, "UPDATE posts SET proposal = ?, ai = ? WHERE id = ?", pr.id, note, post.id);
   }
 }
+// a post that is held leaves its proposal: the proposal's title and question are rebuilt from its visible posts
+// (or it is closed when none is left), and the notes on the other posts are written again
+async function unpropose(env, postId) {
+  const post = await one(env.DB, "SELECT proposal FROM posts WHERE id = ?", postId);
+  if (!post || !post.proposal) return;
+  const prId = post.proposal;
+  await run(env.DB, "DELETE FROM proposal_posts WHERE proposal = ? AND post = ?", prId, postId);
+  await run(env.DB, "UPDATE posts SET proposal = NULL, ai = '' WHERE id = ?", postId);
+  const left = await all(env.DB, "SELECT p.id, p.text FROM proposal_posts pp JOIN posts p ON p.id = pp.post WHERE pp.proposal = ? AND p.hidden = 0 ORDER BY p.id", prId);
+  if (!left.length) {
+    await run(env.DB, "UPDATE proposals SET title = 'Withdrawn', asked = '', status = 'declined', note = 'Its posts were held.' WHERE id = ?", prId);
+    return;
+  }
+  const title = firstSentence(left[0].text);
+  await run(env.DB, "UPDATE proposals SET title = ?, asked = ? WHERE id = ?", title, clip(left[0].text, 240), prId);
+  const n = left.length;
+  for (const x of left) await run(env.DB, "UPDATE posts SET ai = ? WHERE id = ?",
+    n > 1 ? `Grouped with ${n - 1} similar post${n > 2 ? "s" : ""} → Proposal #${prId}: ${title}` : `Proposal #${prId}: ${title}`, x.id);
+}
 // ---------- review: plain local checks on the schedule; the AI's own review comes through the reviewer endpoints
 async function localReview(env) {
   for (const p of await all(env.DB, "SELECT id, text FROM posts WHERE checked = 0 AND staff = 0 AND user != 'ai' LIMIT 200")) {
     const why = localCheck(p.text);
     await run(env.DB, why ? "UPDATE posts SET checked = 1, hidden = 1, held = ? WHERE id = ?" : "UPDATE posts SET checked = 1 WHERE id = ? AND ? IS NULL", ...(why ? [why, p.id] : [p.id, null]));
+    if (why) await unpropose(env, p.id);
   }
 }
 
@@ -167,10 +188,15 @@ async function ghStart(env) {
   await run(env.DB, "INSERT INTO oauth (state, at) VALUES (?, ?)", state, Date.now());
   await run(env.DB, "DELETE FROM oauth WHERE at < ?", Date.now() - 600000);
   const q = new URLSearchParams({ client_id: env.GITHUB_CLIENT_ID, redirect_uri: env.PUBLIC_URL + "/auth/github/callback", state, allow_signup: "true" });
-  return new Response(null, { status: 302, headers: { ...HDR, Location: "https://github.com/login/oauth/authorize?" + q } });
+  // the state is also kept in this browser (a cookie only the callback reads), so a callback link made in another
+  // browser cannot sign this one in as someone else
+  return new Response(null, { status: 302, headers: { ...HDR, Location: "https://github.com/login/oauth/authorize?" + q,
+    "Set-Cookie": `zf_state=${state}; Path=/auth/github; HttpOnly; Secure; SameSite=Lax; Max-Age=600` } });
 }
-async function ghCallback(env, u) {
+async function ghCallback(env, u, req) {
   const state = u.searchParams.get("state") || "", code = u.searchParams.get("code") || "";
+  const mine = ((req.headers.get("cookie") || "").match(/(?:^|;\s*)zf_state=([A-Za-z0-9_-]+)/) || [])[1] || "";
+  if (!state || !same(mine, state)) return text(400, "Sign-in expired. Try again.");
   const st = await one(env.DB, "DELETE FROM oauth WHERE state = ? RETURNING at", state);
   if (!st || Date.now() - st.at > 600000 || !code) return text(400, "Sign-in expired. Try again.");
   const tok = await (await fetch("https://github.com/login/oauth/access_token", { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" },
@@ -188,7 +214,7 @@ async function ghCallback(env, u) {
 async function api(req, env, ctx) {
   const u = new URL(req.url), p = u.pathname;
   if (p === "/auth/github/start") return env.GITHUB_CLIENT_ID ? ghStart(env) : text(404, "GitHub sign-in is not set up on this server.");
-  if (p === "/auth/github/callback") return ghCallback(env, u);
+  if (p === "/auth/github/callback") return ghCallback(env, u, req);
   // the reviewer (the AI's scheduled review): its own token, only these two endpoints
   if (p.startsWith("/api/review/")) {
     const t = (req.headers.get("authorization") || "").replace(/^Bearer /, "");
@@ -198,13 +224,14 @@ async function api(req, env, ctx) {
     if (p === "/api/review/result" && req.method === "POST") {
       const b = await req.json().catch(() => ({}));
       const post = await one(env.DB, "SELECT * FROM posts WHERE id = ? AND reviewed = 0", +b.id); if (!post) return json(404, { error: "no such post, or already reviewed" });
-      if (b.appropriate === false) await run(env.DB, "UPDATE posts SET reviewed = ?, hidden = 1, held = ? WHERE id = ?", Date.now(), clip(b.reason || "Held for a maintainer.", 200), post.id);
+      if (b.appropriate === false) { await run(env.DB, "UPDATE posts SET reviewed = ?, hidden = 1, held = ? WHERE id = ?", Date.now(), clip(b.reason || "Held for a maintainer.", 200), post.id); await unpropose(env, post.id); }
       else await run(env.DB, "UPDATE posts SET reviewed = ? WHERE id = ?", Date.now(), post.id);
       if (b.appropriate !== false && typeof b.answer === "string" && b.answer.trim()) {
         await run(env.DB, "INSERT OR IGNORE INTO users (id, handle, name, via, joined, young, banned) VALUES ('ai', '@zenos-ai', 'ZENOS AI', 'ai', ?, 0, 0)", Date.now());
         // the AI read a stranger's post to write this, so a post can steer it: an answer that carries a link or an
         // address waits for a maintainer instead of going out under the AI's name
-        const steered = /(https?:\/\/|www\.|\b[a-z0-9-]+\.(?:com|net|org|io|xyz|ru|cn|info|app|dev)\b|@[a-z0-9_-]+\.[a-z])/i.test(b.answer);
+        const ans = String(b.answer).normalize("NFKC");
+        const steered = /[\p{L}\p{N}-][.。．｡][\p{L}]{2,}|\d{1,3}(?:\.\d{1,3}){3}|[0-9a-f]{0,4}:[0-9a-f]{0,4}:[0-9a-f:]+|h[tx]{2}ps?|[a-z][a-z0-9+.-]*:\/\/|@[\p{L}\p{N}_-]{2,}|\b(?:dot|ドット)\b/iu.test(ans);
         await run(env.DB, "INSERT INTO posts (thread, edition, text, at, user, staff, reply, byai, hidden, held) VALUES (?, '', ?, ?, 'ai', 0, ?, 1, ?, ?)", post.thread, clip(b.answer, 1500), Date.now(), post.reply || post.id,
           steered ? 1 : 0, steered ? "An AI answer with a link waits for a maintainer." : "");
       }
@@ -256,7 +283,7 @@ async function api(req, env, ctx) {
   if (p.startsWith("/api/admin/") && !admin) return json(403, { error: "maintainers only" });
   if (p === "/api/admin/post") {
     const x = await one(env.DB, "SELECT id FROM posts WHERE id = ?", +b.id); if (!x) return json(404, { error: "no such post" });
-    if (b.hidden) await run(env.DB, "UPDATE posts SET hidden = 1, held = ? WHERE id = ?", clip(b.reason || "Held by a maintainer.", 200), x.id);
+    if (b.hidden) { await run(env.DB, "UPDATE posts SET hidden = 1, held = ? WHERE id = ?", clip(b.reason || "Held by a maintainer.", 200), x.id); await unpropose(env, x.id); }
     else await run(env.DB, "UPDATE posts SET hidden = 0, held = '' WHERE id = ?", x.id);
     return json(200, { ok: true, hidden: !!b.hidden });
   }
@@ -285,7 +312,7 @@ async function api(req, env, ctx) {
     const staff = t.staff || (!me && admin) ? 1 : 0;
     if (staff) await run(env.DB, "INSERT OR IGNORE INTO users (id, handle, name, via, joined, young, banned) VALUES ('staff', '@zenos', 'ZENOS project', 'staff', ?, 0, 0)", Date.now());
     const r = await one(env.DB, "INSERT INTO posts (thread, edition, text, at, user, staff) VALUES (?, ?, ?, ?, ?, ?) RETURNING id", t.id, ed, body, Date.now(), staff ? "staff" : me.id, staff);
-    ctx.waitUntil(triage(env));
+    ctx.waitUntil((async () => { await localReview(env); await triage(env); })());
     return json(200, { ok: true, id: r.id });
   }
   if (p === "/api/reply") {
@@ -313,5 +340,5 @@ export default {
     return env.ASSETS.fetch(req);
   },
   async scheduled(ev, env, ctx) { ctx.waitUntil((async () => { try { await syncGithub(env); } catch (e) { console.log("github sync failed:", String(e)); }
-    await triage(env); await localReview(env); })()); },
+    await localReview(env); await triage(env); })()); },
 };

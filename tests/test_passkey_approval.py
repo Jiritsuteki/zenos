@@ -144,5 +144,11 @@ class PasskeyApproval(unittest.TestCase):
             self.assertTrue(self.check(self.phone.approve(self.digest, count=0, synced=True))[0])
 
 
+    def test_a_signature_sent_again_with_another_nearness_claim_is_refused(self):
+        far = self.phone.approve(self.digest, near=False, count=0, synced=True)
+        self.assertEqual(self.check(far)[:2], (False, "phone-not-near"))
+        near = json.dumps(dict(json.loads(far), attachment="cross-platform"))   # the unsigned field changed
+        self.assertEqual(self.check(near)[:2], (False, "replayed"))
+
 if __name__ == "__main__":
     unittest.main()

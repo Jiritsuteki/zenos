@@ -763,13 +763,16 @@ class Zenos(Gtk.Window):
 
     def on_download(self, ctx, download):
         def decide(dl, name):
+            # the site names the file: keep only a plain name (no folders, no hidden file, no control characters)
+            name = "".join(c for c in os.path.basename(str(name or "").replace("\\", "/")) if c.isprintable())
+            name = name.lstrip(".").strip()[:200] or "download"
             dest = os.path.join(DOWNLOADS, name)
             base, ext = os.path.splitext(dest)
             i = 1
-            while os.path.exists(dest):
+            while os.path.lexists(dest):                     # a link left there is never written through
                 dest = "%s (%d)%s" % (base, i, ext)
                 i += 1
-            dl.set_destination("file://" + dest)
+            dl.set_destination(GLib.filename_to_uri(dest, None))
             return True
         download.connect("decide-destination", decide)
 

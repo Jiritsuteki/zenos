@@ -7,7 +7,7 @@ the copies. Every file argument counts as a package, whatever its name; -R (a wh
 else is passed to /usr/bin/dpkg unchanged. With /etc/zenos/supply.json absent or "off" it only
 passes everything through.
 """
-import os, shutil, subprocess, sys, tempfile
+import os, shutil, stat, subprocess, sys, tempfile
 sys.path.insert(0, "/usr/lib/zenos")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "lib"))
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
@@ -30,7 +30,19 @@ def main(argv):
                                            all(ch.isalpha() for ch in a[1:])) for a in argv):
         print("ZENOS: installing every package in a folder (-R) is not allowed; give the package files.", file=sys.stderr)
         return 2
-    debs = [i for i, a in enumerate(argv) if not a.startswith("-") and os.path.isfile(a)]
+    # a file argument is anything not an option, and everything after "--" (where "-x.deb" is a file too)
+    pos, after = [], False
+    for i, a in enumerate(argv):
+        if after or not a.startswith("-"):
+            pos.append(i)
+        elif a == "--":
+            after = True
+    odd = [argv[i] for i in pos if os.path.lexists(argv[i]) and not (os.path.isfile(argv[i]) or os.path.isdir(argv[i]))]
+    if odd:
+        # a pipe or a device can give dpkg other bytes than the ones checked
+        print("ZENOS: not installing from %s: not a regular file." % ", ".join(odd), file=sys.stderr)
+        return 2
+    debs = [i for i in pos if os.path.isfile(argv[i])]
     if not debs:
         os.execv(DPKG, [DPKG] + argv)
     import zenos_pkgcheck as P
@@ -43,8 +55,13 @@ def main(argv):
         for i in debs:
             src = argv[i]
             dst = os.path.join(d, "%03d-%s" % (i, os.path.basename(src)))
-            with open(src, "rb") as fi, open(dst, "xb") as fo:
-                shutil.copyfileobj(fi, fo)
+            fd = os.open(src, os.O_RDONLY | os.O_NONBLOCK)
+            with os.fdopen(fd, "rb") as fi:
+                if not stat.S_ISREG(os.fstat(fi.fileno()).st_mode):     # swapped for a pipe after the look above
+                    print("ZENOS: not installing from %s: not a regular file." % src, file=sys.stderr)
+                    return 2
+                with open(dst, "xb") as fo:
+                    shutil.copyfileobj(fi, fo)
             os.chmod(dst, 0o400)
             sha = zsupply.sha256_file(dst)
             if not P.allowed_recently(sha):

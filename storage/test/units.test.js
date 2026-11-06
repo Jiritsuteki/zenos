@@ -134,3 +134,37 @@ test('revocation lists: signed by the administrator, newest wins, revoked keys r
   forged.revoked = []
   assert.strictEqual(policy.verifyRevocations(forged, admin.publicKey), null)
 })
+
+test('a manifest with unknown fields or of an unreasonable size is refused', () => {
+  const { manifest, manifestBuf } = seal(Buffer.from('x'), { level: 'L2', name: 'x' })
+  checkManifest(manifestBuf)
+  assert.throws(() => checkManifest(Buffer.from(JSON.stringify({ ...manifest, pad: 'a'.repeat(100) }))), /malformed/)
+  assert.throws(() => checkManifest(Buffer.alloc(40000, 0x20)), /malformed/)
+  assert.throws(() => checkManifest(Buffer.from('[]')), /malformed/)
+})
+
+test('manifests count against the node size limit, and one bad file does not stop repair', async () => {
+  const os = require('os'), fs = require('fs'), path = require('path')
+  const { StorageNode } = require('../lib/node')
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'zenos-store-'))
+  const node = new StorageNode({ dir, bootstrap: [], maxBytes: 1500, clearance: 'L5' })
+  try {
+    const trust = { role: 'client', clearance: 'L5', zone: 'z', certified: true }
+    let refused = null
+    for (let i = 0; i < 10 && !refused; i++) {
+      const { manifestBuf } = seal(Buffer.from('x' + i), { level: 'L1', name: 'n' })
+      try { await node._handle({ op: 'put_manifest' }, manifestBuf, trust) } catch (e) { refused = e }
+    }
+    assert.match(String(refused && refused.message), /full/)
+    assert.ok(node.used <= 1500)
+    // a file folder whose manifest is not JSON: repair logs it and goes on
+    const bad = path.join(dir, 'files', 'ab'.repeat(16))
+    fs.mkdirSync(bad, { recursive: true })
+    fs.writeFileSync(path.join(bad, 'manifest.json'), '{not json')
+    const reports = await node.repairAll()
+    assert.ok(Array.isArray(reports))
+  } finally {
+    await node.swarm.destroy()
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})

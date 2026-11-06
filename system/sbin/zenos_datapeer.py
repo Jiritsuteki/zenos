@@ -139,12 +139,27 @@ class Peer:
         now = self.now()
         with self.lock:
             log = [t for t in self.rates.get(key, []) if now - t <= window]
-            self.rates[key] = log
+            if log:
+                self.rates[key] = log
+            else:
+                self.rates.pop(key, None)                  # nothing kept for a key that has no releases
             return len(log)
 
     def _count(self, key):
         with self.lock:
             self.rates.setdefault(key, []).append(self.now())
+
+    def _refused_quietly(self, what):
+        with self.lock:
+            self.quiet = getattr(self, "quiet", {})
+            n, since = self.quiet.get(what, (0, self.now()))
+            n += 1
+            if self.now() - since >= 60:
+                self.quiet[what] = (0, self.now())
+            else:
+                self.quiet[what] = (n, since)
+                return
+        self.log(what + "-refused-unsigned", "-", count=n)
 
     # ---------------------------------------------------------------- key peer
     def share(self, b):
@@ -163,6 +178,11 @@ class Peer:
             return 400, {"ok": False, "error": "bad request"}
         s, sig_ok = self._server_sig_ok(c, server, core, sig)
         enrolled = s is not None
+        if not (enrolled and sig_ok):
+            # anyone can reach this port: an unsigned or unknown request is answered without a ledger line, a
+            # decision or any state (only a counter, written to the ledger at most once a minute)
+            self._refused_quietly("share")
+            return 403, {"ok": False, "reason": "server"}
         window = float(c.get("window", 60))
         facts = {"op": "share", "enrolled": enrolled, "sig_ok": sig_ok,
                  "fresh": bool(sig_ok and self._fresh(c, server, core.get("t", 0), str(core.get("nonce", "")))),
@@ -183,7 +203,7 @@ class Peer:
             self.log("share-refused", person, reason=ans.get("reason"), **what)
             return 403, {"ok": False, "reason": ans.get("reason")}
         try:
-            y = zdata.open_sealed(self.xkey, sealed, zdata.share_info(rid, table, level, x))
+            y = zdata.open_sealed(self.xkey, sealed, zdata.share_info(server, rid, table, level, x))
         except Exception:
             self.log("share-mismatch", person, **what)
             return 403, {"ok": False, "reason": "share-mismatch"}
@@ -205,17 +225,15 @@ class Peer:
         except (KeyError, TypeError, ValueError):
             return 400, {"ok": False, "error": "bad request"}
         s, ok = self._server_sig_ok(c, server, {k: v for k, v in b.items() if k != "sig"}, sig)
-        if not ok or not self._fresh(c, server, b.get("t", 0), "put:" + zdata.b64(zdata.request_digest(b))):
+        if not ok:
+            self._refused_quietly("put")
+            return 403, {"ok": False, "error": "not an enrolled server, or not signed now"}
+        if not self._fresh(c, server, b.get("t", 0), "put:" + zdata.b64(zdata.request_digest(b))):
             self.log("put-refused", server, id=rid)
             return 403, {"ok": False, "error": "not an enrolled server, or not signed now"}
-        p = self.dir / "records" / f"{rid}.json"
-        if p.exists():
-            try:
-                if json.loads(p.read_text()).get("server") != server:
-                    self.log("put-refused", server, id=rid, reason="owned by another server")
-                    return 403, {"ok": False, "error": "owned by another server"}
-            except (OSError, ValueError):
-                pass
+        # each server's records in its own folder: an id another server will use cannot be taken first
+        p = self.dir / "records" / server / f"{rid}.json"
+        p.parent.mkdir(parents=True, exist_ok=True)
         tmp = p.with_suffix(".tmp")
         tmp.write_text(json.dumps({"server": server, "record": rec}))
         os.replace(tmp, p)
@@ -233,13 +251,17 @@ class Peer:
         except (KeyError, TypeError, ValueError):
             return 400, {"ok": False, "error": "bad request"}
         s, ok = self._server_sig_ok(c, server, {k: v for k, v in b.items() if k != "sig"}, sig)
-        if not ok or not self._fresh(c, server, b.get("t", 0), "get:" + str(b.get("nonce", ""))) \
-                or not re.fullmatch(r"[0-9a-f]{32}", str(b.get("nonce", ""))):
+        if not ok or not re.fullmatch(r"[0-9a-f]{32}", str(b.get("nonce", ""))) \
+                or not self._fresh(c, server, b.get("t", 0), "get:" + str(b.get("nonce", ""))):
             return 403, {"ok": False, "error": "not an enrolled server, or not signed now (or a request seen before)"}
-        p = self.dir / "records" / f"{rid}.json"
-        try:
-            d = json.loads(p.read_text())
-        except (OSError, ValueError):
+        d = None
+        for p in (self.dir / "records" / server / f"{rid}.json", self.dir / "records" / f"{rid}.json"):  # (older layout)
+            try:
+                d = json.loads(p.read_text())
+                break
+            except (OSError, ValueError):
+                continue
+        if d is None:
             return 404, {"ok": False, "error": "no such record"}
         if d.get("server") != server:
             return 404, {"ok": False, "error": "no such record"}

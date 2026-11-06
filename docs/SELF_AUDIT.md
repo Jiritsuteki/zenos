@@ -42,4 +42,11 @@ needed a change of design and is fixed in the source after 0.2.0 (the last row).
 | Feedback board, AI answers | someone posting on the board | steer the AI reviewer into posting links under its name | an AI answer with a link or address waits for a maintainer |
 | Credentials vault (fixed after 0.2.0, in the source) | a program of the same user | pose as the browser or messenger and ask for a password after the phone approval | a root launcher (`zenos-launchd`) starts the browser and the messenger and records each start; the vault serves only a recorded process, which other programs of the user cannot attach to (`ptrace_scope = 1`) |
 
+## Run 2 (source at `5c2a979`, fixed in the source, 6 Nov 2026)
+
+Six hunters, each on one area (the messenger, the supply chain and feedback board, the root services, the server
+side, the apps and storage), with run 1's findings known to them. 21 weaknesses confirmed and fixed with tests; 7
+more that the run pointed at but did not confirm were checked and fixed too (five of them with tests). Which ones they were is published here
+once a release carries the fixes.
+
 Changes others may notice are in the [CHANGELOG](../CHANGELOG.md) under 0.2.0.

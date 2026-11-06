@@ -22,11 +22,8 @@ PLACES = [("Home", HOME, True), ("Desktop", DESK, False), ("Documents", os.path.
 
 
 def folder_level(p):
-    p = p or ""
-    for n, l in sorted(LEVEL_NAMES.items(), key=lambda x: -x[1]):
-        if n in p:
-            return l
-    return 1
+    import zformat
+    return zformat.desk_level(p, os.path.join(HOME, "Desktop"))
 
 
 class _Picker:
@@ -156,7 +153,7 @@ class _Picker:
             isdir = os.path.isdir(p)
             e = {"name": n, "path": p, "dir": isdir, "size": 0 if isdir else st.st_size, "mtime": int(st.st_mtime)}
             if isdir:
-                e["level"] = LEVEL_NAMES.get(n, lvl)
+                e["level"] = folder_level(p)
             elif n.endswith(".zen"):
                 # never open a sealed file just to list it: reading protected files is what the sentinel watches for
                 e["sealed"] = True

@@ -191,13 +191,17 @@ class StorageNode {
       if (!fs.existsSync(root)) return reports
       for (const fileId of fs.readdirSync(root)) {
         if (!HEX32.test(fileId)) continue
-        const mbuf = this._readManifest(fileId)
-        if (!mbuf) continue
-        const r = await repairFile(mbuf, this.allPeers(), {
-          self: force ? null : this.self,
-          log: s => this.log(`[${this.label}] ${s}`)
-        })
-        if (r && (r.rebuilt.length || r.copied.length || r.skipped)) reports.push(r)
+        try { // one bad file (unreadable, malformed, a peer that answers nonsense) never stops the others
+          const mbuf = this._readManifest(fileId)
+          if (!mbuf) continue
+          const r = await repairFile(mbuf, this.allPeers(), {
+            self: force ? null : this.self,
+            log: s => this.log(`[${this.label}] ${s}`)
+          })
+          if (r && (r.rebuilt.length || r.copied.length || r.skipped)) reports.push(r)
+        } catch (e) {
+          this.log(`[${this.label}] repair of ${fileId} skipped: ${e.message}`)
+        }
       }
     } finally {
       this._repairing = false
@@ -239,10 +243,13 @@ class StorageNode {
         const existing = this._readManifest(m.fileId)
         if (existing && !existing.equals(body)) throw new Error('a different manifest is already held for this file') // never overwritten
         if (!existing) {
+          // a manifest counts against the store's size like a shard: nobody fills the disk with manifests alone
+          if (this.maxBytes && this.used + body.length > this.maxBytes) throw new Error('this node is full')
           fs.mkdirSync(dir, { recursive: true, mode: 0o700 })
           const tmp = path.join(dir, `.manifest.${crypto.randomBytes(4).toString('hex')}`)
           fs.writeFileSync(tmp, body, { mode: 0o600 })
           fs.renameSync(tmp, path.join(dir, 'manifest.json'))
+          this.used += body.length
         }
         return {}
       }

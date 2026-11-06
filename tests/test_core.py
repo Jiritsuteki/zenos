@@ -87,6 +87,16 @@ class Guard(unittest.TestCase):
         d = zenos.request_digest(r)
         return base64.b64encode(self.keys[who].sign(b"decline:" + d if decline else d)).decode()
 
+    def test_a_match_code_cannot_be_tried_through(self):
+        G, r = self.G, self._req()
+        wrong = [c for c in ("0000", "1111", "2222", "3333", "4444", "5555", "6666") if c != r["code"]]
+        for c in wrong[:5]:
+            self.assertFalse(G.handle({"op": "approve", "request": r["id"], "approver": "sato", "code": c,
+                                       "sig": self._sig("sato", r)})["ok"])
+        ans = G.handle({"op": "approve", "request": r["id"], "approver": "sato", "code": r["code"], "sig": self._sig("sato", r)})
+        self.assertFalse(ans["ok"])                                 # the right code after five wrong ones: too late
+        self.assertIn("Too many", ans["message"])
+
     def test_release_needs_valid_signatures_and_code(self):
         G, r = self.G, self._req()
         self.assertEqual(r["required"], 3)
@@ -192,7 +202,7 @@ class KeyAgent(unittest.TestCase):
         d.mkdir()
         os.environ.update(ZENOS_KEYD_KEYS=str(d / "keys"), ZENOS_CLEARANCE=str(d / "clearance"), ZENOS_APPROVERS=str(d / "approvers"),
                           ZENOS_KEYD_LOG=str(d / "keyd.jsonl"), ZENOS_KEYD_LEDGER=str(d / "ledger.jsonl"),
-                          ZENOS_EXPOSED=str(d / "exposed.json"), ZENOS_AIGUARD_SOCK=str(d / "aiguard.sock"))
+                          ZENOS_EXPOSED=str(d / "exposed.json"), ZENOS_AIGUARD_SOCK=str(d / "aiguard.sock"), ZENOS_OPEN_HOLDERS=str(d / "holders.json"))
         import importlib, zenos_keyd
         cls.K = importlib.reload(zenos_keyd)
         cls.K.ensure_keys()
@@ -204,7 +214,7 @@ class KeyAgent(unittest.TestCase):
             (d / "approvers" / f"{n}.pub").write_bytes(raw_pub(k))
 
     def call(self, **m):
-        return self.K.handle(m, os.getuid())
+        return self.K.handle(m, os.getuid(), os.getpid())
 
     def seal(self, level, data=b"secret"):
         """a file sealed by someone cleared for its level (this test user is cleared for L2 only)"""
@@ -314,6 +324,28 @@ class AuditShipping(unittest.TestCase):
         self.assertIn("machine-silent", (self.node.dir / "alerts.jsonl").read_text())
         self.ship()
         self.assertIn("machine-back", (self.node.dir / "alerts.jsonl").read_text())
+
+    def test_an_old_batch_sent_again_neither_revives_nor_heals(self):
+        def batch(t, services):
+            b = {"machine": "pc-test", "chain": "status-only", "from": 0, "records": [],
+                 "status": {"t": t, "services": services}}
+            self.S.sign(self.key, b)
+            return b
+        old = batch(int(time.time()) - 3600, {"zenos-keyd": "active"})        # an hour-old, correctly signed batch
+        (self.node.dir / "machines" / "pc-test.seen").write_text("silent")
+        self.assertEqual(self.node.accept(old)[0], 200)                       # the (empty) records are fine...
+        self.assertEqual((self.node.dir / "machines" / "pc-test.seen").read_text(), "silent")   # ...still silent
+        self.node.accept(batch(int(time.time()) + 1, {"zenos-keyd": "failed"}))
+        self.node.accept(batch(int(time.time()), {"zenos-keyd": "active"}))   # an earlier "all running", sent after
+        self.assertEqual(json.loads((self.node.dir / "machines" / "pc-test.status.json").read_text())["down"],
+                         ["zenos-keyd"])
+
+    def test_a_chain_name_cannot_reach_another_machines_file(self):
+        b = {"machine": "pc-test", "chain": "x__guard", "from": 0, "records": []}
+        self.S.sign(self.key, b)
+        self.assertEqual(self.node.accept(b)[0], 400)
+        with self.assertRaises(ValueError):
+            self.node.enroll("pc__test", base64.b64encode(raw_pub(self.key)).decode())
 
     def test_forged_batch_is_refused(self):
         b = {"machine": "pc-test", "chain": "other", "from": 0, "records": [], "sig": base64.b64encode(b"x" * 64).decode()}

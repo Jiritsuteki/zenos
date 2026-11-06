@@ -86,7 +86,7 @@ def card(r):
     opts = "".join(f'<option value="{k}">{e(v)}</option>' for k, v in zenos.ROSTER.items()
                    if not any(a["approver"] == k for a in r["approvals"]))
     return (f'<div class="card">{head}<form method="post">'
-            f'<input type="hidden" name="id" value="{e(str(r["id"]))}">'
+            f'<input type="hidden" name="k" value="{KEY}"><input type="hidden" name="id" value="{e(str(r["id"]))}">'
             f'<label>Signing as (in production: the officer\'s own key)</label><select name="approver">{opts}</select>'
             f'<label>Match code shown on the requester\'s screen</label>'
             f'<input class="code" name="code" inputmode="numeric" maxlength="4" placeholder="····" autocomplete="off">'
@@ -106,14 +106,15 @@ def page(msg=None, good=True):
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>ZENOS Approvals</title>'
             f'<style>{CSS}</style><script>setInterval(function(){{var a=document.activeElement;'
-            f'if(!a||(a.tagName!=="INPUT"&&a.tagName!=="SELECT"))location.href="/"}},8000)</script></head><body><main>'
+            f'if(!a||(a.tagName!=="INPUT"&&a.tagName!=="SELECT"))location.href="/?k={KEY}"}},8000)</script></head><body><main>'
             f'<h1>ZENOS Approvals</h1><p class="sub">Who, which level, and why. Never the content.</p>{m}{body}'
             f'{"<h1 style=margin-top:28px;font-size:15px>Recent</h1>" + hist if hist else ""}</main></body></html>')
 
 
 # The page signs as an officer, so it answers only who shows its key: written at start to a file only this account
-# can read (approval-url), turned into a cookie by the first visit. Another account on the PC, or a web page in a
-# browser (another site's Origin, or a host name other than this one), gets nothing.
+# can read (approval-url). The key travels in the address (?k=) and in each form, never in a cookie: a browser sends
+# a 127.0.0.1 cookie to every port on 127.0.0.1, so any other local server could have collected it. Another account
+# on the PC, or a web page in a browser (another site's Origin, or a host name other than this one), gets nothing.
 KEY = secrets.token_urlsafe(32)
 PORT = int(os.environ.get("ZENOS_APPROVAL_PORT", "8090"))
 
@@ -125,34 +126,33 @@ class H(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(b)))
         self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'")
         for k, v in extra:
             self.send_header(k, v)
         self.end_headers()
         self.wfile.write(b)
 
-    def allowed(self):
+    def allowed(self, key):
         host = self.headers.get("Host", "")
         own = {f"{h}:{PORT}" for h in ("127.0.0.1", "localhost", "[::1]", os.environ.get("ZENOS_APPROVAL_HOST", "127.0.0.1"))}
         origin = self.headers.get("Origin")
         if host not in own or (origin and origin.split("://", 1)[-1] not in own):
             return False
-        ck = dict(x.strip().split("=", 1) for x in self.headers.get("Cookie", "").split(";") if "=" in x)
-        return hmac.compare_digest(ck.get("zak", ""), KEY)
+        return hmac.compare_digest(key or "", KEY)
 
     def do_GET(self):
         q = parse_qs(self.path.split("?", 1)[1]) if "?" in self.path else {}
-        if hmac.compare_digest(q.get("k", [""])[0], KEY) and self.headers.get("Host", "").endswith(f":{PORT}"):
-            return self.send("", 302, [("Set-Cookie", f"zak={KEY}; Path=/; HttpOnly; SameSite=Strict"), ("Location", "/")])
-        if not self.allowed():
+        if not self.allowed(q.get("k", [""])[0]):
             return self.send("Open the approval page from the link in approval-url on this PC.", 403)
         self.send(page())
 
     def do_POST(self):
-        if not self.allowed():
-            return self.send("Open the approval page from the link in approval-url on this PC.", 403)
         n = min(int(self.headers.get("Content-Length", 0) or 0), 65536)
         f = {k: v[0] for k, v in parse_qs(self.rfile.read(n).decode()).items()}
+        if not self.allowed(f.get("k")):
+            return self.send("Open the approval page from the link in approval-url on this PC.", 403)
         rid = os.path.basename(f.get("id", ""))
         if not zenos.request_path(rid).exists():
             return self.send(page("Unknown request.", False))

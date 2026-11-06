@@ -221,6 +221,22 @@ def read_store(path):
     return [ssl.PEM_cert_to_DER_cert(m.decode()) for m in PEM_RE.findall(raw)]
 
 
+def root_only(path):
+    """a file only root can change: it and every folder above it owned by root and not writable by others. This
+    service runs as root, so it never starts a program that someone else could have put or changed there."""
+    try:
+        p = os.path.realpath(path)
+        while True:
+            st = os.lstat(p)
+            if st.st_uid != 0 or st.st_mode & 0o022:
+                return False
+            if p == "/":
+                return True
+            p = os.path.dirname(p)
+    except OSError:
+        return False
+
+
 def node_binaries():
     found = set()
     for n in ("node", "nodejs"):
@@ -234,11 +250,14 @@ def node_binaries():
                 found.add(os.path.realpath(l))
         except OSError:
             pass
-    return sorted(found)
+    skipped = sorted(b for b in found if not root_only(b))
+    if skipped:
+        log("node-skipped", reason="not root-owned, not run", binaries=skipped[:10])
+    return sorted(b for b in found if root_only(b))
 
 
 def node_store(binary):
-    env = {k: v for k, v in os.environ.items() if k != "NODE_OPTIONS"}
+    env = {"PATH": "/usr/bin:/bin", "LANG": "C.UTF-8"}         # nothing from the environment (NODE_OPTIONS, NODE_PATH)
     out = sh(binary, "-e", "const t=require('tls');console.log(JSON.stringify({v:process.version,"
              "sys:String(process.config.variables.openssl_use_def_ca_store),r:t.rootCertificates}))", timeout=30, env=env)
     try:

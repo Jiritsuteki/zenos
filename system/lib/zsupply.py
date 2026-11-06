@@ -110,6 +110,24 @@ def kind(rec):
     return "release" if m and not r else "revoke" if r and not m else None
 
 
+def well_formed(rec):
+    """a record in the shape the ledger defines (anything else a node serves is skipped, never parsed further): one
+    of release or revoke, signatures a list of {"by": str, "sig": str}, rings a map of ring name to a whole number"""
+    k = kind(rec)
+    if k is None:
+        return False
+    sigs = rec.get("sigs", [])
+    if not isinstance(sigs, list) or not all(isinstance(x, dict) and isinstance(x.get("by"), str)
+                                             and isinstance(x.get("sig"), str) for x in sigs):
+        return False
+    if k == "release":
+        rings = rec["manifest"].get("rings", {})
+        if rings is not None and not (isinstance(rings, dict) and all(
+                isinstance(a, str) and isinstance(b, int) and not isinstance(b, bool) and b >= 0 for a, b in rings.items())):
+            return False
+    return True
+
+
 def record_digest(rec):
     k = kind(rec)
     if k is None:
@@ -139,7 +157,9 @@ def valid_signers(rec, keys):
     """officers (enrolled on this PC) whose signature over this record's digest verifies"""
     d = record_digest(rec)
     out = []
-    for s in rec.get("sigs", []):
+    for s in rec.get("sigs", []) if isinstance(rec.get("sigs"), list) else []:
+        if not isinstance(s, dict):
+            continue
         by = str(s.get("by", ""))
         if by in keys:
             try:
@@ -186,12 +206,15 @@ def ledger_candidates(sha, ident, about, nodes, keys, required, ring, get=fetch,
     answers = {}
     for n in nodes:
         try:
-            answers[n["name"]] = get(n, sha)
+            a = get(n, sha)
+            answers[n["name"]] = a if isinstance(a, list) else None     # not a list: as good as no answer
         except Exception:
             answers[n["name"]] = None
     held, records, sigs, revoked = {}, {}, {}, False
     for node, recs in answers.items():
         for r in recs or []:
+            if not well_formed(r):                     # one node's malformed record is skipped, not trusted or fatal
+                continue
             k = kind(r)
             if k == "release" and r["manifest"].get("sha256") == sha:
                 d = record_digest(r)
@@ -212,7 +235,7 @@ def ledger_candidates(sha, ident, about, nodes, keys, required, ring, get=fetch,
         m = rec["manifest"]
         hash_ok = m.get("sha256") == sha and bool(ident(m))
         rings = m.get("rings") or {}
-        ring_open = int(rings.get(str(ring), max([int(x) for x in rings.values()] or [0])))
+        ring_open = int(rings[str(ring)]) if str(ring) in rings else max(list(rings.values()) or [0])
         votes = [{"node": n, "sig_ok": n in reachable, "record": d if n in held[d] else ""} for n in answers]
         out.append({"sha256": sha, "name": name, "version": version, "nodes": [n["name"] for n in nodes],
                     "votes": votes, "record": d, "hash_ok": hash_ok, "signers": valid_signers(rec, keys),

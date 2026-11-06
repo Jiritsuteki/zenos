@@ -117,33 +117,47 @@ def halted():
 
 
 # ---------------- levels ----------------
+def level_folder(p):
+    """the Desktop level folder a path is in (at any depth), or None"""
+    try:
+        rel = Path(p).relative_to(DESK)
+    except ValueError:
+        return None
+    return rel.parts[0] if len(rel.parts) >= 2 and rel.parts[0] in Z.FOLDERS else None
+
+
 def folder_level(p):
-    p = Path(p)
-    if p.parent.parent == DESK and p.parent.name in Z.FOLDERS:
-        return Z.FOLDERS[p.parent.name][0]
-    return 1
+    f = level_folder(p)
+    return Z.FOLDERS[f][0] if f else 1
+
+
+def in_usb(p):
+    """inside the USB exit, at any depth"""
+    try:
+        return len(Path(p).relative_to(USB).parts) >= 1
+    except ValueError:
+        return False
 
 
 def level_of(p):
     """the level written in a sealed file's header (read by the guard itself; its own opens are ignored)"""
     p = Path(p)
     try:
-        if p.suffix == ".zen":
-            fd = os.open(p, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)   # a pipe named *.zen must not stop the guard
-            try:
-                head = os.read(fd, 4096) if stat.S_ISREG(os.fstat(fd).st_mode) else b""
-            finally:
-                os.close(fd)
-            if head.startswith(Z.MAGIC):
-                return int(json.loads(head[len(Z.MAGIC):].split(b"\n", 1)[0])["level"])
+        # by content, not by name: a sealed file renamed to x.tmp is still sealed
+        fd = os.open(p, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)   # a pipe must not stop the guard
+        try:
+            head = os.read(fd, 4096) if stat.S_ISREG(os.fstat(fd).st_mode) else b""
+        finally:
+            os.close(fd)
+        if head.startswith(Z.MAGIC):
+            return int(json.loads(head[len(Z.MAGIC):].split(b"\n", 1)[0])["level"])
     except Exception:
         pass
     return folder_level(p)
 
 
 def in_security(p):
-    p = Path(p)
-    return p.parent.parent == DESK and p.parent.name in Z.FOLDERS
+    return level_folder(p) is not None
 
 
 # ---------------- fanotify ----------------
@@ -238,14 +252,27 @@ def exempt(pid, comm):
         return True
     if not (base in INTERPRETERS or base.startswith("python3.")):
         return False
-    script = next((a.decode(errors="ignore") for a in argv[1:] if a and not a.startswith(b"-")), "")
-    if not script.startswith("/"):
-        try:
-            script = os.path.join(os.readlink(f"/proc/{pid}/cwd"), script)
-        except OSError:
-            return False
-    real = os.path.realpath(script)
-    return any(real.endswith("/" + x) for x in EXEMPT_SCRIPTS) and trusted(real)
+    # the exact shape of a ZENOS start: the interpreter, only options that load nothing else, then the script by
+    # its full path (an existing file, no "..", no links); no -c or -m, no code given through the environment
+    args = [a.decode(errors="ignore") for a in argv[1:] if a]
+    while args and args[0] in ("-I", "-E", "-s", "-Es", "-sE", "-B"):
+        args = args[1:]
+    if not args or not args[0].startswith("/"):
+        return False
+    script = args[0]
+    try:
+        env = Path(f"/proc/{pid}/environ").read_bytes().split(b"\0")
+    except OSError:
+        return False
+    if any(e.split(b"=", 1)[0] in (b"LD_PRELOAD", b"LD_LIBRARY_PATH", b"LD_AUDIT", b"PYTHONPATH", b"PYTHONHOME",
+                                   b"PYTHONSTARTUP", b"PYTHONINSPECT", b"PYTHONUSERBASE") for e in env):
+        return False
+    if any(e.startswith(b"NODE_OPTIONS=") and e not in (b"NODE_OPTIONS=", b"NODE_OPTIONS=--require=/usr/lib/zenos/zdistrust.js")
+           for e in env):
+        return False
+    if os.path.realpath(script) != script or not os.path.isfile(script):
+        return False
+    return any(script.endswith("/" + x) for x in EXEMPT_SCRIPTS) and trusted(script)
 
 
 def holders(paths):
@@ -362,6 +389,8 @@ def verified(r):
 
 
 PLAN_USE = SYSD / "plan-use.json"      # how much of each plan is used, kept by the guard (the plan file is the user's)
+MAX_CODE_TRIES = 5                     # wrong match codes before a request stops taking approvals
+MAX_PLANS, MAX_APPROVALS = 16, 16       # what the guard reads of the user's plan files before deciding
 PLAN_WAIT = 24 * 3600                   # the longest a plan may wait for its approvals after it was filed
 
 
@@ -388,7 +417,7 @@ def plan_allows(rule, level, n=1):
         use = json.loads(PLAN_USE.read_text())
     except Exception:
         use = {}
-    for p in sorted(pdir.glob("*.json")) if pdir.is_dir() else []:
+    for p in (sorted(pdir.glob("*.json"))[:MAX_PLANS] if pdir.is_dir() else []):
         try:
             g = read_user_json(p)
             core, sc = g.get("core", {}), g.get("core", {}).get("scope", {})
@@ -404,10 +433,17 @@ def plan_allows(rule, level, n=1):
                     or time.time() > ends or u["used"] + n > sc.get("max_files", 0)):
                 use.setdefault(key, u)
                 continue
+            # distinct officers, never the requester: a name counts once whatever path-like spelling it is given
             ok = set()
-            for a in g["approvals"]:
-                if zapprove.check(PUB, a.get("approver", ""), a.get("sig", ""), digest, core.get("level", 0))[0]:
-                    ok.add(a["approver"])
+            approvals = g.get("approvals") if isinstance(g.get("approvals"), list) else []
+            for a in approvals[:MAX_APPROVALS]:
+                if not isinstance(a, dict):
+                    continue
+                name = os.path.basename(str(a.get("approver", "")))
+                if not name or name == USER or name in ok:
+                    continue
+                if zapprove.check(PUB, name, a.get("sig", ""), digest, core.get("level", 0))[0]:
+                    ok.add(name)
             if len(ok) >= Z.REQUIRED[core["level"]]:
                 u["used"] += n
                 use[key] = u
@@ -431,7 +467,7 @@ def quarantine(paths, hid):
             st = os.lstat(p)
         except OSError:
             continue
-        if p.parent != USB or not stat.S_ISREG(st.st_mode):     # a link or a pipe is not followed as root
+        if not in_usb(p) or not stat.S_ISREG(st.st_mode):        # a link or a pipe is not followed as root
             continue
         try:
             os.replace(p, q / p.name)
@@ -554,9 +590,13 @@ def on_open(p, pid):
 def on_arrival(p, pid=None):
     now = time.time()
     p = str(p)
+    seen = recent_write.get(p, 0)
     recent_write[p] = now
     path = Path(p)
-    if path.parent != USB or path.name.startswith(".") or path.suffix in (".part", ".tmp"):
+    # every file that lands anywhere inside the exit counts, whatever its name (".x", "*.tmp", in a subfolder)
+    if not in_usb(path) or not path.is_file() or path.is_symlink():
+        return
+    if now - seen < 1:                                    # the same write seen by both watchers: count it once
         return
     if halted():
         h = halted()
@@ -585,8 +625,10 @@ def watch():
     dirs = [USB] + [DESK / n for n in Z.FOLDERS if (DESK / n).is_dir()]
     fd = fan_open(dirs)
     # moves into the exit do not produce a finished write; inotify sees them (without a process id)
-    ino = subprocess.Popen(["inotifywait", "-m", "-q", "-e", "moved_to", "--format", "%w%f", str(USB)],
-                           stdout=subprocess.PIPE, text=True)
+    # and the whole tree of the exit and the level folders, subfolders included (fanotify marks only the folder
+    # itself): files finished or moved into the exit, files opened in a level folder
+    ino = subprocess.Popen(["inotifywait", "-m", "-r", "-q", "-e", "moved_to", "-e", "close_write", "-e", "open",
+                            "--format", "%e %w%f"] + [str(d) for d in dirs], stdout=subprocess.PIPE, text=True)
     log(event="guard-start", user=USER, desktop=str(DESK), watching=[str(d) for d in dirs], fanotify=True)
     checked = time.time()
     while True:
@@ -617,7 +659,15 @@ def watch():
         if ino.stdout in rl:
             line = ino.stdout.readline()
             if line:
-                on_arrival(line.rstrip("\n"))
+                ev, _, path = line.rstrip("\n").partition(" ")
+                try:
+                    if "OPEN" in ev and "ISDIR" not in ev:
+                        if in_security(path) and Path(path).parent.parent != DESK:   # top level: fanotify has it
+                            on_open(path, None)
+                    elif "ISDIR" not in ev and in_usb(path):
+                        on_arrival(path)
+                except Exception as e:
+                    print("event:", e, file=sys.stderr, flush=True)
 
 
 # ---------------- terminals ----------------
@@ -764,7 +814,14 @@ def handle(msg):
                                             "phone near it (scan the QR code the PC shows). Nothing was recorded."}
         if sig_ok and facts.get("exception"):
             log(event="approval-exception", request=rid, approver=who, level=r.get("level"), kind="remote")
+        if op == "approve" and int(r.get("code_tries", 0) or 0) >= MAX_CODE_TRIES:
+            log(event="approve-refused", request=rid, approver=who, reason="code-tries")
+            return {"ok": False, "message": "Too many wrong match codes for this request. Nothing was approved; "
+                                            "decline it and let a new request be sent."}
         code_ok = str(msg.get("code", "")).strip() == r["code"]
+        if op == "approve" and sig_ok and not code_ok:           # only an officer's signed try counts
+            r["code_tries"] = int(r.get("code_tries", 0) or 0) + 1      # a 4-digit code cannot be tried through
+            write_json(rp, r)
         result = zdecide.approve(with_sig_ok(r), roster(), who, op, sig_ok, code_ok)
         if result.startswith("refused:"):
             reason = result.split(":", 1)[1]

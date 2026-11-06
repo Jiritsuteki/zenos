@@ -78,7 +78,7 @@ class DataStore(unittest.TestCase):
             for f in Path(root).rglob("*"):
                 if f.is_file():
                     self.assertNotIn(b"Yamada", f.read_bytes())
-        rec = json.loads((self.stores[0].dir / "records" / f"{rid}.json").read_text())["record"]
+        rec = json.loads((self.stores[0].dir / "records" / "cases" / f"{rid}.json").read_text())["record"]
         self.assertEqual(len(rec["shares"]), 3)
         self.assertEqual(set(rec), {"v", "id", "table", "level", "nonce", "ct", "k", "shares"})
         self.assertEqual(set(rec["shares"][0]), {"peer", "x", "sealed"})       # a share only sealed to its peer
@@ -92,6 +92,34 @@ class DataStore(unittest.TestCase):
         with self.assertRaises(zdata.Refused):
             self.db.get(rid, "tanaka", long, "casework")
         self.assertEqual(self.db.get(rid, "tanaka", self.tanaka, "casework"), {"x": 1})
+
+    def test_another_server_cannot_open_this_servers_records(self):
+        """a second enrolled server holding a copy of the record and a table of the same name gets no key"""
+        rid = self.db.put("cases", {"x": 1}, 3)
+        rec = json.loads((self.stores[0].dir / "records" / "cases" / f"{rid}.json").read_text())["record"]
+        tax_key = Ed25519PrivateKey.generate()
+        c = json.loads(json.dumps(self.conf))
+        c["servers"]["tax"] = {"pub": zdata.b64(zdata.raw(tax_key.public_key())),
+                               "purposes": {"cases": ["casework"]}, "rate_max": 600}
+        for p in self.keys + self.stores:
+            self.write_conf(p, c)
+        other = zdata.Store("tax", tax_key, self.db.key_peers, self.db.k, self.db.stores)
+        with self.assertRaises(Exception):
+            other._key(rec, "tanaka", zdata.idp_token(self.idp, "tanaka", aud="tax"), "casework")
+        self.assertEqual(self.db.get(rid, "tanaka", self.tanaka, "casework"), {"x": 1})
+
+    def test_unsigned_requests_leave_no_trace(self):
+        peer = self.keys[0]
+        f = peer.dir / "ledger.jsonl"
+        before = len(f.read_text().splitlines()) if f.exists() else 0
+        for _ in range(50):
+            code, _ = peer.share({"request": {"server": "nobody", "id": "a" * 32, "table": "cases", "level": 1,
+                                              "person": "x", "purpose": "p", "eph": "AAAA"},
+                                  "sig": "AA", "x": 1, "sealed": "AA"})
+            self.assertEqual(code, 403)
+        after = len(f.read_text().splitlines()) if f.exists() else 0
+        self.assertEqual(after, before)
+        self.assertEqual(peer.rates, {})
 
     def test_a_storage_read_cannot_be_replayed(self):
         rid = self.db.put("cases", {"x": 1}, 3)
@@ -151,7 +179,7 @@ class DataStore(unittest.TestCase):
 
     def test_a_changed_copy_on_a_storage_peer_is_passed_over(self):
         rid = self.db.put("cases", {"x": 7}, 1)
-        p = self.stores[0].dir / "records" / f"{rid}.json"
+        p = self.stores[0].dir / "records" / "cases" / f"{rid}.json"
         d = json.loads(p.read_text())
         ct = bytearray(zdata.unb64(d["record"]["ct"]))
         ct[0] ^= 1

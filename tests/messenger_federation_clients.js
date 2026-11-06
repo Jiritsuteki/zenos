@@ -41,6 +41,18 @@ const wait = async (f, ms = 15000) => { const t = Date.now(); while (Date.now() 
   check("the local port refuses a request without the key", (await plain(za + "/api/me")).status === 401);
   check("the local port refuses another site's page", (await fetch(za + "/api/send", { method: "POST", headers: { Origin: "http://evil.example" }, body: "{}" })).status === 403);
   check("the local port refuses another host name (DNS rebinding)", await new Promise((ok) => require("http").get({ host: "127.0.0.1", port: base + 10, path: "/api/me", headers: { Host: "evil.example:" + (base + 10), "X-Zenos-Local": keyOf(ha, "zenos") } }, (r) => ok(r.statusCode === 403)).on("error", () => ok(false))));
+  // a linked phone that is not government-issued gets no drafts (they hold text typed in L3+ conversations)
+  fs.writeFileSync(path.join(ha, ".local/share/zenos/msg/tunnel-url.zenos"), "https://phone.example");
+  await fetch(za + "/api/local", { method: "POST", body: JSON.stringify({ drafts: { "c:secret-l4": "L4 draft text" } }) });
+  const lk = await (await fetch(za + "/api/link/new", { method: "POST", body: "{}" })).json();
+  const rp = `http://127.0.0.1:${base + 110}`;
+  const lr = await plain(rp + "/link?t=" + new URL(lk.url).searchParams.get("t"), { redirect: "manual" });
+  const sid = (lr.headers.get("set-cookie") || "").split(";")[0];
+  const phoneLocal = await (await plain(rp + "/api/local", { headers: { Cookie: sid } })).text();
+  check("a phone that is not government-issued cannot read drafts", sid.startsWith("zsid=") && !phoneLocal.includes("L4 draft"), phoneLocal);
+  await plain(rp + "/api/local", { method: "POST", headers: { Cookie: sid }, body: JSON.stringify({ drafts: { "c:x": "from phone" }, dnd: true }) });
+  const deskLocal = await (await fetch(za + "/api/local")).json();
+  check("nor change them", deskLocal.drafts["c:secret-l4"] === "L4 draft text" && !deskLocal.drafts["c:x"] && !deskLocal.dnd, deskLocal);
   check("the key file is readable by this account only", (fs.statSync(path.join(ha, ".local/share/zenos/msg/store/zenos/local.key")).mode & 0o077) === 0);
   check("both clients start on their own organization's relay", !!(await wait(() => j(za + "/api/me"))) && !!(await wait(() => j(zb + "/api/me"))));
   await new Promise((z) => setTimeout(z, 1500));

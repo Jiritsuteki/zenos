@@ -11,6 +11,15 @@ FIX = open(os.path.join(os.path.dirname(__file__), "fixtures/emudhra-compromised
 
 
 class TrustWatch(unittest.TestCase):
+    def test_a_program_someone_else_can_change_is_never_run_as_root(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as t:
+            f = os.path.join(t, "node")
+            open(f, "wb").write(b"\x7fELF")
+            os.chmod(t, 0o777)
+            self.assertFalse(T.root_only(f))
+        self.assertTrue(T.root_only("/usr/bin/env") or os.stat("/usr/bin/env").st_uid != 0)
+
     def test_issuer_serial_matches_onecrl_format(self):
         c = x509.load_pem_x509_certificates(FIX.encode())[0]
         der = c.public_bytes(serialization.Encoding.DER)

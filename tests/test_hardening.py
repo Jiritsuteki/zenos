@@ -123,7 +123,8 @@ class AuditStatus(unittest.TestCase):
         return self.node.accept(b)
 
     def st(self, **kw):
-        s = {"t": 0, "kernel": "6.12.113+deb13-amd64", "kernel_newest": "6.12.113+deb13-amd64", "reboot_required": False,
+        AuditStatus.clock = getattr(AuditStatus, "clock", int(time.time()) - 100) + 1    # each status newer
+        s = {"t": AuditStatus.clock, "kernel": "6.12.113+deb13-amd64", "kernel_newest": "6.12.113+deb13-amd64", "reboot_required": False,
              "services": {k: "active" for k in ship.WATCHED}}
         s.update(kw)
         return s
@@ -173,6 +174,28 @@ class AuditStatus(unittest.TestCase):
 
 
 
+class KeydHolders(unittest.TestCase):
+    """keyd records every process holding the client end of the connection, not just the one that connected"""
+    def test_a_socket_handed_on_is_still_held(self):
+        import socket as S, importlib
+        with tempfile.TemporaryDirectory() as d:
+            os.environ["ZENOS_OPEN_HOLDERS"] = os.path.join(d, "h.json")
+            import zenos_keyd as K
+            importlib.reload(K)
+            srv = S.socket(S.AF_UNIX); srv.bind(os.path.join(d, "s")); srv.listen(1)
+            cli = S.socket(S.AF_UNIX); cli.connect(os.path.join(d, "s"))
+            conn, _ = srv.accept()
+            dead = 999999                                               # the connector has gone
+            ok = K.hold(dead, os.getuid(), 4, os.fstat(conn.fileno()).st_ino)
+            held = [h["pid"] for h in json.load(open(os.environ["ZENOS_OPEN_HOLDERS"]))] if ok else []
+            self.assertIn(os.getpid(), held)                            # this process holds the client end
+            self.assertFalse(K.hold(dead, os.getuid(), 4, None))        # nobody alive: no plaintext
+            self.assertTrue(K.hold(0, os.getuid(), 3, None))            # below L4 nothing is held
+            for x in (cli, conn, srv):
+                x.close()
+            del os.environ["ZENOS_OPEN_HOLDERS"]
+
+
 class OpenHolders(unittest.TestCase):
     """the network stays cut while the process that received L4+ plaintext, or anything it started, is alive; the
     user's own flag file cannot lift it"""
@@ -190,8 +213,9 @@ class OpenHolders(unittest.TestCase):
             with open(path, "w") as f:
                 json.dump([{"pid": parent.pid, "start": start, "level": 4}], f)
             self.assertTrue(ns.holders_alive(path))                      # the holder and its child are recorded
-            kids = [h for h in json.load(open(path)) if h["pid"] != parent.pid]
+            kids = [{"pid": p} for p in ns._KIDS]                     # followed in the sentinel's memory
             self.assertTrue(kids)
+            self.assertEqual(len(json.load(open(path))), 1)              # the file is keyd's alone
             parent.wait()
             self.assertTrue(ns.holders_alive(path))                      # the holder exited, its child still holds
             for k in kids:

@@ -105,7 +105,10 @@ def check(debs, c=None, get=zsupply.fetch, out=sys.stderr):
         if c.get("broken"):
             ok, why = False, "the supply configuration cannot be read"
         else:
-            ok, why, f = zsupply.decide(deb, nodes, keys, c.get("required", 2), c.get("ring", 1), get=get)
+            try:
+                ok, why, f = zsupply.decide(deb, nodes, keys, c.get("required", 2), c.get("ring", 1), get=get)
+            except Exception as e:                         # a failure of the check itself: refused when enforcing,
+                ok, why, f = False, f"check failed: {type(e).__name__}", {}    # recorded otherwise, never a crash
         if ok:
             keep(f, name)
             remember(sha)

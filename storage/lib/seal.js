@@ -92,8 +92,13 @@ function verifyManifest (cap, manifestBuf) {
 }
 
 // Basic shape check for a manifest a node is asked to keep (it cannot check the capability hash)
+const MANIFEST_MAX = 32768 // 255 shard hashes and the fields fit in well under this
+const MANIFEST_KEYS = ['v', 'fileId', 'level', 'name', 'k', 'n', 'length', 'shardHashes', 'createdAt', 'owner', 'salt', 'sig']
 function checkManifest (manifestBuf) {
+  if (!Buffer.isBuffer(manifestBuf) || manifestBuf.length > MANIFEST_MAX) throw new Error('malformed manifest')
   const m = JSON.parse(manifestBuf)
+  if (!m || typeof m !== 'object' || Array.isArray(m) || !Object.keys(m).every(x => MANIFEST_KEYS.includes(x))) throw new Error('malformed manifest')
+  if (typeof m.name !== 'string' || m.name.length > 128 || typeof m.createdAt !== 'string' || m.createdAt.length > 40) throw new Error('malformed manifest')
   if (m.v !== 1 || !/^[0-9a-f]{32}$/.test(m.fileId) || !LEVEL.test(m.level)) throw new Error('malformed manifest')
   if (!(Number.isInteger(m.k) && Number.isInteger(m.n) && m.k >= 1 && m.n > m.k && m.n <= 255)) throw new Error('malformed manifest')
   if (!Array.isArray(m.shardHashes) || m.shardHashes.length !== m.n || !m.shardHashes.every(h => /^[0-9a-f]{64}$/.test(h))) throw new Error('malformed manifest')

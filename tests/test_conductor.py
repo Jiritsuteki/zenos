@@ -97,6 +97,17 @@ class Sandbox(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertEqual(r.stdout.split("\n")[:5], ["hello", "noinet 97", "unix", "uring -1 1", "home False False"])
 
+    @unittest.skipUnless(HAVE_BWRAP, "bubblewrap not installed")
+    def test_the_sandbox_has_limits(self):
+        code = ("import os\n"
+                "try:\n bytearray(6 << 30); print('mem big')\nexcept MemoryError: print('mem refused')\n"
+                "try:\n f = open('/tmp/x', 'wb')\n for _ in range(64): f.write(b'0' * (8 << 20))\n f.close(); print('tmp big')\n"
+                "except OSError as e: print('tmp refused')\n")
+        r = zsandbox.run(["python3", "-c", code])
+        self.assertEqual(r.stdout.split("\n")[:2], ["mem refused", "tmp refused"], r.stderr)
+        r = zsandbox.run(["python3", "-c", "import sys; sys.stdout.write('x' * (40 << 20))"])
+        self.assertLessEqual(len(r.stdout), zsandbox.OUTPUT_BYTES)
+
     def test_filter_shape(self):
         for arch in ("x86_64", "aarch64"):
             self.assertEqual(len(zsandbox.seccomp_filter(arch)) % 8, 0)
