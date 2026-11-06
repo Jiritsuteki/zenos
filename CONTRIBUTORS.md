@@ -14,5 +14,6 @@ The list is in order of the first merged pull request, and it is updated when a 
 | [@Janhavi1512](https://github.com/Janhavi1512) | [#47](https://github.com/zenos-org/zenos/pull/47) | CITATION.cff, so GitHub shows "Cite this repository" |
 | [@purva-bhagwat](https://github.com/purva-bhagwat) | [#49](https://github.com/zenos-org/zenos/pull/49) | Citing ZENOS in the README and the documentation index |
 | [@laishettikarthik-tech](https://github.com/laishettikarthik-tech) | [#54](https://github.com/zenos-org/zenos/pull/54) | The docs/ line in the README's repository layout |
+| [@Pranjali258](https://github.com/Pranjali258) | [#65](https://github.com/zenos-org/zenos/pull/65) | The phone passkeys guide in the documentation index |
 
 Want to be on this list? Start with a [good first issue](https://github.com/zenos-org/zenos/labels/good%20first%20issue) and read [CONTRIBUTING.md](CONTRIBUTING.md).
