@@ -179,7 +179,9 @@ privately ([SECURITY.md](SECURITY.md)), not in Discussions.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for test commands and pull request requirements.
+Read the [Code of Conduct](CODE_OF_CONDUCT.md) for the project's community standards.
 Browse the [documentation index](docs/README.md) for the project's guides and design notes.
+Look up unfamiliar terms in the [glossary](docs/GLOSSARY.md).
 To find a starting task, see the [good first issues](https://github.com/zenos-org/zenos/labels/good%20first%20issue).
 
 ## Citing ZENOS
