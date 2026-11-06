@@ -18,8 +18,8 @@ The published image was rebuilt on 2026-11-06 with what follows, so it is part o
 - 28 weaknesses found in the first pass, 27 fixed with tests: in the messenger and its relay, the guard, the key
   agent and the network sentinel, the AI guard, the approval page, the audit node, ZENOS Data, the vulnerability
   watcher, the package wrapper, the model pinning, the app windows, the office AI relay, the storage grid and the
-  repository's automation. One needs a change of design and is not fixed yet. Details are published with the
-  release that carries the fixes (SECURITY.md).
+  repository's automation. One needs a change of design and is not fixed yet. What each one was: [docs/SELF_AUDIT.md](docs/SELF_AUDIT.md)
+  (published 6 Nov 2026).
 - Changes others may notice: the messenger's local port and the approval page answer only this PC's own window
   (a key in a file only the account can read); a relay takes names, organizations and clearances from its
   directory (`directory.json`, `POST /directory` by its administrator), never from an account's own bundle; a

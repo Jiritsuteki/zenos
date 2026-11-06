@@ -13,6 +13,7 @@ This folder contains the main documentation for ZENOS.
 - [Office files in ZENOS](OFFICE_ENGINE.md) — How ZENOS uses LibreOffice to read, write and display Office files.
 - [ZENOS as the conductor](ORCHESTRATOR.md) — How ZENOS coordinates AI tasks across multiple model providers.
 - [Releasing ZENOS](RELEASING.md) — How to check, build, and publish a release.
+- [Self-audit](SELF_AUDIT.md) — What ZENOS's own audits found and how each was fixed.
 - [ZENOS security architecture](SECURITY_ARCHITECTURE.md) — The five security layers and the modules responsible for them.
 - [ZENOS Images · Library and Studio](STUDIO.md) — How the Images app handles music, pictures, and MP4 exports.
 - [ZENOS Data](DATA_STORE.md) — How a server program keeps its records with no plaintext and no key at rest.
